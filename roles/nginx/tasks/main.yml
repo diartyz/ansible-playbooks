@@ -1,0 +1,43 @@
+- name: install nginx
+  become: true
+  pacman:
+    name: nginx
+  when: ansible_distribution == 'Archlinux'
+
+- name: install nginx
+  homebrew:
+    name: nginx
+  when: ansible_distribution == 'MacOSX'
+
+- name: create nginx conf folder
+  become: true
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - /etc/nginx/conf.d
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy nginx conf
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: static.conf, dest: /usr/local/etc/nginx/servers/static.conf }
+  register: nginx_conf
+  when: ansible_distribution == 'MacOSX'
+
+- name: enable nginx
+  command: 'brew services restart nginx'
+  when:
+    - ansible_distribution == 'MacOSX'
+    - nginx_conf.changed
+
+- name: enable nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started
+  when:
+    - ansible_distribution == 'Archlinux'
+    - nginx_conf.changed

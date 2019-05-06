@@ -1,0 +1,8 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["*"],
+  "diagnostic.maxWindowHeight": 18,
+  "javascript.suggest.completeFunctionCalls": false,
+  "python.formatting.provider": "black",
+  "suggest.invalidInsertCharacters": [],
+  "typescript.suggest.completeFunctionCalls": false
+}

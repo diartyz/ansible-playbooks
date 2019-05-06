@@ -1,0 +1,55 @@
+---
+- name: install v2ray
+  become: true
+  pacman:
+    name: v2ray
+  when: ansible_distribution == 'Archlinux'
+
+- name: homebrew tap
+  homebrew_tap:
+    name: v2ray/v2ray
+  when: ansible_distribution == 'MacOSX'
+
+- name: install packages
+  homebrew:
+    name: v2ray-core
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy v2ray conf
+  become: true
+  copy:
+    src: config.json
+    dest: /etc/v2ray/config.json
+  when: ansible_distribution == 'Archlinux'
+  register: v2ray_conf
+
+- name: restart v2ray
+  become: true
+  systemd:
+    name: v2ray
+    enabled: yes
+    state: restarted
+  when:
+    - ansible_distribution == 'Archlinux'
+    - v2ray_conf.changed
+
+- name: copy v2ray conf
+  copy:
+    src: config.json
+    dest: /usr/local/etc/v2ray/config.json
+  when: ansible_distribution == 'MacOSX'
+  register: v2ray_conf
+
+- name: enable v2ray
+  become: true
+  systemd:
+    name: v2ray
+    enabled: yes
+    state: started
+  when: ansible_distribution == 'Archlinux'
+
+- name: restart v2ray
+  command: 'brew services restart v2ray-core'
+  when:
+    - ansible_distribution == 'MacOSX'
+    - v2ray_conf.changed

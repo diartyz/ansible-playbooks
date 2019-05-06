@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+yabai -m config layout         bsp
+yabai -m config window_topmost on
+
+YABAI_CERT=yabai-cert sh -c "$(curl -fsSL "https://git.io/update-yabai")" &

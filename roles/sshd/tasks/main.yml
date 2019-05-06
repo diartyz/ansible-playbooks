@@ -1,0 +1,36 @@
+---
+- name: create ssh folder
+  file:
+    path: ~/.ssh
+    state: directory
+    mode: 0700
+
+- name: copy authorized_keys
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0400
+  with_items:
+    - { src: id_rsa.pub, dest: ~/.ssh/authorized_keys }
+
+- name: update sshd config
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: '{{ item.line }}'
+    regexp: '{{ item.reg }}'
+  with_items:
+    - { line: 'PubkeyAuthentication yes', reg: '^#?PubkeyAuthentication' }
+    - { line: 'PasswordAuthentication no', reg: '^#?PasswordAuthentication' }
+    - { line: 'Port 2048', reg: '^#?Port' }
+  register: sshd_conf
+
+- name: reload sshd
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: reloaded
+  with_items:
+    - sshd
+  when: sshd_conf.changed

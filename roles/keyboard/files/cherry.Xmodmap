@@ -1,0 +1,21 @@
+clear   Lock
+clear   Control
+keycode 66      = Control_L NoSymbol Control_L
+keycode 37      = Caps_Lock NoSymbol Caps_Lock
+add     Lock    = Caps_Lock
+add     Control = Control_L
+
+clear   Mod1
+clear   Mod4
+keycode 64   = Super_L NoSymbol Super_L
+keycode 133  = Alt_L   Meta_L   Alt_L Meta_L
+keycode 108  = Super_R NoSymbol Super_R
+! keycode 134  = Alt_R   Meta_R   Alt_R Meta_R
+keycode 134 = Mode_switch NoSymbol Mode_switch
+add     Mod1 = Alt_L   Alt_R
+add     Mod4 = Super_L Super_R
+
+keycode 25 = w W Up    W
+keycode 38 = a A Left  A
+keycode 39 = s S Down  S
+keycode 40 = d D Right D

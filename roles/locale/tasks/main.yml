@@ -1,0 +1,28 @@
+---
+- name: edit locale.gen
+  become: true
+  lineinfile:
+    dest: /etc/locale.gen
+    regexp: '^#?en_US.UTF-8 UTF-8'
+    line: 'en_US.UTF-8 UTF-8'
+  when: ansible_distribution == 'Archlinux'
+
+- name: get LANG
+  command: /bin/bash -l -c "echo $LANG"
+  register: lang_result
+  changed_when: false
+  when: ansible_distribution == 'Archlinux'
+
+- name: run locale-gen
+  become: true
+  command: locale-gen
+  when:
+    - ansible_distribution == 'Archlinux'
+    - "'en_US.UTF-8' not in lang_result.stdout"
+
+- name: copy locale.conf
+  become: true
+  copy:
+    content: 'LANG=en_US.UTF-8'
+    dest: /etc/locale.conf
+  when: ansible_distribution == 'Archlinux'

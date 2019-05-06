@@ -1,0 +1,64 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: openssh
+  when: ansible_distribution == 'Archlinux'
+
+- name: create ssh folder
+  file:
+    path: ~/.ssh
+    state: directory
+    mode: 0700
+
+- name: copy ssh key
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: '{{ item.mode }}'
+  with_items:
+    - { src: id_rsa, dest: ~/.ssh/id_rsa, mode: '0600' }
+    - { src: id_rsa.pub, dest: ~/.ssh/id_rsa.pub, mode: '0644' }
+    - { src: teletraan, dest: ~/.ssh/teletraan, mode: '0600' }
+    - { src: teletraan.pub, dest: ~/.ssh/teletraan.pub, mode: '0644' }
+    - { src: zenvy-ghost, dest: ~/.ssh/zenvy-ghost, mode: '0600' }
+    - { src: zenvy-ghost.pub, dest: ~/.ssh/zenvy-ghost.pub, mode: '0644' }
+
+- name: copy ssh config
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: ssh-config, dest: ~/.ssh/config }
+
+- name: copy authorized_keys
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0400
+  with_items:
+    - { src: id_rsa.pub, dest: ~/.ssh/authorized_keys }
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Archlinux'
+
+- name: update sshd config
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: '{{ item.line }}'
+    regexp: '{{ item.reg }}'
+  with_items:
+    - { line: 'PubkeyAuthentication yes', reg: '^#?PubkeyAuthentication' }
+    - { line: 'PasswordAuthentication no', reg: '^#?PasswordAuthentication' }
+    - { line: 'Port 2048', reg: '^#?Port' }
+  when: ansible_distribution == 'CentOS'
+  register: sshd_conf
+
+- name: reload sshd
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: reloaded
+  with_items:
+    - sshd
+  when: ansible_distribution == 'CentOS' and sshd_conf.changed

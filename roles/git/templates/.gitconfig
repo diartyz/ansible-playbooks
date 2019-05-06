@@ -1,0 +1,20 @@
+[user]
+  name = diartyz
+  email = diartyz@gmail.com
+[core]
+	ignorecase = false
+  pager = diff-so-fancy | less
+[http "https://github.com"]
+	proxy = socks5://127.0.0.1:1080
+[includeIf "gitdir:~/Work/"]
+  path = .gitconfig-work
+[diff]
+  tool = meld
+[difftool "meld"]
+  cmd = {{ meld }} $LOCAL $REMOTE
+[merge]
+  tool = meld
+[mergetool]
+  keepBackup = false
+[mergetool "meld"]
+  cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge

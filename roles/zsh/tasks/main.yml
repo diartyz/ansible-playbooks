@@ -1,0 +1,40 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: ['zsh', 'xclip', 'scrot', 'fd', 'fzf', 'fasd']
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: ['zsh', 'fd', 'fzf', 'fasd']
+  when: ansible_distribution == 'MacOSX'
+
+- name: clone oh-my-zsh
+  git:
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+    update: no
+  with_items:
+    - { repo: 'https://github.com/robbyrussell/oh-my-zsh.git', dest: ~/.oh-my-zsh }
+
+- name: clone zsh-syntax-highlighting
+  git:
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+    update: no
+  with_items:
+    - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting', dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting }
+
+- name: copy zsh conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: .zshrc, dest: ~/.zshrc }
+
+- name: change default shell to zsh
+  become: true
+  user:
+    name: '{{ ansible_user_id }}'
+    shell: /bin/zsh

@@ -1,0 +1,76 @@
+---
+- name: set no_xmodmap
+  debug:
+    msg: 'set no_xmodmap'
+  register: no_xmodmap
+
+- name: copy hhkb conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: hhkb.Xmodmap, dest: ~/.Xmodmap }
+  when: no_xmodmap is not defined
+  tags:
+    - hhkb
+
+- name: copy cherry conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: cherry.Xmodmap, dest: ~/.Xmodmap }
+  when: no_xmodmap is not defined
+  tags:
+    - cherry
+
+- name: copy mac conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: mac.Xmodmap, dest: ~/.Xmodmap }
+  when: no_xmodmap is not defined
+  tags:
+    - mackb
+
+- name: set no_kbdlight
+  debug:
+    msg: 'set no_kbdlight'
+  register: no_kbdlight
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy kbdlight config
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0755
+  with_items:
+    - { src: kbdlight, dest: /usr/local/bin/kbdlight }
+  when:
+    - ansible_distribution == 'Archlinux'
+    - no_kbdlight is not defined
+  tags:
+    - kbdlight
+
+- name: install cask packages
+  homebrew_cask:
+    name: ['karabiner-elements']
+  when: ansible_distribution == 'MacOSX'
+
+- name: create config folder
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.config/karabiner
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy config
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: karabiner.json, dest: ~/.config/karabiner/karabiner.json }
+  when: ansible_distribution == 'MacOSX'

@@ -1,0 +1,18 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: tmux
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: ['tmux', 'reattach-to-user-namespace']
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy tmux conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: .tmux.conf, dest: ~/.tmux.conf }

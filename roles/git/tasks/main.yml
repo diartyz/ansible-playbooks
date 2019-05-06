@@ -1,0 +1,52 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: ['git', 'tig', 'diff-so-fancy', 'meld', 'openbsd-netcat']
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: ['tig', 'diff-so-fancy']
+  when: ansible_distribution == 'MacOSX'
+
+- name: install cask packages
+  homebrew_cask:
+    name: meld
+  when: ansible_distribution == 'MacOSX'
+
+- name: create folder ~/.config
+  file:
+    name: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.config
+
+- name: copy .gitconfig
+  vars:
+    meld: 'meld'
+  template:
+    src: .gitconfig
+    dest: ~/.gitconfig
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy .gitconfig
+  vars:
+    meld: '/Applications/Meld.app/Contents/MacOS/Meld'
+  template:
+    src: .gitconfig
+    dest: ~/.gitconfig
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy git config
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: .tigrc, dest: ~/.tigrc }
+    - { src: .gitconfig-work, dest: ~/.gitconfig-work }
+
+- name: copy github token
+  copy:
+    src: hub
+    dest: ~/.config/hub

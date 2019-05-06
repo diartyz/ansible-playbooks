@@ -1,0 +1,31 @@
+---
+- name: install shadowsocks-libev
+  become: true
+  apt:
+    name: shadowsocks-libev
+    update_cache: yes
+  when: ansible_distribution == 'Debian'
+
+- name: copy shadowsocks conf
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: server.json, dest: /etc/shadowsocks-libev/config.json }
+  register: shadowsocks_conf
+  when: ansible_distribution == 'Debian'
+
+- name: enable shadowsocks
+  become: true
+  systemd:
+    name: shadowsocks-libev.service
+    enabled: yes
+  when: ansible_distribution == 'Debian'
+
+- name: reload shadowsocks
+  become: true
+  systemd:
+    name: shadowsocks-libev.service
+    state: restarted
+  when: ansible_distribution == 'Debian' and shadowsocks_conf.changed

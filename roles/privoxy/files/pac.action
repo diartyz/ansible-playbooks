@@ -1,0 +1,34 @@
+# /etc/privoxy/pac.action
+
+{{alias}}
+direct = +forward-override{forward .}
+ssh    = +forward-override{forward-socks5t 127.0.0.1:1080 .}
+https  = +redirect{s@http://@https://@}
+
+{direct}
+
+{ssh}
+
+# medium
+.medium.com
+
+# github
+.githubusercontent.com
+gist.github.com
+
+# google
+.golang.org
+.google.com
+.googleapis.com
+.googleusercontent.com
+.gstatic.com
+
+# slack
+.slack.com
+.slack-edge.com
+
+# wiki
+.wikipedia.org
+
+# zeplin
+.zeplin.io

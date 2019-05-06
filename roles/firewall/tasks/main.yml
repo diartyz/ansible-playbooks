@@ -1,0 +1,22 @@
+---
+- name: copy firewall pac
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: public.xml, dest: '/etc/firewalld/zones/public.xml' }
+  register: firewall_conf
+  when: ansible_distribution == 'CentOS'
+
+- name: reload firewalld
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: reloaded
+  with_items:
+    - firewalld
+  when:
+    - ansible_distribution == 'CentOS'
+    - firewall_conf.changed

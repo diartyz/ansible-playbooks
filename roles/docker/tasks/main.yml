@@ -1,0 +1,24 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: [docker, docker-machine]
+  when: ansible_distribution == 'Archlinux'
+
+- name: create conf folder
+  become: true
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - /etc/docker
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy docker conf
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: daemon.json, dest: '/etc/docker/daemon.json' }
+  when: ansible_distribution == 'Archlinux'

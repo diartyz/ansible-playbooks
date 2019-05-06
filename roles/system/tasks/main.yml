@@ -1,0 +1,9 @@
+---
+- name: copy conf
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: 40-max-user-watches.conf, dest: /etc/sysctl.d/40-max-user-watches.conf }
+  when: ansible_distribution == 'Archlinux'

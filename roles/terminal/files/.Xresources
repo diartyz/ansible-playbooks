@@ -1,0 +1,48 @@
+*termName: xterm-256color
+*metaSendsEscape: true
+
+xterm*faceName: Jetbrains Mono:size=9
+xterm*faceNameDoublesize: WenQuanYi Micro Hei Mono:size=9
+
+urxvt*font: xft:Jetbrains Mono:size=9, xft:WenQuanYi Micro Hei Mono:size=9
+urxvt.scrollBar: false
+urxvt.perl-ext-common: matcher,selection-to-clipboard
+urxvt.url-launcher: /usr/bin/xdg-open
+urxvt.matcher.button: 1
+
+! special
+*.background:     #1c1c1c
+*.foreground:     #c5c8c6
+*.highlightColor: #373b41
+
+! black
+*.color0:         #1d1f21
+*.color8:         #969896
+
+! red
+*.color1:         #cc6666
+*.color9:         #cc6666
+
+! green
+*.color2:         #b5bd68
+*.color10:        #b5bd68
+
+! yellow
+*.color3:         #de935f
+*.color11:        #de935f
+
+! blue
+*.color4:         #81a2be
+*.color12:        #81a2be
+
+! magenta
+*.color5:         #b294bb
+*.color13:        #b294bb
+
+! cyan
+*.color6:         #8abeb7
+*.color14:        #8abeb7
+
+! white
+*.color7:         #c5c8c6
+*.color15:        #ffffff

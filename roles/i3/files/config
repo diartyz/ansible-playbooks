@@ -1,0 +1,95 @@
+set $mod Mod4
+bindsym $mod+n bar mode toggle
+bindsym $mod+m bar hidden_state toggle
+bindsym $mod+Return exec --no-startup-id i3-sensible-terminal
+bindsym $mod+q kill
+bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+v split h
+bindsym $mod+b split v
+bindsym $mod+t split toggle
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+0 workspace 0
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+Shift+0 move container to workspace 0
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+q exec --no-startup-id i3lock -c 000000
+bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+  bindsym h resize grow width 10 px or 10 ppt
+    bindsym j resize shrink height 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink width 10 px or 10 ppt
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+focus_follows_mouse no
+font pango:Jetbrains Mono 9
+hide_edge_borders both
+new_window pixel 1
+
+bar {
+  modifier none
+    mode hide
+    hidden_state hide
+    status_command i3status --config ~/.config/i3/status.conf
+    colors {
+      statusline #00A5FF
+    }
+}
+
+exec --no-startup-id i3-msg 'workspace 1; exec chromium'
+exec --no-startup-id i3-msg 'workspace 2; exec i3-sensible-terminal'
+exec --no-startup-id i3-msg 'workspace 3; exec blueberry'
+exec --no-startup-id i3-msg 'workspace 4; exec virtualbox; layout tabbed'
+
+assign [class="Chromium"] 1
+assign [class="VirtualBox"] 4
+
+workspace 1 output VGA1
+workspace 2 output VGA1
+workspace 3 output VGA1
+workspace 4 output DP1
+
+bindsym XF86MonBrightnessUp exec xbacklight -inc 2
+bindsym XF86MonBrightnessDown exec xbacklight -dec 2
+bindsym XF86KbdBrightnessUp exec kbdlight up 2
+bindsym XF86KbdBrightnessDown exec kbdlight down 2
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -3%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +3%
+bindsym --release button2 kill

@@ -1,0 +1,42 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: pacman-contrib
+  when: ansible_distribution == 'Archlinux'
+
+- name: set no_rankmirrors
+  debug:
+    msg: 'set no_rankmirrors'
+  register: no_rankmirrors
+  when: ansible_distribution == 'Archlinux'
+
+- name: download & rank mirrors
+  become: true
+  block:
+    - name: download mirrorlist
+      get_url:
+        url: https://www.archlinux.org/mirrorlist/?country=CN
+        dest: /tmp/mirrorlist
+        force: yes
+      changed_when: False
+      register: mirrorlist
+    - name: uncomment mirrorlist
+      replace:
+        dest: /tmp/mirrorlist
+        regexp: '^#Server'
+        replace: 'Server'
+      changed_when: False
+    - name: rank mirrorlist
+      command: 'rankmirrors -n 6 /tmp/mirrorlist'
+      register: rankmirrors_result
+      changed_when: False
+    - name: copy mirrorlist
+      copy:
+        content: '{{ rankmirrors_result.stdout }}'
+        dest: /etc/pacman.d/mirrorlist
+  when:
+    - ansible_distribution == 'Archlinux'
+    - no_rankmirrors is not defined
+  tags:
+    - rankmirrors

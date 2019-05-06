@@ -1,0 +1,26 @@
+---
+- name: Allow 'wheel' group to have passwordless sudo
+  become: true
+  lineinfile:
+    dest: /etc/sudoers
+    line: '%wheel ALL=(ALL) ALL'
+    regexp: '^%wheel'
+  when: ansible_distribution == 'Archlinux'
+
+- name: add groups
+  become: true
+  group:
+    name: '{{ item }}'
+  with_items:
+    - autologin
+    - docker
+  when: ansible_distribution == 'Archlinux'
+
+- name: add user
+  become: true
+  user:
+    name: '{{ username }}'
+    password: '{{ password | password_hash("sha512") }}'
+    groups: wheel,autologin,docker
+    update_password: on_create
+  when: ansible_distribution == 'Archlinux'

@@ -1,0 +1,19 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: rxvt-unicode
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: .Xresources, dest: ~/.Xresources }
+  when: ansible_distribution == 'Archlinux'
+
+- name: install cask packages
+  homebrew_cask:
+    name: iterm2
+  when: ansible_distribution == 'MacOSX'

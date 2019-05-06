@@ -1,0 +1,34 @@
+---
+- name: install xprofile packages
+  become: true
+  pacman:
+    name: [ xorg, xf86-video-intel, xf86-input-synaptics, wqy-microhei, ttf-jetbrains-mono, ttf-dejavu, feh, arandr, parcellite, lightdm-gtk-greeter ]
+  when: ansible_distribution == 'Archlinux'
+
+- name: enable lightdm
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+  with_items:
+    - lightdm
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy xprofile conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: .xprofile, dest: ~/.xprofile }
+  when: ansible_distribution == 'Archlinux'
+
+- name: enable autologin
+  become: true
+  lineinfile:
+    dest: /etc/lightdm/lightdm.conf
+    line: '{{ item.line }}'
+    regexp: '{{ item.regexp }}'
+  with_items:
+    - { regexp: '^#?autologin-user=', line: 'autologin-user=diartyz' }
+    - { regexp: '^#?autologin-user-timeout=', line: 'autologin-user-timeout=0' }
+  when: ansible_distribution == 'Archlinux'

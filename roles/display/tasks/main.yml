@@ -1,0 +1,7 @@
+---
+- name: set brightness
+  become: true
+  copy:
+    content: '10'
+    dest: /sys/class/backlight/acpi_video0/brightness
+  when: ansible_distribution == 'Archlinux'

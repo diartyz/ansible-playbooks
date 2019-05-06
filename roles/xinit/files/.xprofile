@@ -1,0 +1,20 @@
+#!/bin/sh
+
+ibus-daemon -d -x
+xset r rate 200 30
+# feh --bg-fill /usr/share/pixmaps/background.jpg
+# sh ~/.screenlayout/default.sh
+xbacklight -set 10
+parcellite &
+battery &
+
+synclient TapButton1=1
+synclient TapButton2=3
+synclient PalmDetect=1
+synclient VertScrollDelta=-111
+synclient HorizScrollDelta=-111
+synclient HorizTwoFingerScroll=1
+
+export QT_IM_MODULE="ibus"
+export GTK_IM_MODULE="ibus"
+export XMODIFIERS="@im=ibus"

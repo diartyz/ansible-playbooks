@@ -1,0 +1,45 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: ['vim', 'neovim', 'python-pynvim', 'ripgrep', 'the_silver_searcher']
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher']
+  when: ansible_distribution == 'MacOSX'
+
+- name: install python packages
+  pip:
+    name: [neovim]
+    extra_args: --user
+    executable: pip3
+
+- name: create vim & nvim conf folder
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.vim/autoload
+    - ~/.local/share/nvim/site/autoload
+    - ~/.config/nvim
+
+- name: download vim-plug for vim
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: ~/.vim/autoload/plug.vim
+
+- name: download vim-plug for nvim
+  get_url:
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: ~/.local/share/nvim/site/autoload/plug.vim
+
+- name: copy vim conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: .vimrc, dest: ~/.vimrc }
+    - { src: .vimrc, dest: ~/.config/nvim/init.vim }
+    - { src: coc-settings.json, dest: ~/.config/nvim/coc-settings.json }

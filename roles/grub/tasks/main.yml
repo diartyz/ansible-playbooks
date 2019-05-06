@@ -1,0 +1,25 @@
+---
+- name: install grub packages
+  become: true
+  pacman:
+    name: [grub, efibootmgr, intel-ucode]
+  when: ansible_distribution == 'Archlinux'
+
+- name: update grub conf
+  become: true
+  lineinfile:
+    dest: '/etc/default/grub'
+    line: '{{ item.line }}'
+    regexp: '{{ item.regexp }}'
+  with_items:
+    - { line: 'GRUB_CMDLINE_LINUX_DEFAULT="acpi_osi=linux acpi_backlight=vendor"', regexp: ^GRUB_CMDLINE_LINUX_DEFAULT }
+    - { line: 'GRUB_TIMEOUT=1', regexp: ^GRUB_TIMEOUT }
+  register: grub_conf
+  when: ansible_distribution == 'Archlinux'
+
+- name: create grub conf
+  become: true
+  command: grub-mkconfig -o /boot/grub/grub.cfg
+  when:
+    - ansible_distribution == 'Archlinux'
+    - grub_conf.changed

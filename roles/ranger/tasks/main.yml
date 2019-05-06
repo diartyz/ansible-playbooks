@@ -1,0 +1,26 @@
+---
+- name: install ranger
+  become: true
+  pacman:
+    name: ranger
+  when: ansible_distribution == 'Archlinux'
+
+- name: install ranger
+  homebrew:
+    name: ranger
+  when: ansible_distribution == 'MacOSX'
+
+- name: create conf folder
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.config/ranger
+
+- name: copy ranger conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: rc.conf, dest: ~/.config/ranger/rc.conf }
+    - { src: commands.py, dest: ~/.config/ranger/commands.py }

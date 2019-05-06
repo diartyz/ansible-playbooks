@@ -1,0 +1,22 @@
+---
+- name: copy v2ray conf
+  become: true
+  copy:
+    src: config.json
+    dest: /etc/v2ray/config.json
+  register: v2ray_conf
+  when: ansible_distribution == 'Debian'
+
+- name: enable v2ray
+  become: true
+  systemd:
+    name: v2ray
+    enabled: yes
+  when: ansible_distribution == 'Debian'
+
+- name: reload v2ray
+  become: true
+  systemd:
+    name: v2ray
+    state: restarted
+  when: ansible_distribution == 'Debian' and v2ray_conf.changed

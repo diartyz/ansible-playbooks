@@ -1,0 +1,20 @@
+---
+- name: get timedatectl status
+  command: timedatectl status
+  changed_when: False
+  register: timedatectl_result
+  when: ansible_distribution == 'Archlinux'
+
+- name: enable ntp
+  become: yes
+  command: timedatectl set-ntp true
+  when:
+    - ansible_distribution == 'Archlinux'
+    - "'NTP service: inactive' in timedatectl_result.stdout"
+
+- name: set timezone
+  become: yes
+  command: timedatectl set-timezone Asia/Shanghai
+  when:
+    - ansible_distribution == 'Archlinux'
+    - "'Asia/Shanghai' not in timedatectl_result.stdout"

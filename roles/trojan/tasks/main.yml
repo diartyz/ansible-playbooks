@@ -1,0 +1,55 @@
+---
+- name: install trojan
+  become: true
+  pacman:
+    name: trojan
+  when: ansible_distribution == 'Archlinux'
+
+- name: homebrew tap
+  homebrew_tap:
+    name: trojan-gfw/trojan
+  when: ansible_distribution == 'MacOSX'
+
+- name: install packages
+  homebrew:
+    name: trojan
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy trojan conf
+  become: true
+  copy:
+    src: config.json
+    dest: /etc/trojan/config.json
+  when: ansible_distribution == 'Archlinux'
+  register: trojan_conf
+
+- name: restart trojan
+  become: true
+  systemd:
+    name: trojan
+    enabled: yes
+    state: restarted
+  when:
+    - ansible_distribution == 'Archlinux'
+    - trojan_conf.changed
+
+- name: copy trojan conf
+  copy:
+    src: config.json
+    dest: /usr/local/etc/trojan/config.json
+  when: ansible_distribution == 'MacOSX'
+  register: trojan_conf
+
+- name: enable trojan
+  become: true
+  systemd:
+    name: trojan
+    enabled: yes
+    state: started
+  when: ansible_distribution == 'Archlinux'
+
+- name: restart trojan
+  command: 'brew services restart trojan'
+  when:
+    - ansible_distribution == 'MacOSX'
+    - trojan_conf.changed

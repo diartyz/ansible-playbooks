@@ -1,0 +1,20 @@
+##!/bin/bash
+
+chunkc core::plugin_dir /usr/local/opt/chunkwm/share/chunkwm/plugins
+
+# chunkc core::unload border.so
+chunkc core::unload tiling.so
+# chunkc core::unload ffm.so
+
+chunkc set global_desktop_mode           monocle
+chunkc set global_desktop_offset_top     0
+chunkc set global_desktop_offset_bottom  0
+chunkc set global_desktop_offset_left    0
+chunkc set global_desktop_offset_right   0
+chunkc set global_desktop_offset_gap     0
+
+chunkc set 2_desktop_mode                bsp
+
+# chunkc core::load border.so
+chunkc core::load tiling.so
+# chunkc core::load ffm.so

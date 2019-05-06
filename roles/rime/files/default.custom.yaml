@@ -1,0 +1,8 @@
+patch:
+  key_binder/bindings:
+    - {accept: comma, send: Page_Up, when: paging}
+    - {accept: period, send: Page_Down, when: has_menu}
+  menu/page_size: 9
+  schema_list:
+    - schema: luna_pinyin_simp
+  switcher/hotkeys:

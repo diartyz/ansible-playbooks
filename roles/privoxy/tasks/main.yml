@@ -1,0 +1,58 @@
+---
+- name: install privoxy
+  become: true
+  pacman:
+    name: privoxy
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: privoxy
+  when: ansible_distribution == 'MacOSX'
+
+- name: set sysconfdir
+  set_fact:
+    confdir: '/usr/local/etc'
+  when: ansible_distribution == 'MacOSX'
+
+- name: set sysconfdir
+  set_fact:
+    confdir: '/etc'
+  when: ansible_distribution == 'Archlinux'
+
+- name: update privoxy conf
+  become: true
+  lineinfile:
+    dest: '{{ confdir }}/privoxy/config'
+    line: '{{ item.line }}'
+    regexp: '{{ item.regexp }}'
+  with_items:
+    - { line: 'actionsfile pac.action', regexp: '^(#\s)?actionsfile pac.action' }
+    - { line: 'listen-address  0.0.0.0:8118', regexp: '^listen-address' }
+    - { line: '# actionsfile default.action', regexp: '^(#\s)?actionsfile default.action' }
+    - { line: '# forward-socks5t / 127.0.0.1:1080 .', regexp: '^(#\s)?forward-socks5t / 127.0.0.1:1080 .' }
+
+- name: copy privoxy pac
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  register: privoxy_conf
+  with_items:
+    - { src: pac.action, dest: '{{ confdir }}/privoxy/pac.action' }
+
+- name: enable privoxy
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+    - privoxy
+  when: ansible_distribution == 'Archlinux'
+
+- name: enable privoxy
+  command: 'brew services restart privoxy'
+  when:
+    - ansible_distribution == 'MacOSX'
+    - privoxy_conf.changed

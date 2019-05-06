@@ -1,0 +1,58 @@
+---
+- name: install shadowsocks
+  become: true
+  pacman:
+    name: shadowsocks
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: shadowsocks-libev
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy shadowsocks conf
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: client.json, dest: /etc/shadowsocks/client.json }
+  when: ansible_distribution == 'Archlinux'
+  register: shadowsocks_conf
+
+- name: copy shadowsocks conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: client.json, dest: /usr/local/etc/shadowsocks-libev.json }
+  when: ansible_distribution == 'MacOSX'
+  register: shadowsocks_conf
+
+- name: enable shadowsocks
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+    - shadowsocks@client
+  when: ansible_distribution == 'Archlinux'
+
+- name: restart shadowsocks
+  become: true
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: restarted
+  with_items:
+    - shadowsocks@client
+  when:
+    - ansible_distribution == 'Archlinux'
+    - shadowsocks_conf.changed
+
+- name: restart shadowsocks
+  command: 'brew services restart shadowsocks-libev'
+  when:
+    - ansible_distribution == 'MacOSX'
+    - shadowsocks_conf.changed

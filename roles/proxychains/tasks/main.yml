@@ -1,0 +1,28 @@
+---
+- name: install proxychains-ng
+  become: true
+  pacman:
+    name: proxychains-ng
+  when: ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew:
+    name: proxychains-ng
+  when: ansible_distribution == 'MacOSX'
+
+- name: set sysconfdir
+  set_fact:
+    confdir: '/usr/local/etc'
+  when: ansible_distribution == 'MacOSX'
+
+- name: set sysconfdir
+  set_fact:
+    confdir: '/etc'
+  when: ansible_distribution == 'Archlinux'
+
+- name: update proxychains conf
+  become: true
+  lineinfile:
+    dest: '{{ confdir }}/proxychains.conf'
+    line: 'socks5 127.0.0.1 1080'
+    regexp: '^socks'

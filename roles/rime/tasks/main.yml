@@ -1,0 +1,29 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: ibus-rime
+  when: ansible_distribution == 'Archlinux'
+
+- name: set confdir
+  set_fact:
+    confdir: '~/Library/Rime'
+  when: ansible_distribution == 'MacOSX'
+
+- name: set confdir
+  set_fact:
+    confdir: '~/.config/ibus/rime'
+  when: ansible_distribution == 'Archlinux'
+
+- name: create conf folder
+  file:
+    path: '{{ confdir }}'
+    state: directory
+
+- name: copy conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: default.custom.yaml, dest: '{{ confdir }}/default.custom.yaml' }
+    - { src: luna_pinyin_simp.custom.yaml, dest: '{{ confdir }}/luna_pinyin_simp.custom.yaml' }

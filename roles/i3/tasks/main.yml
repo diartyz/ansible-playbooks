@@ -1,0 +1,78 @@
+---
+- name: install packages
+  become: true
+  pacman:
+    name: [i3-wm, i3lock, i3status, dmenu]
+  when: ansible_distribution == 'Archlinux'
+
+- name: create i3 conf folder
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.config/i3
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy i3 conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: config, dest: ~/.config/i3/config }
+    - { src: status.conf, dest: ~/.config/i3/status.conf }
+  when: ansible_distribution == 'Archlinux'
+
+- name: create folder ~/.local/bin
+  file:
+    name: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.local/bin
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy shell scripts
+  copy:
+    src: '{{ item }}'
+    dest: '~/.local/bin/{{ item }}'
+    mode: 0755
+  with_items:
+    - battery
+  when: ansible_distribution == 'Archlinux'
+
+- name: homebrew tap
+  homebrew_tap:
+    name: koekeishiya/formulae
+  when: ansible_distribution == 'MacOSX'
+
+- name: install packages
+  homebrew:
+    name: ['skhd', 'yabai']
+  register: yabai_install
+  when: ansible_distribution == 'MacOSX'
+
+- name: install yabai scripts
+  become: true
+  command: 'yabai --install-sa'
+  when:
+    - ansible_distribution == 'MacOSX'
+    - yabai_install.changed
+
+- name: copy yabai conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0755
+  with_items:
+    - { src: .yabairc, dest: ~/.yabairc }
+    - { src: .skhdrc, dest: ~/.skhdrc }
+  register: yabai_conf
+  when: ansible_distribution == 'MacOSX'
+
+- name: enable yabai & skhd
+  command: 'brew services restart {{ item }}'
+  with_items:
+    - yabai
+    - skhd
+  when:
+    - ansible_distribution == 'MacOSX'
+    - yabai_conf.changed

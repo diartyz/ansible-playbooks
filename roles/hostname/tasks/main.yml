@@ -1,0 +1,7 @@
+---
+- name: set hostname
+  become: true
+  copy:
+    content: 'Lancelot'
+    dest: /etc/hostname
+  when: ansible_distribution == 'Archlinux'
