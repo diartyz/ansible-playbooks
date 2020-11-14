@@ -58,6 +58,7 @@
     - yabai_install.changed
 
 - name: copy yabai conf
+  become: true
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
@@ -65,6 +66,7 @@
   with_items:
     - { src: .yabairc, dest: ~/.yabairc }
     - { src: .skhdrc, dest: ~/.skhdrc }
+    - { src: yabai, dest: /private/etc/sudoers.d/yabai }
   register: yabai_conf
   when: ansible_distribution == 'MacOSX'
 
