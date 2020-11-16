@@ -18,3 +18,5 @@
   keepBackup = false
 [mergetool "meld"]
   cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
+[pull]
+	ff = only
