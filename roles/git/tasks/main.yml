@@ -7,7 +7,7 @@
 
 - name: install packages
   homebrew:
-    name: ['tig', 'diff-so-fancy']
+    name: ['jesseduffield/lazygit/lazygit', 'diff-so-fancy']
   when: ansible_distribution == 'MacOSX'
 
 - name: install cask packages
@@ -45,8 +45,3 @@
   with_items:
     - { src: .tigrc, dest: ~/.tigrc }
     - { src: .gitconfig-work, dest: ~/.gitconfig-work }
-
-- name: copy github token
-  copy:
-    src: hub
-    dest: ~/.config/hub
