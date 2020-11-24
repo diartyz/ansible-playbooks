@@ -7,7 +7,7 @@
 
 - name: install packages
   homebrew:
-    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher']
+    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher', 'jq']
   when: ansible_distribution == 'MacOSX'
 
 - name: install python packages
