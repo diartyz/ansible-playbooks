@@ -39,7 +39,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'w0ng/vim-hybrid'
-Plug 'w0rp/ale'
 Plug 'wellle/targets.vim'
 
 call plug#end()
@@ -100,14 +99,6 @@ set number
 set relativenumber
 set showtabline=2
 
-" ale
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-      \ 'typescriptreact': ['eslint'],
-      \ }
-nmap <c-j> <Plug>(ale_next_wrap)
-nmap <c-k> <Plug>(ale_previous_wrap)
-
 " camel case motion
 map <leader>b <Plug>CamelCaseMotion_b
 map <leader>e <Plug>CamelCaseMotion_e
@@ -129,6 +120,7 @@ call coc#add_extension(
       \ 'coc-python',
       \ 'coc-tsserver',
       \ 'coc-prettier',
+      \ 'coc-eslint',
       \ )
 command! -nargs=0 Format :call CocActionAsync('format')
 command! -nargs=? Rename :call CocActionAsync('rename', <f-args>)
@@ -136,10 +128,10 @@ inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()
 inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
 let g:UltiSnipsExpandTrigger = "<c-l>"
+nmap <c-j> <Plug>(coc-diagnostic-next)
+nmap <c-k> <Plug>(coc-diagnostic-prev)
 nmap <leader>gd <Plug>(coc-references)
 nmap <leader>p <Plug>(coc-format)
-nmap [g <Plug>(coc-diagnostic-prev)
-nmap ]g <Plug>(coc-diagnostic-next)
 nmap gd <Plug>(coc-definition)
 nnoremap <leader>. :call CocActionAsync('codeAction')<cr>
 nnoremap <leader>k :call CocActionAsync('doHover')<cr>
@@ -232,7 +224,7 @@ let indent_guides_guide_size = 1
 
 " multi cursor
 let g:VM_maps = {}
-let g:VM_maps['Visual Cursors'] = '<c-n>'
+let g:VM_maps['Visual Cursors'] = '<c-m>'
 
 " lightline
 let g:lightline = {

@@ -1,6 +1,7 @@
 {
   "coc.preferences.formatOnSaveFiletypes": ["*"],
   "diagnostic.maxWindowHeight": 18,
+  "eslint.autoFixOnSave": true,
   "javascript.suggest.completeFunctionCalls": false,
   "python.formatting.provider": "black",
   "suggest.invalidInsertCharacters": [],
