@@ -27,16 +27,16 @@ git:
   paging:
     # colorArg: always
     pager: diff-so-fancy
-#   merging:
-#     # only applicable to unix users
-#     manualCommit: false
-#     # extra args passed to `git merge`, e.g. --no-ff
-#     args: ''
-#   pull:
-#     mode: 'merge' # one of 'merge' | 'rebase' | 'ff-only'
-#   skipHookPrefix: WIP
-#   autoFetch: true
-#   branchLogCmd: 'git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --'
+  # merging:
+  #   # only applicable to unix users
+  #   manualCommit: false
+  #   # extra args passed to `git merge`, e.g. --no-ff
+  #   args: ''
+  pull:
+    mode: 'ff-only' # one of 'merge' | 'rebase' | 'ff-only'
+  #   skipHookPrefix: WIP
+  #   autoFetch: true
+  branchLogCmd: 'git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" {{branchName}} --'
 #   overrideGpg: false # prevents lazygit from spawning a separate process when using GPG
 #   disableForcePushing: false
 # update:
