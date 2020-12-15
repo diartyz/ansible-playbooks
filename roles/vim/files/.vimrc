@@ -214,9 +214,6 @@ let g:user_emmet_leader_key = '<c-z>'
 let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
 
-" gitgutter
-let g:gitgutter_diff_args = '-w'
-
 " indent
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
