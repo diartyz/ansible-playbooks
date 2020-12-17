@@ -59,17 +59,18 @@ set wildignore=*/dist/*,*/node_modules/*
 
 " mapping
 command! -nargs=0 E :e $MYVIMRC
-command! -nargs=0 W :noautocmd w
 command! -nargs=0 SortJson :%!jq '--sort-keys' .
+command! -nargs=0 W :noautocmd w
+command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
 let mapleader = ' '
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
-nnoremap <leader>q :q<cr>
 nnoremap <leader>d :BufOnly<cr>
+nnoremap <leader>q :q<cr>
 nnoremap <leader>r :source $MYVIMRC<cr>
-nnoremap <leader>v ggVG
 nnoremap <leader>s :w<cr>
+nnoremap <leader>v ggVG
 nnoremap <leader>x :bd<cr>
 nnoremap cf :let @+=expand("%:p")<cr>
 nnoremap ch :nohlsearch<cr>
