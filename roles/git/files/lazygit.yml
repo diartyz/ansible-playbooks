@@ -58,8 +58,8 @@ keybinding:
     # nextItem: '<down>' # go one line down
     # prevItem-alt: 'k' # go one line up
     # nextItem-alt: 'j' # go one line down
-    # prevPage: ',' # go to next page in list
-    # nextPage: '.' # go to previous page in list
+    prevPage: '<c-b>' # go to next page in list
+    nextPage: '<c-f>' # go to previous page in list
     # gotoTop: '<' # go to top of list
     # gotoBottom: '>' # go to bottom of list
     # prevBlock: '<left>' # goto the previous block / panel
@@ -78,8 +78,8 @@ keybinding:
     # new: 'n'
     # edit: 'e'
     # openFile: 'o'
-    scrollUpMain: '<c-b>'
-    scrollDownMain: '<c-f>'
+    # scrollUpMain: '<pgup>' # main panel scrool up
+    # scrollDownMain: '<pgdown>' # main panel scrool down
     # scrollUpMain-alt1: 'K' # main panel scrool up
     # scrollDownMain-alt1: 'J' # main panel scrool down
     # scrollUpMain-alt2: '<c-u>' # main panel scrool up
