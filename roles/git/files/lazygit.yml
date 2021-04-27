@@ -23,6 +23,10 @@ gui:
   mouseEvents: true
   skipUnstageLineWarning: false
   skipStashWarning: true
+  showFileTree: true # for rendering changes files in a tree format
+  showRandomTip: true
+  showCommandLog: true
+  commandLogSize: 8
 git:
   paging:
     colorArg: always
@@ -34,20 +38,23 @@ git:
     # extra args passed to `git merge`, e.g. --no-ff
     args: ''
   pull:
-    mode: 'ff-only' # one of 'merge' | 'rebase' | 'ff-only'
+    mode: 'merge' # one of 'merge' | 'rebase' | 'ff-only'
   skipHookPrefix: WIP
   autoFetch: true
   branchLogCmd: 'git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" {{branchName}} --'
   allBranchesLogCmd: 'git log --graph --all --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"'
   overrideGpg: false # prevents lazygit from spawning a separate process when using GPG
   disableForcePushing: false
+refresher:
+  refreshInterval: 10 # file/submodule refresh interval in seconds
+  fetchInterval: 60 # re-fetch interval in seconds
 update:
   method: prompt # can be: prompt | background | never
   days: 14 # how often an update is checked for
 reporting: 'undetermined' # one of: 'on' | 'off' | 'undetermined'
 confirmOnQuit: false
 # determines whether hitting 'esc' will quit the application when there is nothing to cancel/close
-quitOnTopLevelReturn: true
+quitOnTopLevelReturn: false
 disableStartupPopups: false
 notARepository: 'skip' # one of: 'prompt' | 'create' | 'skip'
 keybinding:
@@ -61,8 +68,8 @@ keybinding:
     nextItem: '<down>' # go one line down
     prevItem-alt: 'k' # go one line up
     nextItem-alt: 'j' # go one line down
-    prevPage: '<c-b>' # go to next page in list
-    nextPage: '<c-f>' # go to previous page in list
+    prevPage: ',' # go to next page in list
+    nextPage: '.' # go to previous page in list
     gotoTop: '<' # go to top of list
     gotoBottom: '>' # go to bottom of list
     prevBlock: '<left>' # goto the previous block / panel
@@ -81,12 +88,12 @@ keybinding:
     new: 'n'
     edit: 'e'
     openFile: 'o'
-    scrollUpMain: '<pgup>' # main panel scrool up
-    scrollDownMain: '<pgdown>' # main panel scrool down
-    scrollUpMain-alt1: 'K' # main panel scrool up
-    scrollDownMain-alt1: 'J' # main panel scrool down
-    scrollUpMain-alt2: '<c-u>' # main panel scrool up
-    scrollDownMain-alt2: '<c-d>' # main panel scrool down
+    scrollUpMain: '<pgup>' # main panel scroll up
+    scrollDownMain: '<pgdown>' # main panel scroll down
+    scrollUpMain-alt1: 'K' # main panel scroll up
+    scrollDownMain-alt1: 'J' # main panel scroll down
+    scrollUpMain-alt2: '<c-u>' # main panel scroll up
+    scrollDownMain-alt2: '<c-d>' # main panel scroll down
     executeCustomCommand: ':'
     createRebaseOptionsMenu: 'm'
     pushFiles: 'P'
@@ -120,6 +127,7 @@ keybinding:
     toggleStagedAll: 'a' # stage/unstage all
     viewResetOptions: 'D'
     fetch: 'f'
+    toggleTreeView: '`'
   branches:
     createPullRequest: 'o'
     checkoutBranchByName: 'c'
