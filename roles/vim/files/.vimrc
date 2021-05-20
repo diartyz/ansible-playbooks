@@ -2,19 +2,20 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'Chiel92/vim-autoformat'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git'
-Plug 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
-Plug 'bkad/CamelCaseMotion'
+Plug 'chaoren/vim-wordmotion'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
-Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-easy-align'
+Plug 'kana/vim-textobj-user' | Plug 'kana/vim-textobj-entire'
 Plug 'lambdalisue/suda.vim'
+Plug 'machakann/vim-highlightedyank'
 Plug 'mattn/emmet-vim'
 Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi'
@@ -29,7 +30,7 @@ Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'terryma/vim-expand-region'
-Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession' | Plug 'dhruvasagar/vim-prosession'
@@ -70,11 +71,9 @@ nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>r :source $MYVIMRC<cr>
 nnoremap <leader>s :w<cr>
-nnoremap <leader>v ggVG
 nnoremap <leader>x :bd<cr>
 nnoremap cf :let @+=expand("%:p")<cr>
 nnoremap ch :nohlsearch<cr>
-nnoremap cp :%y<cr>
 tnoremap <esc> <c-\><C-n>
 
 " search & tab
@@ -99,18 +98,6 @@ set laststatus=2
 set number
 set relativenumber
 set showtabline=2
-
-" camel case motion
-map <leader>b <Plug>CamelCaseMotion_b
-map <leader>e <Plug>CamelCaseMotion_e
-map <leader>ge <Plug>CamelCaseMotion_ge
-map <leader>w <Plug>CamelCaseMotion_w
-omap i<leader>b <Plug>CamelCaseMotion_ib
-omap i<leader>e <Plug>CamelCaseMotion_ie
-omap i<leader>w <Plug>CamelCaseMotion_iw
-xmap i<leader>b <Plug>CamelCaseMotion_ib
-xmap i<leader>e <Plug>CamelCaseMotion_ie
-xmap i<leader>w <Plug>CamelCaseMotion_iw
 
 " completion
 call coc#add_extension(
@@ -170,7 +157,7 @@ call defx#custom#option('_', {
       \ 'resume': 1,
       \ 'show_ignored_files': 1,
       \ 'split': 'vertical',
-      \ 'winwidth': '30',
+      \ 'winwidth': '39',
       \ })
 function! s:defx_my_settings() abort
   nnoremap <buffer><expr> <c-e>
@@ -280,3 +267,6 @@ let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 " undotree
 let g:undotree_SetFocusWhenToggle = 1
 nnoremap <leader>u :UndotreeToggle<cr>
+
+" word motion
+let g:wordmotion_prefix = '<leader>'
