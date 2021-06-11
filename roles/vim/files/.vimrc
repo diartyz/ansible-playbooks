@@ -1,5 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'chemzqm/wxapp.vim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -105,6 +106,7 @@ call coc#add_extension(
       \ 'coc-json',
       \ 'coc-css',
       \ 'coc-html',
+      \ 'coc-wxml',
       \ 'coc-python',
       \ 'coc-tsserver',
       \ 'coc-prettier',
