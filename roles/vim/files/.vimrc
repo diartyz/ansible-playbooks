@@ -1,6 +1,5 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'chemzqm/wxapp.vim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -8,6 +7,7 @@ Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
+Plug 'chemzqm/wxapp.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
@@ -28,6 +28,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'osyo-manga/vim-over'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'sainnhe/everforest'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'terryma/vim-expand-region'
@@ -40,7 +41,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/ReplaceWithRegister'
-Plug 'w0ng/vim-hybrid'
 Plug 'wellle/targets.vim'
 
 call plug#end()
@@ -88,17 +88,17 @@ set smartcase
 set tabstop=2
 
 " theme
-colorscheme hybrid
-hi DiffDelete ctermfg=9
-hi IndentGuidesEven ctermbg=236
-hi IndentGuidesOdd ctermbg=235
-hi LineNr ctermfg=240
+let g:everforest_background = 'hard'
+let g:everforest_sign_column_background = 'none'
+let g:indent_guides_auto_colors = 0
+colorscheme everforest
 set colorcolumn=80,120
 set cul
 set laststatus=2
 set number
 set relativenumber
 set showtabline=2
+set termguicolors
 
 " completion
 call coc#add_extension(
@@ -205,7 +205,6 @@ let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
 
 " indent
-let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
 let indent_guides_guide_size = 1
 
@@ -215,6 +214,7 @@ let g:VM_maps['Visual Cursors'] = '<c-m>'
 
 " lightline
 let g:lightline = {
+      \ 'colorscheme' : 'everforest',
       \ 'tabline': {
       \   'left': [ ['buffers'] ],
       \   'right': [ [] ]
@@ -232,11 +232,6 @@ let g:lightline = {
 let g:lightline#bufferline#clickable = 1
 let g:lightline#bufferline#shorten_path = 0
 let g:lightline#bufferline#show_number = 2
-let s:palette = g:lightline#colorscheme#powerline#palette
-let s:palette.tabline.left = [ [ '#bcbcbc', '#1c1c1c', 250, 239 ] ]
-let s:palette.tabline.middle = [ [ '#4e4e4e', '#1c1c1c', 234, 239 ] ]
-let s:palette.tabline.right = [ [ '#4e4e4e', '#1c1c1c', 234, 239 ] ]
-let s:palette.tabline.tabsel = [ [ '#bcbcbc', '#4e4e4e', 250, 234 ] ]
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
 nmap <Leader>2 <Plug>lightline#bufferline#go(2)
@@ -257,7 +252,6 @@ nmap <Leader>c6 <Plug>lightline#bufferline#delete(6)
 nmap <Leader>c7 <Plug>lightline#bufferline#delete(7)
 nmap <Leader>c8 <Plug>lightline#bufferline#delete(8)
 nmap <Leader>c9 <Plug>lightline#bufferline#delete(9)
-unlet s:palette
 
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
