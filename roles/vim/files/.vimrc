@@ -11,6 +11,7 @@ Plug 'chemzqm/wxapp.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
+Plug 'glepnir/lspsaga.nvim'
 Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/vim-easy-align'
@@ -24,6 +25,7 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'neovim/nvim-lspconfig'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'osyo-manga/vim-over'
 Plug 'roxma/nvim-yarp'
@@ -70,7 +72,6 @@ nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
 nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>q :q<cr>
-nnoremap <leader>r :source $MYVIMRC<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd<cr>
 nnoremap cf :let @+=expand("%:p")<cr>
@@ -89,16 +90,26 @@ set tabstop=2
 
 " theme
 let g:everforest_background = 'hard'
+let g:everforest_better_performance = 1
+let g:everforest_diagnostic_line_highlight = 1
 let g:everforest_sign_column_background = 'none'
+let g:everforest_transparent_background = 1
 let g:indent_guides_auto_colors = 0
 colorscheme everforest
 set colorcolumn=80,120
 set cul
-set laststatus=2
+set laststatus=0
 set number
 set relativenumber
 set showtabline=2
-set termguicolors
+if has('nvim')
+  set termguicolors
+endif
+if has("nvim-0.5.0") || has("patch-8.1.1564")
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " completion
 call coc#add_extension(
@@ -120,12 +131,14 @@ inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
 let g:UltiSnipsExpandTrigger = "<c-l>"
 nmap <c-j> <Plug>(coc-diagnostic-next)
 nmap <c-k> <Plug>(coc-diagnostic-prev)
+nmap gd <Plug>(coc-definition)
 nmap <leader>gd <Plug>(coc-references)
 nmap <leader>p <Plug>(coc-format)
-nmap gd <Plug>(coc-definition)
-nnoremap <leader>. :call CocActionAsync('codeAction')<cr>
+vmap <leader>p <Plug>(coc-format-selected)
+nnoremap <leader>. :call CocActionAsync('codeAction', 'cursor')<cr>
 nnoremap <leader>k :call CocActionAsync('doHover')<cr>
 nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
+nnoremap <leader>r :call CocActionAsync('rename')<cr>
 omap af <Plug>(coc-funcobj-a)
 omap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)

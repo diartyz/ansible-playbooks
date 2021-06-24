@@ -7,3 +7,7 @@ Host github.com-zenvy
   HostName github.com
   IdentityFile ~/.ssh/zenvy-ghost
   ProxyCommand nc -X 5 -x 127.0.0.1:1080 %h %p
+
+Host code.teletraan.io
+  HostName code.teletraan.io
+  IdentityFile ~/.ssh/teletraan
