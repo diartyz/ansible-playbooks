@@ -25,6 +25,7 @@
     update: no
   with_items:
     - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting', dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting }
+    - { repo: 'https://github.com/romkatv/powerlevel10k', dest: ~/.oh-my-zsh/custom//themes/powerlevel10k }
 
 - name: copy zsh conf
   copy:
@@ -32,6 +33,7 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: .zshrc, dest: ~/.zshrc }
+    - { src: .p10k.zsh, dest: ~/.p10k.zsh }
 
 - name: change default shell to zsh
   become: true
