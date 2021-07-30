@@ -25,6 +25,7 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'osyo-manga/vim-over'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
@@ -70,6 +71,7 @@ nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
 nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>q :q<cr>
+nnoremap <leader>r :source $MYVIMRC<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd<cr>
 nnoremap cf :let @+=expand("%:p")<cr>
@@ -103,11 +105,6 @@ set showtabline=2
 if has('nvim')
   set termguicolors
 endif
-if has("nvim-0.5.0") || has("patch-8.1.1564")
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
 
 " completion
 call coc#add_extension(
@@ -120,6 +117,8 @@ call coc#add_extension(
       \ 'coc-tsserver',
       \ 'coc-prettier',
       \ 'coc-eslint',
+      \ 'coc-graphql',
+      \ 'coc-vimlsp',
       \ )
 command! -nargs=0 Format :call CocActionAsync('format')
 command! -nargs=? Rename :call CocActionAsync('rename', <f-args>)
@@ -136,7 +135,6 @@ vmap <leader>p <Plug>(coc-format-selected)
 nnoremap <leader>. :call CocActionAsync('codeAction', 'cursor')<cr>
 nnoremap <leader>k :call CocActionAsync('doHover')<cr>
 nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-nnoremap <leader>r :call CocActionAsync('rename')<cr>
 omap af <Plug>(coc-funcobj-a)
 omap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
@@ -270,6 +268,19 @@ autocmd User targets#mappings#user call targets#mappings#extend({
       \ 'b': {'pair': [{'o':'(', 'c':')'}]}
       \ })
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
+
+" telescope
+lua << EOF
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<esc>"] = require('telescope.actions').close,
+      },
+    },
+  },
+}
+EOF
 
 " undotree
 let g:undotree_SetFocusWhenToggle = 1
