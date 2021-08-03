@@ -1,15 +1,18 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git'
+Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
 Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
 Plug 'chemzqm/wxapp.vim'
+Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
-Plug 'easymotion/vim-easymotion'
-Plug 'hoob3rt/lualine.nvim'
-Plug 'jiangmiao/auto-pairs'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'hrsh7th/nvim-compe' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
+Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils' | Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'junegunn/vim-easy-align'
+Plug 'kabouzeid/nvim-lspinstall'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
 Plug 'lambdalisue/suda.vim'
 Plug 'lewis6991/gitsigns.nvim' | Plug 'nvim-lua/plenary.nvim'
@@ -17,16 +20,16 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'mattn/emmet-vim'
 Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi'
+Plug 'mhartington/formatter.nvim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'neovim/nvim-lspconfig'
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/lsp-status.nvim'
+Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/popup.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
 Plug 'osyo-manga/vim-over'
-Plug 'romgrk/barbar.nvim' | Plug 'kyazdani42/nvim-web-devicons'
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'phaazon/hop.nvim'
 Plug 'sainnhe/everforest'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
@@ -38,6 +41,7 @@ Plug 'tpope/vim-obsession' | Plug 'dhruvasagar/vim-prosession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'wellle/targets.vim'
 
@@ -58,7 +62,7 @@ set updatetime=300
 set wildignore=*/dist/*,*/node_modules/*
 
 " mapping
-command! -nargs=0 E :e $MYVIMRC
+command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :source $MYVIMRC
 command! -nargs=0 SortJson :%!jq '--sort-keys' .
 command! -nargs=0 W :noautocmd w
@@ -73,17 +77,26 @@ nnoremap cf :let @+=expand("%")<cr>
 nnoremap ch :nohlsearch<cr>
 tnoremap <esc> <c-\><C-n>
 
-" search & tab
-set expandtab
+" search
 set hlsearch
 set ignorecase
 set incsearch
+set smartcase
+
+" tab
+set expandtab
 set shiftround
 set shiftwidth=0
-set smartcase
 set tabstop=2
 
 " theme
+function! s:everforest_custom() abort
+  highlight! link BufferInactiveIndex BufferInactive
+endfunction
+augroup EverforestCustom
+  autocmd!
+  autocmd ColorScheme everforest call s:everforest_custom()
+augroup END
 let g:everforest_background = 'hard'
 let g:everforest_better_performance = 1
 let g:everforest_diagnostic_line_highlight = 1
@@ -101,61 +114,6 @@ if has('nvim')
   set termguicolors
 endif
 
-" completion
-call coc#add_extension(
-      \ 'coc-json',
-      \ 'coc-css',
-      \ 'coc-html',
-      \ 'coc-wxml',
-      \ 'coc-python',
-      \ 'coc-tsserver',
-      \ 'coc-prettier',
-      \ 'coc-eslint',
-      \ 'coc-graphql',
-      \ 'coc-vimlsp',
-      \ )
-inoremap <expr><c-@> coc#refresh()
-inoremap <expr><c-space> coc#refresh()
-inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
-nmap gd <Plug>(coc-definition)
-nmap <leader>gd <Plug>(coc-references)
-nmap <c-j> <Plug>(coc-diagnostic-next)
-nmap <c-k> <Plug>(coc-diagnostic-prev)
-nmap <leader>. <Plug>(coc-codeaction-cursor)
-nmap <leader>p <Plug>(coc-format)
-xmap <leader>p <Plug>(coc-format-selected)
-nmap <leader>r <Plug>(coc-rename)
-nnoremap <leader>k :call CocActionAsync('doHover')<cr>
-nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-nmap + <Plug>(coc-range-select)
-xmap + <Plug>(coc-range-select)
-xmap _ <Plug>(coc-range-select-backward)
-omap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-xmap if <Plug>(coc-funcobj-i)
-
-" bufferline
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.icons = 'numbers'
-let bufferline.maximum_padding = 1
-nnoremap <leader>0 :BufferGoto 10<CR>
-nnoremap <leader>1 :BufferGoto 1<CR>
-nnoremap <leader>2 :BufferGoto 2<CR>
-nnoremap <leader>3 :BufferGoto 3<CR>
-nnoremap <leader>4 :BufferGoto 4<CR>
-nnoremap <leader>5 :BufferGoto 5<CR>
-nnoremap <leader>6 :BufferGoto 6<CR>
-nnoremap <leader>7 :BufferGoto 7<CR>
-nnoremap <leader>8 :BufferGoto 8<CR>
-nnoremap <leader>9 :BufferGoto 9<CR>
-nnoremap <leader>d :BufferCloseAllButCurrent<CR>
-nnoremap <leader>x :BufferClose<CR>
-nnoremap [B :BufferGoto 1<CR>
-nnoremap [b :BufferPrevious<CR>
-nnoremap ]B :BufferLast<CR>
-nnoremap ]b :BufferNext<CR>
-
 " ctrlsf
 let g:ctrlsf_auto_focus = {
       \ "at" : "start",
@@ -169,10 +127,25 @@ nmap <leader>f <Plug>CtrlSFPrompt
 nnoremap <c-s> :CtrlSFToggle<cr>
 xmap <leader>f <Plug>CtrlSFVwordPath
 
+" completion
+inoremap <expr><c-space> compe#complete()
+inoremap <expr><tab> pumvisible() ? compe#confirm(lexima#expand('<LT>CR>', 'i')) : "\<c-g>u\<tab>"
+set completeopt=menuone,noinsert,noselect
+lua << EOF
+  require'compe'.setup {
+    resolve_timeout = 0,
+    source = {
+      nvim_lsp = true,
+      path = true,
+      tabnine = true,
+    },
+  }
+EOF
+
 " defx
 autocmd FileType defx call s:defx_my_settings()
 call defx#custom#option('_', {
-      \ 'columns': 'git:indent:icon:mark:filename:type',
+      \ 'columns': 'git:indent:icons:mark:filename:type',
       \ 'resume': 1,
       \ 'show_ignored_files': 1,
       \ 'split': 'vertical',
@@ -199,7 +172,7 @@ function! s:defx_my_settings() abort
         \ defx#async_action('paste')
   nnoremap <buffer><expr> D
         \ defx#async_action('remove', ['force'])
-  nnoremap <buffer><expr> N
+  nnoremap <buffer><expr> M
         \ defx#async_action('new_multiple_files')
   nnoremap <buffer><expr> R
         \ defx#async_action('redraw')
@@ -211,10 +184,6 @@ function! s:defx_my_settings() abort
 endfunction
 nnoremap <c-e> :Defx -search=`expand('%:p')`<cr>
 
-" easymotion
-map <leader>/ <Plug>(easymotion-sn)
-map <leader>t <Plug>(easymotion-s2)
-
 " emmet
 imap <expr><c-y> pumvisible() ? "\<c-y>\<Plug>(emmet-expand-abbr)" : "\<Plug>(emmet-expand-abbr)"
 let g:user_emmet_expandabbr_key = '<c-y>'
@@ -222,35 +191,148 @@ let g:user_emmet_leader_key = '<c-z>'
 let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
 
+" formatter
+lua << EOF
+require'formatter'.setup {
+  filetype = {
+  },
+}
+EOF
+
 " git
-lua << END
-require('gitsigns').setup()
-END
+lua << EOF
+  require'gitsigns'.setup {
+    current_line_blame = true,
+  }
+EOF
+
+" hop
+noremap <leader>/ :HopPattern<cr>
+noremap <leader>t :HopChar2<cr>
+lua << EOF
+  require'hop'.setup()
+EOF
 
 " indent
 let g:indent_guides_enable_on_vim_startup = 1
 let indent_guides_guide_size = 1
 
+" lexima
+let g:lexima_map_escape = ''
+
+" lsp
+command! LspInstalled :echo lspinstall#installed_servers()
+nnoremap <leader>p :lua vim.lsp.buf.formatting()<cr>
+lua << EOF
+  local lsp_status = require'lsp-status'
+  local lspconfig = require'lspconfig'
+  local lspinstall = require'lspinstall'
+  local null_ls = require'null-ls'
+  local servers = lspinstall.installed_servers()
+  lsp_status.config{
+    status_symbol = 'lsp:',
+  }
+  null_ls.config {}
+  lsp_status.register_progress()
+  lspinstall.setup()
+  lspconfig['null-ls'].setup {}
+  for _, server in pairs(servers) do
+    lspconfig[server].setup {
+      on_attach = function(client, bufnr)
+        lsp_status.on_attach(client, bufnr)
+        if server == 'typescript' then
+          local ts_utils = require'nvim-lsp-ts-utils'
+          local opts = {}
+          client.resolved_capabilities.document_formatting = false
+          ts_utils.setup {
+            eslint_bin = 'eslint_d',
+            eslint_enable_diagnostics = true,
+            enable_formatting = true,
+          }
+          ts_utils.setup_client(client)
+          vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>o', ':TSLspOrganize<cr>', opts)
+        end
+        vim.cmd('autocmd BufWritePost <buffer> lua vim.lsp.buf.formatting()')
+      end,
+      capabilities = lsp_status.capabilities,
+    }
+  end
+EOF
+
 " multi cursor
 let g:VM_maps = {}
 let g:VM_maps['Visual Cursors'] = '<c-m>'
 
-" lualine
+" lightline
+function! LspStatus() abort
+  if luaeval('#vim.lsp.buf_get_clients() > 0')
+    return luaeval('require("lsp-status").status()')
+  endif
+  return ''
+endfunction
+let g:lightline = {
+      \ 'colorscheme' : 'everforest',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified' ],
+      \             [ 'coc_status', 'lsp_status' ] ]
+      \ },
+      \ 'tabline': {
+      \   'left': [ [ 'buffers' ] ],
+      \   'right': [ [] ],
+      \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers',
+      \ },
+      \ 'component_function': {
+      \   'coc_status': 'coc#status',
+      \   'lsp_status': 'LspStatus',
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel',
+      \ },
+      \ 'component_raw': {
+      \   'buffers': 1,
+      \ },
+      \ }
+let g:lightline#bufferline#clickable = 1
+let g:lightline#bufferline#shorten_path = 0
+let g:lightline#bufferline#show_number = 2
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nnoremap <leader>d :BufOnly<cr>
+nnoremap <leader>x :bd<cr>
+
+" saga
+nnoremap <c-j> :Lspsaga diagnostic_jump_next<cr>
+nnoremap <c-k> :Lspsaga diagnostic_jump_prev<cr>
+nnoremap <leader>. :Lspsaga code_action<cr>
+nnoremap <leader>gd :Lspsaga lsp_finder<cr>
+nnoremap <leader>k :Lspsaga hover_doc<cr>
+nnoremap <leader>r :Lspsaga rename<cr>
+nnoremap gh :Lspsaga preview_definition<cr>
 lua << EOF
-require('lualine').setup{
-  options = {
-    icons_enabled = false,
-    theme = 'everforest',
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch'},
-    lualine_c = {'filename', 'g:coc_status'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-}
+  require'lspsaga'.init_lsp_saga {
+    code_action_keys = {
+      quit = '<esc>',
+    },
+    finder_action_keys = {
+      open = '<cr>',
+      quit = '<esc>',
+    },
+    rename_action_keys = {
+      quit = '<esc>',
+    },
+    rename_prompt_prefix = '',
+  }
 EOF
 
 " targets
@@ -261,33 +343,31 @@ autocmd User targets#mappings#user call targets#mappings#extend({
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 
 " telescope
-nnoremap <c-p> <cmd>Telescope find_files hidden=true<cr>
-nnoremap <leader>a <cmd>Telescope buffers<cr>
+nnoremap <c-p> <cmd>Telescope find_files theme=get_dropdown hidden=true<cr>
+nnoremap <c-t> <cmd>Telescope lsp_document_symbols theme=get_dropdown<cr>
+nnoremap <leader>a <cmd>Telescope buffers theme=get_dropdown<cr>
+nnoremap gd :Telescope lsp_definitions theme=get_dropdown<cr>
 lua << EOF
-require('telescope').setup{
-  defaults = {
-    file_ignore_patterns = { '.git/.*' },
-    mappings = {
-      i = {
-        ["<esc>"] = "close",
-      },
-    },
-  },
-  pickers = {
-    buffers = {
-      previewer = false,
-      theme = "dropdown",
+  require'telescope'.setup {
+    defaults = {
+      file_ignore_patterns = { '.git/.*' },
       mappings = {
         i = {
-          ["<c-d>"] = "delete_buffer",
+          ['<esc>'] = 'close',
         },
-      }
+      },
     },
-    find_files = {
-      theme = "dropdown"
-    }
-  },
-}
+    pickers = {
+      buffers = {
+        previewer = false,
+        mappings = {
+          i = {
+            ['<c-d>'] = 'delete_buffer',
+          },
+        },
+      },
+    },
+  }
 EOF
 
 " undotree
