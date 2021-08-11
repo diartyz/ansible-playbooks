@@ -179,7 +179,7 @@ function! s:defx_my_settings() abort
   nnoremap <buffer><expr> p
         \ defx#async_action('paste')
   nnoremap <buffer><expr> D
-        \ defx#async_action('remove', ['force'])
+        \ defx#async_action('remove_trash', ['force'])
   nnoremap <buffer><expr> M
         \ defx#async_action('new_multiple_files')
   nnoremap <buffer><expr> R
