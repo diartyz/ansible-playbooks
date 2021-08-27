@@ -41,5 +41,5 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: .vimrc, dest: ~/.vimrc }
-    - { src: .vimrc, dest: ~/.config/nvim/init.vim }
+    - { src: init.vim, dest: ~/.config/nvim/init.vim }
     - { src: coc-settings.json, dest: ~/.config/nvim/coc-settings.json }

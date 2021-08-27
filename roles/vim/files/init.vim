@@ -1,5 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
@@ -9,6 +10,7 @@ Plug 'chemzqm/wxapp.vim'
 Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
+Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
 Plug 'lambdalisue/suda.vim'
@@ -16,12 +18,17 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'mattn/emmet-vim'
 Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi'
+Plug 'mhartington/formatter.nvim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
 Plug 'osyo-manga/vim-over'
+Plug 'phaazon/hop.nvim'
 Plug 'roxma/nvim-yarp' | Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'sainnhe/everforest'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'tommcdo/vim-exchange'
@@ -46,13 +53,15 @@ set hidden
 set mouse=a
 set noswapfile
 set pastetoggle=<F12>
+set undodir=/tmp
+set undofile
 set updatetime=300
 set wildignore=*/dist/*,*/node_modules/*
 
 " mapping
 command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :source $MYVIMRC
-command! -nargs=0 SortJson :%!jq '--sort-keys' .
+command! -nargs=0 SortJson :%!jq '--sort-keys'
 command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
@@ -80,12 +89,22 @@ set shiftwidth=0
 set tabstop=2
 
 " theme
+let g:everforest_background = 'hard'
+let g:everforest_better_performance = 1
+let g:everforest_diagnostic_line_highlight = 1
+let g:everforest_sign_column_background = 'none'
+let g:everforest_transparent_background = 1
+let g:indent_guides_auto_colors = 0
+colorscheme everforest
 set colorcolumn=80,120
 set cul
-set laststatus=0
+set laststatus=2
 set number
 set relativenumber
-set showtabline=0
+set showtabline=2
+if has('nvim')
+  set termguicolors
+endif
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
@@ -99,6 +118,42 @@ let g:ctrlsf_populate_qflist = 1
 nmap <leader>f <Plug>CtrlSFPrompt
 nnoremap <c-s> :CtrlSFToggle<cr>
 xmap <leader>f <Plug>CtrlSFVwordPath
+
+" completion
+call coc#add_extension(
+      \ 'coc-snippets',
+      \ 'coc-json',
+      \ 'coc-css',
+      \ 'coc-html',
+      \ 'coc-wxml',
+      \ 'coc-python',
+      \ 'coc-tsserver',
+      \ 'coc-prettier',
+      \ 'coc-eslint',
+      \ 'coc-graphql',
+      \ 'coc-vimlsp',
+      \ )
+imap <c-l> <Plug>(coc-snippets-expand)
+inoremap <expr><c-@> coc#refresh()
+inoremap <expr><c-space> coc#refresh()
+inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
+nmap gd <Plug>(coc-definition)
+nmap <leader>gd <Plug>(coc-references)
+nmap <c-j> <Plug>(coc-diagnostic-next)
+nmap <c-k> <Plug>(coc-diagnostic-prev)
+nmap <leader>. <Plug>(coc-codeaction-cursor)
+nmap <leader>p <Plug>(coc-format)
+xmap <leader>p <Plug>(coc-format-selected)
+nmap <leader>r <Plug>(coc-rename)
+nnoremap <leader>k :call CocActionAsync('doHover')<cr>
+nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
+nmap + <Plug>(coc-range-select)
+xmap + <Plug>(coc-range-select)
+xmap _ <Plug>(coc-range-select-backward)
+omap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+xmap if <Plug>(coc-funcobj-i)
 
 " defx
 autocmd FileType defx call s:defx_my_settings()
@@ -152,6 +207,21 @@ let g:user_emmet_leader_key = '<c-z>'
 let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
 
+" formatter
+lua << EOF
+require'formatter'.setup {
+  filetype = {
+  },
+}
+EOF
+
+" hop
+noremap <leader>/ :HopPattern<cr>
+noremap <leader>t :HopChar2<cr>
+lua << EOF
+  require'hop'.setup()
+EOF
+
 " indent
 let g:indent_guides_enable_on_vim_startup = 1
 let indent_guides_guide_size = 1
@@ -171,12 +241,78 @@ let g:lexima_map_escape = ''
 let g:VM_maps = {}
 let g:VM_maps['Visual Cursors'] = '<c-m>'
 
+" lightline
+let g:lightline = {
+      \ 'colorscheme' : 'everforest',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified' ],
+      \             [ 'coc_status' ] ]
+      \ },
+      \ 'tabline': {
+      \   'left': [ [ 'buffers' ] ],
+      \   'right': [ [] ],
+      \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers',
+      \ },
+      \ 'component_function': {
+      \   'coc_status': 'coc#status',
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel',
+      \ },
+      \ 'component_raw': {
+      \   'buffers': 1,
+      \ },
+      \ }
+let g:lightline#bufferline#clickable = 1
+let g:lightline#bufferline#shorten_path = 0
+let g:lightline#bufferline#show_number = 2
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
       \ 'a': {'argument': [{'o': '[{(<[]', 'c': '[]>)}]', 's': ','}]},
       \ 'b': {'pair': [{'o':'(', 'c':')'}]}
       \ })
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
+
+" telescope
+nnoremap <c-p> <cmd>Telescope find_files theme=get_dropdown hidden=true<cr>
+nnoremap <leader>a <cmd>Telescope buffers theme=get_dropdown<cr>
+lua << EOF
+  require'telescope'.setup {
+    defaults = {
+      file_ignore_patterns = { '.git/.*' },
+      file_sorter =  require'telescope.sorters'.get_fzy_sorter,
+      mappings = {
+        i = {
+          ['<esc>'] = 'close',
+        },
+      },
+    },
+    pickers = {
+      buffers = {
+        previewer = false,
+        mappings = {
+          i = {
+            ['<c-d>'] = 'delete_buffer',
+          },
+        },
+      },
+    },
+  }
+EOF
 
 " undotree
 let g:undotree_SetFocusWhenToggle = 1
