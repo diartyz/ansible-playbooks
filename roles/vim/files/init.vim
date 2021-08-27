@@ -2,7 +2,6 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
-Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
@@ -226,14 +225,6 @@ EOF
 " indent
 let g:indent_guides_enable_on_vim_startup = 1
 let indent_guides_guide_size = 1
-
-" leaderf
-let g:Lf_CommandMap = {'<c-j>': ['<c-n>'], '<c-k>': ['<c-p>'], '<down>': ['<c-j>'], '<up>': ['<c-k>'], '<c-p>': ['<c-l>']}
-let g:Lf_PreviewInPopup = 1
-let g:Lf_ShortcutB = "<leader>a"
-let g:Lf_ShortcutF = "<c-p>"
-let g:Lf_ShowDevIcons = 1
-let g:Lf_WindowPosition = 'popup'
 
 " lexima
 let g:lexima_map_escape = ''
