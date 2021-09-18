@@ -7,7 +7,7 @@
 
 - name: install packages
   homebrew:
-    name: ['jesseduffield/lazygit/lazygit', 'diff-so-fancy']
+    name: ['jesseduffield/lazygit/lazygit', 'diff-so-fancy', 'sublime-merge']
   when: ansible_distribution == 'MacOSX'
 
 - name: install cask packages
