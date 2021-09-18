@@ -31,3 +31,5 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: .prettierrc.yml, dest: ~/.prettierrc.yml }
+    - { src: .npmrc, dest: ~/.npmrc }
+    - { src: .yarnrc.yml, dest: ~/.yarnrc.yml }
