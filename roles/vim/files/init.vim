@@ -285,7 +285,7 @@ nnoremap <leader>a <cmd>Telescope buffers theme=get_dropdown<cr>
 lua << EOF
   require'telescope'.setup {
     defaults = {
-      file_ignore_patterns = { '.git/.*' },
+      file_ignore_patterns = { '^.git/.*' },
       file_sorter =  require'telescope.sorters'.get_fzy_sorter,
       mappings = {
         i = {
