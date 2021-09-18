@@ -7,12 +7,12 @@
 
 - name: install packages
   homebrew:
-    name: ['jesseduffield/lazygit/lazygit', 'diff-so-fancy', 'sublime-merge']
+    name: ['jesseduffield/lazygit/lazygit', 'diff-so-fancy']
   when: ansible_distribution == 'MacOSX'
 
 - name: install cask packages
   homebrew_cask:
-    name: meld
+    name: [meld, sublime-merge]
   when: ansible_distribution == 'MacOSX'
 
 - name: create folder ~/.config

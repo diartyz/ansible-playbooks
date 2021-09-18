@@ -36,5 +36,7 @@
 
 - name: Install Apps
   community.general.mas:
-    id: 993841014
+    id:
+      - 993841014 # CopyLess 2
     state: present
+  when: ansible_distribution == 'MacOSX'

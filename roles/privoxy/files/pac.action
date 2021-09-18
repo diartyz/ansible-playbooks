@@ -14,7 +14,7 @@ https  = +redirect{s@http://@https://@}
 
 # github
 .githubusercontent.com
-gist.github.com
+.github.com
 
 # google
 .golang.org

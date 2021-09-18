@@ -14,7 +14,9 @@
   changed_when: false
 
 - name: Execute script if foo.node is not installed
-  shell: /bin/bash -c "source ~/.nvm/nvm.sh && nvm install lts/* && source ~/.zshrc"
+  shell: "source ~/.nvm/nvm.sh && nvm install lts/*"
+  args:
+    executable: /bin/bash
   when: node_check.failed == true
 
 - name: install node packages
