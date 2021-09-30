@@ -22,3 +22,7 @@
   cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
 [pull]
 	ff = only
+[push]
+	recurseSubmodules = on-demand
+[submodule]
+	recurse = true

@@ -121,6 +121,7 @@ xmap <leader>f <Plug>CtrlSFVwordPath
 
 " completion
 call coc#add_extension(
+      \ 'coc-tabnine',
       \ 'coc-snippets',
       \ 'coc-json',
       \ 'coc-css',
