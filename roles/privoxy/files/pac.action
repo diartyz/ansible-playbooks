@@ -9,6 +9,9 @@ https  = +redirect{s@http://@https://@}
 
 {ssh}
 
+# feedly
+.feedly.com
+
 # medium
 .medium.com
 
