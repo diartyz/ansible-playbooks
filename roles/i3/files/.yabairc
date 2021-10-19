@@ -2,9 +2,8 @@
 
 sudo yabai --load-sa
 
-yabai -m config layout         bsp
-yabai -m config window_topmost on
-yabai -m config auto_balance   on
+yabai -m config layout       bsp
+yabai -m config auto_balance on
 
 yabai -m rule --add app=Meld manage=off
 
