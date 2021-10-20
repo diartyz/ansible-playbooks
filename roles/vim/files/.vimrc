@@ -1,5 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
@@ -9,6 +10,7 @@ Plug 'chemzqm/wxapp.vim'
 Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
+Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
@@ -22,7 +24,6 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'osyo-manga/vim-over'
-Plug 'roxma/nvim-yarp' | Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'tommcdo/vim-exchange'
@@ -52,7 +53,7 @@ set wildignore=*/dist/*,*/node_modules/*
 " mapping
 command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :source $MYVIMRC
-command! -nargs=0 SortJson :%!jq '--sort-keys' .
+command! -nargs=0 SortJson :%!jq '--sort-keys'
 command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
@@ -140,10 +141,12 @@ function! s:defx_my_settings() abort
         \ defx#async_action('toggle_select') . 'j'
   nnoremap <buffer><expr> V
         \ defx#async_action('toggle_select') . 'k'
-  nnoremap <buffer> [c <Plug>(defx-git-prev)
-  nnoremap <buffer> ]c <Plug>(defx-git-next)
 endfunction
 nnoremap <c-e> :Defx -search=`expand('%:p')`<cr>
+
+" easyalign
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
 
 " emmet
 imap <expr><c-y> pumvisible() ? "\<c-y>\<Plug>(emmet-expand-abbr)" : "\<Plug>(emmet-expand-abbr)"

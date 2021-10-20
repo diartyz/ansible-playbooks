@@ -2,7 +2,6 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
-Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
 Plug 'chemzqm/wxapp.vim'
@@ -15,11 +14,11 @@ Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
 Plug 'lambdalisue/suda.vim'
+Plug 'lewis6991/gitsigns.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'mattn/emmet-vim'
 Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi'
-Plug 'mhartington/formatter.nvim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
@@ -28,7 +27,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
 Plug 'osyo-manga/vim-over'
 Plug 'phaazon/hop.nvim'
-Plug 'roxma/nvim-yarp' | Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'sainnhe/everforest'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
@@ -102,9 +100,7 @@ set laststatus=2
 set number
 set relativenumber
 set showtabline=2
-if has('nvim')
-  set termguicolors
-endif
+set termguicolors
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
@@ -196,10 +192,12 @@ function! s:defx_my_settings() abort
         \ defx#async_action('toggle_select') . 'j'
   nnoremap <buffer><expr> V
         \ defx#async_action('toggle_select') . 'k'
-  nnoremap <buffer> [c <Plug>(defx-git-prev)
-  nnoremap <buffer> ]c <Plug>(defx-git-next)
 endfunction
 nnoremap <c-e> :Defx -search=`expand('%:p')`<cr>
+
+" easyalign
+nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
 
 " emmet
 imap <expr><c-y> pumvisible() ? "\<c-y>\<Plug>(emmet-expand-abbr)" : "\<Plug>(emmet-expand-abbr)"
@@ -208,12 +206,16 @@ let g:user_emmet_leader_key = '<c-z>'
 let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
 
-" formatter
+" gitsigns
 lua << EOF
-require'formatter'.setup {
-  filetype = {
-  },
-}
+  require('gitsigns').setup {
+    current_line_blame = true,
+    signs = {
+      add          = {hl = 'GitSignsAdd',    text = '+', numhl = 'GitSignsAddNr',    linehl = 'GitSignsAddLn'},
+      change       = {hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
+      changedelete = {hl = 'GitSignsChange', text = '|', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
+    },
+  }
 EOF
 
 " hop
@@ -287,7 +289,6 @@ lua << EOF
   require'telescope'.setup {
     defaults = {
       file_ignore_patterns = { '^.git/.*' },
-      file_sorter =  require'telescope.sorters'.get_fzy_sorter,
       mappings = {
         i = {
           ['<esc>'] = 'close',
