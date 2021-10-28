@@ -193,7 +193,7 @@ function! s:defx_my_settings() abort
   nnoremap <buffer><expr> V
         \ defx#async_action('toggle_select') . 'k'
 endfunction
-nnoremap <c-e> :Defx -search=`expand('%:p')`<cr>
+nnoremap <c-e> :Defx -search_recursive=`expand('%:p')`<cr>
 
 " easyalign
 nmap ga <Plug>(EasyAlign)
