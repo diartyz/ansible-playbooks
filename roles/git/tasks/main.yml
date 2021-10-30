@@ -21,6 +21,7 @@
     state: directory
   with_items:
     - ~/.config
+    - ~/Library/Application Support/lazygit
 
 - name: copy .gitconfig
   vars:
