@@ -30,6 +30,9 @@ https  = +redirect{s@http://@https://@}
 .slack.com
 .slack-edge.com
 
+# v2ex
+.v2ex.com
+
 # wiki
 .wikipedia.org
 

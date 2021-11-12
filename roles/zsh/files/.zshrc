@@ -34,6 +34,7 @@ plugins+=(git-flow-avh)
 plugins+=(nvm)
 plugins+=(tmux)
 plugins+=(zsh-syntax-highlighting)
+plugins+=(zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
