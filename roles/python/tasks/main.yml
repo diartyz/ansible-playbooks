@@ -7,7 +7,7 @@
 
 - name: install packages
   homebrew:
-    name: python
+    name: [python, pyenv, pyenv-virtualenv]
   when: ansible_distribution == 'MacOSX'
 
 - name: create pip conf folder

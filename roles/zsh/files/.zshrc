@@ -18,11 +18,16 @@ fi
 export GOPROXY=https://goproxy.io
 export KEYTIMEOUT=1
 export LANG=en_US.UTF-8
-export PATH="$GOPATH/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/llvm/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/$GOPATH/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/llvm/bin:$PATH"
 export PYTHONUSERBASE="$HOME/.local"
 export ZSH=~/.oh-my-zsh
 # export http_proxy=http://127.0.0.1:8118
 # export https_proxy=http://127.0.0.1:8118
+
+if which pyenv > /dev/null;
+  then eval "$(pyenv init --path)";
+fi
 
 plugins+=(colored-man-pages)
 plugins+=(docker-compose)
