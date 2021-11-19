@@ -265,6 +265,8 @@
 	</dict>
 	<key>Default Bookmark Guid</key>
 	<string>1B7ED117-8887-4CD1-871B-3B09E411469D</string>
+	<key>EnableAPIServer</key>
+	<true/>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
 	<key>HideScrollbar</key>
