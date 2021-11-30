@@ -36,5 +36,8 @@ https  = +redirect{s@http://@https://@}
 # wiki
 .wikipedia.org
 
+# youtube
+.youtube.com
+
 # zeplin
 .zeplin.io
