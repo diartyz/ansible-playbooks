@@ -1,7 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/tagalong.vim'
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
+Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons' | Plug 'roxma/vim-hug-neovim-rpc' | Plug 'roxma/nvim-yarp'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
