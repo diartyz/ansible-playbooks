@@ -1,5 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
+" Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
 Plug 'arthurxavierx/vim-caser'
@@ -12,6 +13,8 @@ Plug 'github/copilot.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
 Plug 'lambdalisue/suda.vim'
@@ -21,9 +24,12 @@ Plug 'mattn/emmet-vim'
 Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'neovim/nvim-lspconfig'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
 Plug 'osyo-manga/vim-over'
@@ -40,6 +46,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'wellle/targets.vim'
+Plug 'williamboman/nvim-lsp-installer'
 
 call plug#end()
 
@@ -67,7 +74,7 @@ inoremap <c-o> <esc>O
 let mapleader = ' '
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
-nnoremap <leader>d :BufOnly<cr>
+nnoremap <leader>d :BufOnly!<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd!<cr>
@@ -105,7 +112,7 @@ set termguicolors
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
-      \ "at" : "start",
+      \ 'at' : 'start',
       \ }
 let g:ctrlsf_extra_backend_args = {
       \ 'ag': '--hidden --ignore-dir .git/ --nocolor',
@@ -116,42 +123,96 @@ nmap <leader>f <Plug>CtrlSFPrompt
 nnoremap <c-s> :CtrlSFToggle<cr>
 xmap <leader>f <Plug>CtrlSFVwordPath
 
-" completion
-call coc#add_extension(
-      \ 'coc-tabnine',
-      \ 'coc-snippets',
-      \ 'coc-json',
-      \ 'coc-css',
-      \ 'coc-html',
-      \ 'coc-wxml',
-      \ 'coc-python',
-      \ 'coc-tsserver',
-      \ 'coc-prettier',
-      \ 'coc-eslint',
-      \ 'coc-graphql',
-      \ 'coc-vimlsp',
-      \ )
-imap <c-l> <Plug>(coc-snippets-expand)
-inoremap <expr><c-@> coc#refresh()
-inoremap <expr><c-space> coc#refresh()
-inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
-nmap gd <Plug>(coc-definition)
-nmap <leader>gd <Plug>(coc-references)
-nmap <c-j> <Plug>(coc-diagnostic-next)
-nmap <c-k> <Plug>(coc-diagnostic-prev)
-nmap <leader>. <Plug>(coc-codeaction-cursor)
-nmap <leader>p <Plug>(coc-format)
-xmap <leader>p <Plug>(coc-format-selected)
-nmap <leader>r <Plug>(coc-rename)
-nnoremap <leader>k :call CocActionAsync('doHover')<cr>
-nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-nmap + <Plug>(coc-range-select)
-xmap + <Plug>(coc-range-select)
-xmap _ <Plug>(coc-range-select-backward)
-omap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-xmap if <Plug>(coc-funcobj-i)
+" coq
+let g:coq_settings = {
+      \ 'auto_start': 'shut-up',
+      \ 'clients.snippets.enabled': v:false,
+      \ 'clients.tmux.enabled': v:false,
+      \ 'display.pum.fast_close': v:false,
+      \ 'keymap.recommended': v:false,
+      \ }
+ino <expr><tab> pumvisible() ? (complete_info().selected == -1 ? "\<C-e><tab>" : "\<C-y>") : "\<tab>"
+nn <c-j> <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+nn <c-k> <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nn <leader>. <cmd>lua vim.lsp.buf.code_action()<CR>
+nn <leader>gd <cmd>lua vim.lsp.buf.references()<CR>
+nn <leader>o :TSLspOrganize<CR>
+nn <leader>p <cmd>lua vim.lsp.buf.formatting()<CR>
+nn <leader>r <cmd>lua vim.lsp.buf.rename()<CR>
+nn gd <cmd>lua vim.lsp.buf.definition()<CR>
+nn gh <cmd>lua vim.lsp.buf.hover()<CR>
+lua << EOF
+local coq = require 'coq'
+local lsp_installer = require 'nvim-lsp-installer'
+local lspconfig = require 'lspconfig'
+local null_ls = require 'null-ls'
+local ts_utils = require('nvim-lsp-ts-utils')
+
+lsp_installer.on_server_ready(function(server)
+  local opts = {}
+
+  if server.name == 'tsserver' then
+    opts.init_options = ts_utils.init_options
+    opts.on_attach = function(client, bufnr)
+      client.resolved_capabilities.document_formatting = false
+      client.resolved_capabilities.document_range_formatting = false
+      ts_utils.setup({
+        auto_inlay_hints = false,
+      })
+      ts_utils.setup_client(client)
+    end
+  end
+
+  server:setup(coq.lsp_ensure_capabilities(opts))
+end)
+
+null_ls.config({
+  sources = {
+    null_ls.builtins.diagnostics.eslint_d,
+    null_ls.builtins.code_actions.eslint_d,
+    null_ls.builtins.formatting.prettierd,
+  },
+})
+
+lspconfig['null-ls'].setup({})
+EOF
+
+" " completion
+" call coc#add_extension(
+"       \ 'coc-tabnine',
+"       \ 'coc-snippets',
+"       \ 'coc-json',
+"       \ 'coc-css',
+"       \ 'coc-html',
+"       \ 'coc-wxml',
+"       \ 'coc-python',
+"       \ 'coc-tsserver',
+"       \ 'coc-prettier',
+"       \ 'coc-eslint',
+"       \ 'coc-graphql',
+"       \ 'coc-vimlsp',
+"       \ )
+" imap <c-l> <Plug>(coc-snippets-expand)
+" inoremap <expr><c-@> coc#refresh()
+" inoremap <expr><c-space> coc#refresh()
+" inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
+" nmap gd <Plug>(coc-definition)
+" nmap <leader>gd <Plug>(coc-references)
+" nmap <c-j> <Plug>(coc-diagnostic-next)
+" nmap <c-k> <Plug>(coc-diagnostic-prev)
+" nmap <leader>. <Plug>(coc-codeaction-cursor)
+" nmap <leader>p <Plug>(coc-format)
+" xmap <leader>p <Plug>(coc-format-selected)
+" nmap <leader>r <Plug>(coc-rename)
+" nnoremap <leader>k :call CocActionAsync('doHover')<cr>
+" nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
+" nmap + <Plug>(coc-range-select)
+" xmap + <Plug>(coc-range-select)
+" xmap _ <Plug>(coc-range-select-backward)
+" omap af <Plug>(coc-funcobj-a)
+" omap if <Plug>(coc-funcobj-i)
+" xmap af <Plug>(coc-funcobj-a)
+" xmap if <Plug>(coc-funcobj-i)
 
 " defx
 autocmd FileType defx call s:defx_my_settings()
@@ -285,6 +346,7 @@ let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 
 " telescope
 nnoremap <c-p> <cmd>Telescope find_files theme=get_dropdown hidden=true<cr>
+nnoremap <c-t> <cmd>Telescope lsp_document_symbols theme=get_dropdown<cr>
 nnoremap <leader>a <cmd>Telescope buffers theme=get_dropdown<cr>
 lua << EOF
   require'telescope'.setup {

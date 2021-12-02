@@ -1,7 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/tagalong.vim'
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons' | Plug 'roxma/vim-hug-neovim-rpc' | Plug 'roxma/nvim-yarp'
+Plug 'Shougo/defx.nvim' | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons' | Plug 'roxma/vim-hug-neovim-rpc' | Plug 'roxma/nvim-yarp'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
@@ -60,7 +60,7 @@ inoremap <c-o> <esc>O
 let mapleader = ' '
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
-nnoremap <leader>d :BufOnly<cr>
+nnoremap <leader>d :BufOnly!<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd!<cr>
@@ -90,7 +90,7 @@ set showtabline=0
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
-      \ "at" : "start",
+      \ 'at' : 'start',
       \ }
 let g:ctrlsf_extra_backend_args = {
       \ 'ag': '--hidden --ignore-dir .git/ --nocolor',
@@ -142,7 +142,7 @@ function! s:defx_my_settings() abort
   nnoremap <buffer><expr> V
         \ defx#async_action('toggle_select') . 'k'
 endfunction
-nnoremap <c-e> :Defx -search=`expand('%:p')`<cr>
+nnoremap <c-e> :Defx -search_recursive=`expand('%:p')`<cr>
 
 " easyalign
 nmap ga <Plug>(EasyAlign)
