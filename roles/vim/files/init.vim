@@ -127,6 +127,7 @@ xmap <leader>f <Plug>CtrlSFVwordPath
 let g:coq_settings = {
       \ 'auto_start': 'shut-up',
       \ 'clients.snippets.enabled': v:false,
+      \ 'clients.tabnine.enabled': v:true,
       \ 'clients.tmux.enabled': v:false,
       \ 'display.pum.fast_close': v:false,
       \ 'keymap.recommended': v:false,
@@ -142,11 +143,11 @@ nn <leader>r <cmd>lua vim.lsp.buf.rename()<CR>
 nn gd <cmd>lua vim.lsp.buf.definition()<CR>
 nn gh <cmd>lua vim.lsp.buf.hover()<CR>
 lua << EOF
-local coq = require 'coq'
-local lsp_installer = require 'nvim-lsp-installer'
-local lspconfig = require 'lspconfig'
-local null_ls = require 'null-ls'
-local ts_utils = require('nvim-lsp-ts-utils')
+local coq = require'coq'
+local lsp_installer = require'nvim-lsp-installer'
+local lspconfig = require'lspconfig'
+local null_ls = require'null-ls'
+local ts_utils = require'nvim-lsp-ts-utils'
 
 lsp_installer.on_server_ready(function(server)
   local opts = {}
