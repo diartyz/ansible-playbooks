@@ -10,6 +10,7 @@ Plug 'chemzqm/wxapp.vim'
 Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
+Plug 'easymotion/vim-easymotion'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'junegunn/vim-easy-align'
@@ -81,7 +82,6 @@ set shiftwidth=0
 set tabstop=2
 
 " theme
-set colorcolumn=80,120
 set cul
 set laststatus=0
 set number
@@ -105,9 +105,11 @@ xmap <leader>f <Plug>CtrlSFVwordPath
 autocmd FileType defx call s:defx_my_settings()
 call defx#custom#option('_', {
       \ 'columns': 'git:indent:icons:mark:filename:type',
+      \ 'preview_width': 80,
       \ 'resume': 1,
       \ 'show_ignored_files': 1,
       \ 'split': 'vertical',
+      \ 'vertical_preview': 1,
       \ 'winwidth': '39',
       \ })
 function! s:defx_my_settings() abort
@@ -121,6 +123,8 @@ function! s:defx_my_settings() abort
         \ defx#is_directory() ?
         \ defx#async_action('open_tree') :
         \ defx#async_action('drop')
+  nnoremap <buffer><expr> o
+	      \ defx#do_action('preview')
   nnoremap <buffer><expr> cc
         \ defx#async_action('rename')
   nnoremap <buffer><expr> dd
@@ -147,6 +151,10 @@ nnoremap <c-e> :Defx -search_recursive=`expand('%:p')`<cr>
 " easyalign
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
+
+" easymotion
+nmap <leader>/ <Plug>(easymotion-sn)
+nmap <leader>t <Plug>(easymotion-overwin-f2)
 
 " emmet
 imap <expr><c-y> pumvisible() ? "\<c-y>\<Plug>(emmet-expand-abbr)" : "\<Plug>(emmet-expand-abbr)"

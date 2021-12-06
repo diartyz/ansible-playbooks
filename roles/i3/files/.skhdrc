@@ -36,8 +36,6 @@ alt - 7     : yabai -m space --focus 7
 alt - 8     : yabai -m space --focus 8
 alt - 9     : yabai -m space --focus 9
 alt - 0     : yabai -m space --focus last
-alt - left  : yabai -m space --focus prev
-alt - right : yabai -m space --focus next
 alt - tab   : yabai -m space --focus recent
 alt - 0x29  : yabai -m space --focus recent
 

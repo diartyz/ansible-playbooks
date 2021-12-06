@@ -1,6 +1,12 @@
 call plug#begin('~/.vim/plugged')
 
-" Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+" Plug 'jose-elias-alvarez/null-ls.nvim'
+" Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+" Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+" Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
+" Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+" Plug 'neovim/nvim-lspconfig'
+" Plug 'williamboman/nvim-lsp-installer'
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
 Plug 'arthurxavierx/vim-caser'
@@ -9,12 +15,11 @@ Plug 'chemzqm/wxapp.vim'
 Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
+Plug 'folke/todo-comments.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'github/copilot.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
-Plug 'jose-elias-alvarez/null-ls.nvim'
-Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
 Plug 'lambdalisue/suda.vim'
@@ -24,12 +29,9 @@ Plug 'mattn/emmet-vim'
 Plug 'mbbill/undotree'
 Plug 'mg979/vim-visual-multi'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
-Plug 'ms-jpq/coq.thirdparty', {'branch': '3p'}
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
-Plug 'neovim/nvim-lspconfig'
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
 Plug 'osyo-manga/vim-over'
@@ -46,7 +48,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'wellle/targets.vim'
-Plug 'williamboman/nvim-lsp-installer'
 
 call plug#end()
 
@@ -123,105 +124,103 @@ nmap <leader>f <Plug>CtrlSFPrompt
 nnoremap <c-s> :CtrlSFToggle<cr>
 xmap <leader>f <Plug>CtrlSFVwordPath
 
-" coq
-let g:coq_settings = {
-      \ 'auto_start': 'shut-up',
-      \ 'clients.snippets.enabled': v:false,
-      \ 'clients.tabnine.enabled': v:true,
-      \ 'clients.tmux.enabled': v:false,
-      \ 'display.pum.fast_close': v:false,
-      \ 'keymap.recommended': v:false,
-      \ }
-ino <expr><tab> pumvisible() ? (complete_info().selected == -1 ? "\<C-e><tab>" : "\<C-y>") : "\<tab>"
-nn <c-j> <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-nn <c-k> <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nn <leader>. <cmd>lua vim.lsp.buf.code_action()<CR>
-nn <leader>gd <cmd>lua vim.lsp.buf.references()<CR>
-nn <leader>o :TSLspOrganize<CR>
-nn <leader>p <cmd>lua vim.lsp.buf.formatting()<CR>
-nn <leader>r <cmd>lua vim.lsp.buf.rename()<CR>
-nn gd <cmd>lua vim.lsp.buf.definition()<CR>
-nn gh <cmd>lua vim.lsp.buf.hover()<CR>
-lua << EOF
-local coq = require'coq'
-local lsp_installer = require'nvim-lsp-installer'
-local lspconfig = require'lspconfig'
-local null_ls = require'null-ls'
-local ts_utils = require'nvim-lsp-ts-utils'
+" coc
+call coc#add_extension(
+      \ 'coc-tabnine',
+      \ 'coc-snippets',
+      \ 'coc-json',
+      \ 'coc-css',
+      \ 'coc-html',
+      \ 'coc-wxml',
+      \ 'coc-python',
+      \ 'coc-tsserver',
+      \ 'coc-prettier',
+      \ 'coc-eslint',
+      \ 'coc-graphql',
+      \ 'coc-vimlsp',
+      \ )
+inoremap <expr><c-@> coc#refresh()
+inoremap <expr><c-space> coc#refresh()
+inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
+nmap gd <Plug>(coc-definition)
+nmap <leader>gd <Plug>(coc-references)
+nmap gp <Plug>(coc-format)
+xmap gp <Plug>(coc-format-selected)
+nmap <c-j> <Plug>(coc-diagnostic-next)
+nmap <c-k> <Plug>(coc-diagnostic-prev)
+nmap <leader>. <Plug>(coc-codeaction-cursor)
+nmap <leader>r <Plug>(coc-rename)
+nnoremap gh :call CocActionAsync('doHover')<cr>
+nnoremap go :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
+nmap + <Plug>(coc-range-select)
+xmap + <Plug>(coc-range-select)
+xmap _ <Plug>(coc-range-select-backward)
+omap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+xmap if <Plug>(coc-funcobj-i)
 
-lsp_installer.on_server_ready(function(server)
-  local opts = {}
-
-  if server.name == 'tsserver' then
-    opts.init_options = ts_utils.init_options
-    opts.on_attach = function(client, bufnr)
-      client.resolved_capabilities.document_formatting = false
-      client.resolved_capabilities.document_range_formatting = false
-      ts_utils.setup({
-        auto_inlay_hints = false,
-      })
-      ts_utils.setup_client(client)
-    end
-  end
-
-  server:setup(coq.lsp_ensure_capabilities(opts))
-end)
-
-null_ls.config({
-  sources = {
-    null_ls.builtins.diagnostics.eslint_d,
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.prettierd,
-  },
-})
-
-lspconfig['null-ls'].setup({})
-EOF
-
-" " completion
-" call coc#add_extension(
-"       \ 'coc-tabnine',
-"       \ 'coc-snippets',
-"       \ 'coc-json',
-"       \ 'coc-css',
-"       \ 'coc-html',
-"       \ 'coc-wxml',
-"       \ 'coc-python',
-"       \ 'coc-tsserver',
-"       \ 'coc-prettier',
-"       \ 'coc-eslint',
-"       \ 'coc-graphql',
-"       \ 'coc-vimlsp',
-"       \ )
-" imap <c-l> <Plug>(coc-snippets-expand)
-" inoremap <expr><c-@> coc#refresh()
-" inoremap <expr><c-space> coc#refresh()
-" inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
-" nmap gd <Plug>(coc-definition)
-" nmap <leader>gd <Plug>(coc-references)
-" nmap <c-j> <Plug>(coc-diagnostic-next)
-" nmap <c-k> <Plug>(coc-diagnostic-prev)
-" nmap <leader>. <Plug>(coc-codeaction-cursor)
-" nmap <leader>p <Plug>(coc-format)
-" xmap <leader>p <Plug>(coc-format-selected)
-" nmap <leader>r <Plug>(coc-rename)
-" nnoremap <leader>k :call CocActionAsync('doHover')<cr>
-" nnoremap <leader>o :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-" nmap + <Plug>(coc-range-select)
-" xmap + <Plug>(coc-range-select)
-" xmap _ <Plug>(coc-range-select-backward)
-" omap af <Plug>(coc-funcobj-a)
-" omap if <Plug>(coc-funcobj-i)
-" xmap af <Plug>(coc-funcobj-a)
-" xmap if <Plug>(coc-funcobj-i)
+" " coq
+" let g:coq_settings = {
+"       \ 'auto_start': 'shut-up',
+"       \ 'display.ghost_text.enabled': v:false,
+"       \ 'clients.buffers.enabled': v:false,
+"       \ 'clients.snippets.enabled': v:false,
+"       \ 'clients.tabnine.enabled': v:false,
+"       \ 'clients.tmux.enabled': v:false,
+"       \ 'display.pum.fast_close': v:false,
+"       \ 'keymap.recommended': v:false,
+"       \ }
+" ino <expr><tab> pumvisible() ? (complete_info().selected == -1 ? "\<C-e><tab>" : "\<C-y>") : "\<tab>"
+" nn <c-j> <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+" nn <c-k> <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+" nn <leader>. <cmd>lua vim.lsp.buf.code_action()<CR>
+" nn <leader>gd <cmd>lua vim.lsp.buf.references()<CR>
+" nn <leader>r <cmd>lua vim.lsp.buf.rename()<CR>
+" nn gd <cmd>lua vim.lsp.buf.definition()<CR>
+" nn gh <cmd>lua vim.lsp.buf.hover()<CR>
+" nn go :TSLspOrganize<CR>
+" nn gp <cmd>lua vim.lsp.buf.formatting()<CR>
+" set completeopt=menuone,noinsert,noselect
+" lua << EOF
+" local coq = require'coq'
+" local lsp_installer = require'nvim-lsp-installer'
+" local lspconfig = require'lspconfig'
+" local null_ls = require'null-ls'
+" local ts_utils = require'nvim-lsp-ts-utils'
+" lsp_installer.on_server_ready(function(server)
+"   local opts = {}
+"   if server.name == 'tsserver' then
+"     opts.init_options = ts_utils.init_options
+"     opts.on_attach = function(client, bufnr)
+"       client.resolved_capabilities.document_formatting = false
+"       client.resolved_capabilities.document_range_formatting = false
+"       ts_utils.setup({
+"         auto_inlay_hints = false,
+"       })
+"       ts_utils.setup_client(client)
+"     end
+"   end
+"   server:setup(coq.lsp_ensure_capabilities(opts))
+" end)
+" null_ls.setup({
+"   sources = {
+"     null_ls.builtins.diagnostics.eslint_d,
+"     null_ls.builtins.code_actions.eslint_d,
+"     null_ls.builtins.formatting.prettierd,
+"   },
+" })
+" EOF
 
 " defx
 autocmd FileType defx call s:defx_my_settings()
 call defx#custom#option('_', {
       \ 'columns': 'git:indent:icons:mark:filename:type',
+      \ 'preview_width': 80,
       \ 'resume': 1,
       \ 'show_ignored_files': 1,
       \ 'split': 'vertical',
+      \ 'vertical_preview': 1,
       \ 'winwidth': '39',
       \ })
 function! s:defx_my_settings() abort
@@ -235,6 +234,8 @@ function! s:defx_my_settings() abort
         \ defx#is_directory() ?
         \ defx#async_action('open_tree') :
         \ defx#async_action('drop')
+  nnoremap <buffer><expr> o
+	      \ defx#do_action('preview')
   nnoremap <buffer><expr> cc
         \ defx#async_action('rename')
   nnoremap <buffer><expr> dd
@@ -346,12 +347,12 @@ autocmd User targets#mappings#user call targets#mappings#extend({
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 
 " telescope
-nnoremap <c-p> <cmd>Telescope find_files theme=get_dropdown hidden=true<cr>
-nnoremap <c-t> <cmd>Telescope lsp_document_symbols theme=get_dropdown<cr>
-nnoremap <leader>a <cmd>Telescope buffers theme=get_dropdown<cr>
+nnoremap <c-p> <cmd>Telescope find_files<cr>
+nnoremap <c-t> <cmd>Telescope current_buffer_fuzzy_find<cr>
+nnoremap <leader>a <cmd>Telescope buffers<cr>
 lua << EOF
   require'telescope'.setup {
-    defaults = {
+    defaults = require'telescope.themes'.get_dropdown{
       file_ignore_patterns = { '^.git/.*' },
       mappings = {
         i = {
@@ -368,6 +369,22 @@ lua << EOF
           },
         },
       },
+      find_files = {
+        hidden = true,
+      }
+    },
+  }
+EOF
+
+" todo
+nnoremap <leader>p :TodoTelescope<cr>
+lua << EOF
+  require'todo-comments'.setup {
+    highlight = {
+      pattern = [[<(KEYWORDS)>]],
+    },
+    search = {
+      pattern = [[\b(KEYWORDS)\b]],
     },
   }
 EOF

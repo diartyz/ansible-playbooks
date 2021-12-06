@@ -17,6 +17,7 @@ https  = +redirect{s@http://@https://@}
 
 # github
 .githubusercontent.com
+.github.blog
 .github.com
 
 # google
@@ -37,6 +38,7 @@ https  = +redirect{s@http://@https://@}
 .wikipedia.org
 
 # youtube
+.googlevideo.com
 .youtube.com
 
 # zeplin
