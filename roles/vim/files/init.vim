@@ -9,6 +9,7 @@ call plug#begin('~/.vim/plugged')
 " Plug 'williamboman/nvim-lsp-installer'
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
+Plug 'SirVer/ultisnips'
 Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
 Plug 'chemzqm/wxapp.vim'
@@ -73,6 +74,8 @@ command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
 let mapleader = ' '
+nnoremap <bs> :nohlsearch<cr>
+nnoremap <c-h> :nohlsearch<cr>
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
 nnoremap <leader>d :BufOnly!<cr>
@@ -80,7 +83,6 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd!<cr>
 nnoremap cf :let @+=expand("%")<cr>
-nnoremap ch :nohlsearch<cr>
 tnoremap <esc> <c-\><C-n>
 
 " search
@@ -142,6 +144,7 @@ call coc#add_extension(
 inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()
 inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
+let g:UltiSnipsExpandTrigger = "<c-l>"
 nmap gd <Plug>(coc-definition)
 nmap <leader>gd <Plug>(coc-references)
 nmap gp <Plug>(coc-format)
@@ -152,9 +155,6 @@ nmap <leader>. <Plug>(coc-codeaction-cursor)
 nmap <leader>r <Plug>(coc-rename)
 nnoremap gh :call CocActionAsync('doHover')<cr>
 nnoremap go :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-nmap + <Plug>(coc-range-select)
-xmap + <Plug>(coc-range-select)
-xmap _ <Plug>(coc-range-select-backward)
 omap af <Plug>(coc-funcobj-a)
 omap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)

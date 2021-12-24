@@ -59,6 +59,8 @@ command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
 let mapleader = ' '
+nnoremap <bs> :nohlsearch<cr>
+nnoremap <c-h> :nohlsearch<cr>
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
 nnoremap <leader>d :BufOnly!<cr>
@@ -66,7 +68,6 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd!<cr>
 nnoremap cf :let @+=expand("%")<cr>
-nnoremap ch :nohlsearch<cr>
 tnoremap <esc> <c-\><C-n>
 
 " search

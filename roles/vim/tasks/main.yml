@@ -2,7 +2,7 @@
 - name: install packages
   become: true
   pacman:
-    name: ['vim', 'neovim', 'python-pynvim', 'ripgrep', 'the_silver_searcher']
+    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher']
   when: ansible_distribution == 'Archlinux'
 
 - name: install packages
