@@ -5,6 +5,7 @@ gui:
   sidePanelWidth: 0.3333 # number from 0 to 1
   expandFocusedSidePanel: false
   mainPanelSplitMode: 'flexible' # one of 'horizontal' | 'flexible' | 'vertical'
+  language: 'auto' # one of 'auto' | 'en' | 'zh' | 'pl' | 'nl'
   theme:
     lightTheme: false # For terminals with a light background
     activeBorderColor:
@@ -18,12 +19,17 @@ gui:
       - reverse
     selectedRangeBgColor:
       - reverse
+    cherryPickedCommitBgColor:
+      - blue
+    cherryPickedCommitFgColor:
+      - cyan
   commitLength:
     show: true
   mouseEvents: true
   skipUnstageLineWarning: false
   skipStashWarning: true
   showFileTree: true # for rendering changes files in a tree format
+  showListFooter: true # for seeing the '5 of 20' message in list panels
   showRandomTip: true
   showCommandLog: true
   commandLogSize: 8
@@ -32,19 +38,33 @@ git:
     colorArg: always
     pager: diff-so-fancy
     useConfig: false
+  commit:
+    signOff: false
   merging:
     # only applicable to unix users
     manualCommit: false
     # extra args passed to `git merge`, e.g. --no-ff
     args: ''
-  pull:
-    mode: 'merge' # one of 'merge' | 'rebase' | 'ff-only'
+  log:
+    # one of date-order, author-date-order, topo-order.
+    # topo-order makes it easier to read the git log graph, but commits may not
+    # appear chronologically. See https://git-scm.com/docs/git-log#_commit_ordering
+    order: 'topo-order'
+    # one of always, never, when-maximised
+    # this determines whether the git graph is rendered in the commits panel
+    showGraph: 'when-maximised'
   skipHookPrefix: WIP
   autoFetch: true
   branchLogCmd: 'git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" {{branchName}} --'
   allBranchesLogCmd: 'git log --graph --all --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"'
   overrideGpg: false # prevents lazygit from spawning a separate process when using GPG
   disableForcePushing: false
+  parseEmoji: false
+  diffContextSize: 3 # how many lines of context are shown around a change in diffs
+os:
+  editCommand: '' # see 'Configuring File Editing' section
+  editCommandTemplate: '{{editor}} {{filename}}'
+  openCommand: ''
 refresher:
   refreshInterval: 10 # file/submodule refresh interval in seconds
   fetchInterval: 60 # re-fetch interval in seconds
@@ -72,16 +92,20 @@ keybinding:
     nextPage: '.' # go to previous page in list
     gotoTop: '<' # go to top of list
     gotoBottom: '>' # go to bottom of list
+    scrollLeft: 'H' # scroll left within list view
+    scrollRight: 'L' # scroll right within list view
     prevBlock: '<left>' # goto the previous block / panel
     nextBlock: '<right>' # goto the next block / panel
     prevBlock-alt: 'h' # goto the previous block / panel
     nextBlock-alt: 'l' # goto the next block / panel
+    jumpToBlock: ['1', '2', '3', '4', '5'] # goto the Nth block / panel
     nextMatch: 'n'
     prevMatch: 'N'
     optionMenu: 'x' # show help menu
     optionMenu-alt1: '?' # show help menu
     select: '<space>'
     goInto: '<enter>'
+    openRecentRepos: '<c-r>'
     confirm: '<enter>'
     confirm-alt1: 'y'
     remove: 'd'
@@ -111,7 +135,11 @@ keybinding:
     diffingMenu-alt: '<c-e>' # deprecated
     copyToClipboard: '<c-o>'
     submitEditorText: '<enter>'
-    appendNewline: '<tab>'
+    appendNewline: '<a-enter>'
+    extrasMenu: '@'
+    toggleWhitespaceInDiffView: '<c-w>'
+    increaseContextInDiffView: '}'
+    decreaseContextInDiffView: '{'
   status:
     checkForUpdate: 'u'
     recentRepos: '<enter>'
@@ -130,6 +158,7 @@ keybinding:
     toggleTreeView: '`'
   branches:
     createPullRequest: 'o'
+    viewPullRequestOptions: 'O'
     checkoutBranchByName: 'c'
     forceCheckoutBranch: 'F'
     rebaseBranch: 'r'
@@ -159,6 +188,7 @@ keybinding:
     checkoutCommit: '<space>'
     resetCherryPick: '<c-R>'
     copyCommitMessageToClipboard: '<c-y>'
+    openLogMenu: '<c-l>'
   stash:
     popStash: 'g'
   commitFiles:
