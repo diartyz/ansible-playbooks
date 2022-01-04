@@ -21,12 +21,36 @@
 - name: install packages
   become: true
   pacman:
-    name: [chromium, hardinfo, pulsemixer, bluez, bluez-utils, cmus, mpv, besttrace, dfc, ncdu, htop, tree, yaourt]
+    name:
+      [
+        firefox,
+        hardinfo,
+        pulsemixer,
+        bluez,
+        bluez-utils,
+        cmus,
+        mpv,
+        besttrace,
+        dfc,
+        ncdu,
+        htop,
+        tree,
+        yaourt,
+      ]
   when: ansible_distribution == 'Archlinux'
 
 - name: install cask packages
   homebrew_cask:
-    name: ['google-chrome', 'alfred', 'firefox', 'macs-fan-control', 'omnidisksweeper', 'prefs-editor', 'visual-studio-code']
+    name:
+      [
+        firefox,
+        alfred,
+        firefox,
+        macs-fan-control,
+        omnidisksweeper,
+        prefs-editor,
+        visual-studio-code,
+      ]
   when: ansible_distribution == 'MacOSX'
 
 - name: install packages
