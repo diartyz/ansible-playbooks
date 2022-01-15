@@ -23,7 +23,7 @@
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: static.conf, dest: /usr/local/etc/nginx/servers/static.conf }
+    - { src: static.conf, dest: /opt/homebrew/etc/nginx/servers/static.conf }
   register: nginx_conf
   when: ansible_distribution == 'MacOSX'
 

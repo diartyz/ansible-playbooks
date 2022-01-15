@@ -22,8 +22,9 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/shims:$GOPATH/bin:$HOME/.cargo/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/llvm/bin:$PATH"
 export PYTHONUSERBASE="$HOME/.local"
 export ZSH=~/.oh-my-zsh
-# export http_proxy=http://127.0.0.1:8118
-# export https_proxy=http://127.0.0.1:8118
+# export http_proxy=http://127.0.0.1:1080
+# export https_proxy=http://127.0.0.1:1080
+# export all_proxy=socks5://127.0.0.1:1080
 
 if which pyenv > /dev/null;
   then eval "$(pyenv init --path)";

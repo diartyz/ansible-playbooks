@@ -36,7 +36,7 @@
 - name: copy trojan conf
   copy:
     src: config.json
-    dest: /usr/local/etc/trojan/config.json
+    dest: /opt/homebrew/etc/trojan/config.json
   when: ansible_distribution == 'MacOSX'
   register: trojan_conf
 

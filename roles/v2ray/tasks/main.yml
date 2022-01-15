@@ -36,7 +36,7 @@
 - name: copy v2ray conf
   copy:
     src: config.json
-    dest: /usr/local/etc/v2ray/config.json
+    dest: /opt/homebrew/etc/v2ray/config.json
   when: ansible_distribution == 'MacOSX'
   register: v2ray_conf
 

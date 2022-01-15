@@ -519,7 +519,7 @@
               },
               "to": [
                 {
-                  "apple_vendor_top_case_key_code": "keyboard_fn"
+                  "consumer_key_code": "scan_previous_track"
                 }
               ]
             },
@@ -540,6 +540,16 @@
               "to": [
                 {
                   "key_code": "right_command"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "right_control"
+              },
+              "to": [
+                {
+                  "apple_vendor_top_case_key_code": "keyboard_fn"
                 }
               ]
             }
@@ -620,6 +630,40 @@
               "to": [
                 {
                   "key_code": "left_command"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "disable_built_in_keyboard_if_exists": false,
+          "fn_function_keys": [],
+          "identifiers": {
+            "is_keyboard": true,
+            "is_pointing_device": false,
+            "product_id": 834,
+            "vendor_id": 1452
+          },
+          "ignore": false,
+          "manipulate_caps_lock_led": true,
+          "simple_modifications": [
+            {
+              "from": {
+                "key_code": "caps_lock"
+              },
+              "to": [
+                {
+                  "key_code": "left_control"
+                }
+              ]
+            },
+            {
+              "from": {
+                "key_code": "left_control"
+              },
+              "to": [
+                {
+                  "key_code": "caps_lock"
                 }
               ]
             }

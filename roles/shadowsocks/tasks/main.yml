@@ -25,7 +25,7 @@
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: client.json, dest: /usr/local/etc/shadowsocks-libev.json }
+    - { src: client.json, dest: /opt/homebrew/etc/shadowsocks-libev.json }
   when: ansible_distribution == 'MacOSX'
   register: shadowsocks_conf
 

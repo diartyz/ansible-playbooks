@@ -12,7 +12,7 @@
 
 - name: set sysconfdir
   set_fact:
-    confdir: '/usr/local/etc'
+    confdir: '/opt/homebrew/etc'
   when: ansible_distribution == 'MacOSX'
 
 - name: set sysconfdir

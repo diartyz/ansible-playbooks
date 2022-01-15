@@ -43,7 +43,6 @@
   homebrew_cask:
     name:
       [
-        firefox,
         alfred,
         firefox,
         macs-fan-control,

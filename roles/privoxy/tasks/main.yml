@@ -12,7 +12,7 @@
 
 - name: set sysconfdir
   set_fact:
-    confdir: '/usr/local/etc'
+    confdir: '/opt/homebrew/etc'
   when: ansible_distribution == 'MacOSX'
 
 - name: set sysconfdir
@@ -27,10 +27,19 @@
     line: '{{ item.line }}'
     regexp: '{{ item.regexp }}'
   with_items:
-    - { line: 'actionsfile pac.action', regexp: '^(#\s)?actionsfile pac.action' }
+    - {
+        line: 'actionsfile pac.action',
+        regexp: '^(#\s)?actionsfile pac.action',
+      }
     - { line: 'listen-address  0.0.0.0:8118', regexp: '^listen-address' }
-    - { line: '# actionsfile default.action', regexp: '^(#\s)?actionsfile default.action' }
-    - { line: '# forward-socks5t / 127.0.0.1:1080 .', regexp: '^(#\s)?forward-socks5t / 127.0.0.1:1080 .' }
+    - {
+        line: '# actionsfile default.action',
+        regexp: '^(#\s)?actionsfile default.action',
+      }
+    - {
+        line: '# forward-socks5t / 127.0.0.1:1080 .',
+        regexp: '^(#\s)?forward-socks5t / 127.0.0.1:1080 .',
+      }
 
 - name: copy privoxy pac
   become: true
