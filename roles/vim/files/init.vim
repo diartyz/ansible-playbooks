@@ -17,6 +17,7 @@ Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'folke/todo-comments.nvim' | Plug 'nvim-lua/plenary.nvim'
+Plug 'francoiscabrol/ranger.vim'
 Plug 'github/copilot.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
@@ -37,6 +38,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
 Plug 'osyo-manga/vim-over'
 Plug 'phaazon/hop.nvim'
+Plug 'rbgrouleff/bclose.vim'
 Plug 'sainnhe/everforest'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
@@ -338,6 +340,10 @@ nmap <Leader>6 <Plug>lightline#bufferline#go(6)
 nmap <Leader>7 <Plug>lightline#bufferline#go(7)
 nmap <Leader>8 <Plug>lightline#bufferline#go(8)
 nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+
+" ranger
+let g:ranger_map_keys = 0
+nnoremap - :Ranger<cr>
 
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({

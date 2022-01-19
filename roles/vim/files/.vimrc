@@ -1,7 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/tagalong.vim'
-Plug 'Shougo/defx.nvim' | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons' | Plug 'roxma/vim-hug-neovim-rpc' | Plug 'roxma/nvim-yarp'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
@@ -11,6 +10,7 @@ Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
+Plug 'francoiscabrol/ranger.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'junegunn/vim-easy-align'
@@ -102,53 +102,6 @@ nmap <leader>f <Plug>CtrlSFPrompt
 nnoremap <c-s> :CtrlSFToggle<cr>
 xmap <leader>f <Plug>CtrlSFVwordPath
 
-" defx
-autocmd FileType defx call s:defx_my_settings()
-call defx#custom#option('_', {
-      \ 'columns': 'git:indent:icons:mark:filename:type',
-      \ 'preview_width': 80,
-      \ 'resume': 1,
-      \ 'show_ignored_files': 1,
-      \ 'split': 'vertical',
-      \ 'vertical_preview': 1,
-      \ 'winwidth': '39',
-      \ })
-function! s:defx_my_settings() abort
-  nnoremap <buffer><expr> <c-e>
-        \ defx#async_action('quit')
-  nnoremap <buffer><expr> <cr>
-        \ defx#async_action('multi', ['drop', 'quit'])
-  nnoremap <buffer><expr> h
-        \ defx#async_action('close_tree')
-  nnoremap <buffer><expr> l
-        \ defx#is_directory() ?
-        \ defx#async_action('open_tree') :
-        \ defx#async_action('drop')
-  nnoremap <buffer><expr> o
-	      \ defx#do_action('preview')
-  nnoremap <buffer><expr> cc
-        \ defx#async_action('rename')
-  nnoremap <buffer><expr> dd
-        \ defx#async_action('move')
-  nnoremap <buffer><expr> yy
-        \ defx#async_action('copy')
-  nnoremap <buffer><expr> cp
-        \ defx#do_action('yank_path')
-  nnoremap <buffer><expr> p
-        \ defx#async_action('paste')
-  nnoremap <buffer><expr> D
-        \ defx#async_action('remove_trash', ['force'])
-  nnoremap <buffer><expr> M
-        \ defx#async_action('new_multiple_files')
-  nnoremap <buffer><expr> R
-        \ defx#async_action('redraw')
-  nnoremap <buffer><expr> v
-        \ defx#async_action('toggle_select') . 'j'
-  nnoremap <buffer><expr> V
-        \ defx#async_action('toggle_select') . 'k'
-endfunction
-nnoremap <c-e> :Defx -search_recursive=`expand('%:p')`<cr>
-
 " easyalign
 nmap ga <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
@@ -182,6 +135,10 @@ let g:lexima_map_escape = ''
 " multi cursor
 let g:VM_maps = {}
 let g:VM_maps['Visual Cursors'] = '<c-m>'
+
+" ranger
+let g:ranger_map_keys = 0
+nnoremap - :Ranger<cr>
 
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
