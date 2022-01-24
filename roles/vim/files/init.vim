@@ -24,6 +24,7 @@ Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
+Plug 'kdheepak/lazygit.nvim'
 Plug 'lambdalisue/suda.vim'
 Plug 'lewis6991/gitsigns.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'machakann/vim-highlightedyank'
@@ -85,7 +86,6 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd!<cr>
 nnoremap cf :let @+=expand("%")<cr>
-tnoremap <esc> <c-\><C-n>
 
 " search
 set hlsearch
@@ -146,7 +146,7 @@ call coc#add_extension(
 inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()
 inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
-let g:UltiSnipsExpandTrigger = "<c-l>"
+let g:UltiSnipsExpandTrigger = "<c-;>"
 nmap gd <Plug>(coc-definition)
 nmap <leader>gd <Plug>(coc-references)
 nmap gp <Plug>(coc-format)
@@ -295,8 +295,13 @@ EOF
 let g:indent_guides_enable_on_vim_startup = 1
 let indent_guides_guide_size = 1
 
+" lazygit
+let g:lazygit_floating_window_scaling_factor = 1
+nnoremap <c-l> :LazyGit<cr>
+
 " lexima
 let g:lexima_map_escape = ''
+let g:lexima_accept_pum_with_enter = 0
 
 " multi cursor
 let g:VM_maps = {}

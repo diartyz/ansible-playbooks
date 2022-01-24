@@ -68,7 +68,6 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
 nnoremap <leader>x :bd!<cr>
 nnoremap cf :let @+=expand("%")<cr>
-tnoremap <esc> <c-\><C-n>
 
 " search
 set hlsearch
@@ -131,6 +130,7 @@ let g:Lf_WindowPosition = 'popup'
 
 " lexima
 let g:lexima_map_escape = ''
+let g:lexima_accept_pum_with_enter = 0
 
 " multi cursor
 let g:VM_maps = {}
