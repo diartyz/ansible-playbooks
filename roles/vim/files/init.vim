@@ -136,11 +136,9 @@ call coc#add_extension(
       \ 'coc-css',
       \ 'coc-html',
       \ 'coc-wxml',
-      \ 'coc-python',
       \ 'coc-tsserver',
       \ 'coc-prettier',
       \ 'coc-eslint',
-      \ 'coc-graphql',
       \ 'coc-vimlsp',
       \ )
 inoremap <expr><c-@> coc#refresh()
@@ -183,11 +181,9 @@ xmap if <Plug>(coc-funcobj-i)
 " nn gh <cmd>lua vim.lsp.buf.hover()<CR>
 " nn go :TSLspOrganize<CR>
 " nn gp <cmd>lua vim.lsp.buf.formatting()<CR>
-" set completeopt=menuone,noinsert,noselect
 " lua << EOF
 " local coq = require'coq'
 " local lsp_installer = require'nvim-lsp-installer'
-" local lspconfig = require'lspconfig'
 " local null_ls = require'null-ls'
 " local ts_utils = require'nvim-lsp-ts-utils'
 " lsp_installer.on_server_ready(function(server)
@@ -368,6 +364,8 @@ lua << EOF
       mappings = {
         i = {
           ['<esc>'] = 'close',
+          ["<c-j>"] = require('telescope.actions').cycle_history_next,
+          ["<c-k>"] = require('telescope.actions').cycle_history_prev,
         },
       },
     },

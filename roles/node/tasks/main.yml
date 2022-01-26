@@ -14,7 +14,7 @@
   changed_when: false
 
 - name: Execute script if foo.node is not installed
-  shell: "source ~/.nvm/nvm.sh && nvm install lts/*"
+  shell: 'source ~/.nvm/nvm.sh && nvm install lts/*'
   args:
     executable: /bin/bash
   when: node_check.failed == true
@@ -26,6 +26,8 @@
     registry: https://registry.npm.taobao.org
   with_items:
     - yarn
+    - graphql-language-service-cli
+    - nx
 
 - name: copy node config
   copy:

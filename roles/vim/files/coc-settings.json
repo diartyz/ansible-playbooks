@@ -2,9 +2,15 @@
   "coc.preferences.formatOnSaveFiletypes": ["*"],
   "eslint.autoFixOnSave": true,
   "javascript.suggest.completeFunctionCalls": false,
-  "python.formatting.provider": "black",
   "suggest.enablePreview": true,
   "suggest.invalidInsertCharacters": [],
   "suggest.triggerAfterInsertEnter": true,
-  "typescript.suggest.completeFunctionCalls": false
+  "typescript.suggest.completeFunctionCalls": false,
+  "languageserver": {
+    "graphql": {
+      "command": "graphql-lsp",
+      "args": ["server", "-m", "stream"],
+      "filetypes": ["typescript", "typescriptreact", "graphql"]
+    }
+  }
 }
