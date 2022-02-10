@@ -54,7 +54,7 @@ set wildignore=*/dist/*,*/node_modules/*
 " mapping
 command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :source $MYVIMRC
-command! -nargs=0 SortJson :%!jq '--sort-keys'
+command! -nargs=0 Jq :%!jq '--sort-keys'
 command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O

@@ -15,6 +15,7 @@ Plug 'chaoren/vim-wordmotion'
 Plug 'chemzqm/wxapp.vim'
 Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
+Plug 'diartyz/nvim-sort-json', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'dyng/ctrlsf.vim'
 Plug 'folke/todo-comments.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'francoiscabrol/ranger.vim'
@@ -72,7 +73,7 @@ set wildignore=*/dist/*,*/node_modules/*
 " mapping
 command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :source $MYVIMRC
-command! -nargs=0 SortJson :%!jq '--sort-keys'
+command! -nargs=0 Jq :%!jq '--sort-keys'
 command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
@@ -345,6 +346,30 @@ nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 " ranger
 let g:ranger_map_keys = 0
 nnoremap - :Ranger<cr>
+
+" sort
+let g:sort_json = {
+      \ 'orderOverride': [
+      \   'name',
+      \   'private',
+      \   'version',
+      \   'main',
+      \   'module',
+      \   'types',
+      \   'typings',
+      \   'files',
+      \   'publishConfig',
+      \   'repository',
+      \   'scripts'
+      \ ],
+      \ 'orderUnderride': [
+      \   'resolutions',
+      \   'dependencies',
+      \   'devDependencies',
+      \   'peerDependencies',
+      \   'source.organizeImports'
+      \ ],
+      \ }
 
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
