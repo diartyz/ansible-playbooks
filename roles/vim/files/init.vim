@@ -15,7 +15,11 @@ Plug 'chaoren/vim-wordmotion'
 Plug 'chemzqm/wxapp.vim'
 Plug 'cohama/lexima.vim'
 Plug 'diartyz/vim-utils'
-Plug 'diartyz/nvim-sort-json', { 'do': 'yarn install --frozen-lockfile' }
+function! InstallNvimSortJson(info)
+  !yarn install --frozen-lockfile
+  execute ':UpdateRemotePlugins'
+endfunction
+Plug 'diartyz/nvim-sort-json', { 'do': function('InstallNvimSortJson') }
 Plug 'dyng/ctrlsf.vim'
 Plug 'folke/todo-comments.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'francoiscabrol/ranger.vim'
@@ -82,10 +86,10 @@ nnoremap <bs> :nohlsearch<cr>
 nnoremap <c-h> :nohlsearch<cr>
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
-nnoremap <leader>d :BufOnly!<cr>
+nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
-nnoremap <leader>x :bd!<cr>
+nnoremap <leader>x :bd<cr>
 nnoremap cf :let @+=expand("%")<cr>
 
 " search
@@ -278,6 +282,15 @@ lua << EOF
       change       = {hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
       changedelete = {hl = 'GitSignsChange', text = '|', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
     },
+    on_attach = function(bufnr)
+      local function map(mode, lhs, rhs, opts)
+          opts = vim.tbl_extend('force', {noremap = true, silent = true}, opts or {})
+          vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+      end
+
+      map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
+      map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr=true})
+    end
   }
 EOF
 
@@ -347,7 +360,7 @@ nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 let g:ranger_map_keys = 0
 nnoremap - :Ranger<cr>
 
-" sort
+" sort json
 let g:sort_json = {
       \ 'orderOverride': [
       \   'name',
