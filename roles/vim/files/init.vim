@@ -168,11 +168,11 @@ xmap if <Plug>(coc-funcobj-i)
 " " coq
 " let g:coq_settings = {
 "       \ 'auto_start': 'shut-up',
-"       \ 'display.ghost_text.enabled': v:false,
 "       \ 'clients.buffers.enabled': v:false,
 "       \ 'clients.snippets.enabled': v:false,
 "       \ 'clients.tabnine.enabled': v:false,
 "       \ 'clients.tmux.enabled': v:false,
+"       \ 'display.ghost_text.enabled': v:false,
 "       \ 'display.pum.fast_close': v:false,
 "       \ 'keymap.recommended': v:false,
 "       \ }
@@ -398,7 +398,7 @@ nnoremap <leader>a <cmd>Telescope buffers<cr>
 lua << EOF
   require'telescope'.setup {
     defaults = require'telescope.themes'.get_dropdown{
-      file_ignore_patterns = { '^.git/.*' },
+      file_ignore_patterns = { '^./.git/.*' },
       mappings = {
         i = {
           ['<esc>'] = 'close',
