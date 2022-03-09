@@ -1,1 +1,1 @@
-diartyz ALL = (root) NOPASSWD: /usr/local/bin/yabai --load-sa
+diartyz ALL = (root) NOPASSWD: /opt/homebrew/bin/yabai --load-sa
