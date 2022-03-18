@@ -7,6 +7,7 @@ defaults write com.apple.dock ResetLaunchPad -bool true; killall Dock
 defaults write com.apple.dock persistent-apps -array; killall Dock
 
 # enable PressAndHold
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
 
 # music language
