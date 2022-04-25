@@ -7,7 +7,7 @@ call plug#begin('~/.vim/plugged')
 " Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
 " Plug 'neovim/nvim-lspconfig'
 " Plug 'williamboman/nvim-lsp-installer'
-Plug 'AndrewRadev/tagalong.vim'
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' } | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/defx-icons'
 Plug 'SirVer/ultisnips'
 Plug 'arthurxavierx/vim-caser'
@@ -42,6 +42,7 @@ Plug 'nelstrom/vim-visual-star-search'
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-telescope/telescope.nvim' | Plug 'nvim-lua/plenary.nvim' | Plug 'kyazdani42/nvim-web-devicons'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'osyo-manga/vim-over'
 Plug 'phaazon/hop.nvim'
 Plug 'rbgrouleff/bclose.vim'
@@ -76,8 +77,8 @@ set wildignore=*/dist/*,*/node_modules/*
 
 " mapping
 command! -nargs=0 E :edit $MYVIMRC
-command! -nargs=0 R :source $MYVIMRC
 command! -nargs=0 Jq :%!jq '--sort-keys'
+command! -nargs=0 R :source $MYVIMRC
 command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
@@ -89,8 +90,8 @@ nnoremap <leader><leader>s :w suda://%<cr>
 nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
-nnoremap <leader>x :bd<cr>
-nnoremap cf :let @+=expand("%")<cr>
+nnoremap <leader>x :Bclose<cr>
+nnoremap cp :let @+=expand("%")<cr>
 
 " search
 set hlsearch
@@ -119,6 +120,7 @@ set number
 set relativenumber
 set showtabline=2
 set termguicolors
+hi Visual cterm=NONE ctermbg=241 gui=NONE guibg=#665c54
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
@@ -148,7 +150,7 @@ call coc#add_extension(
       \ )
 inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()
-inoremap <expr><tab> pumvisible() ? "\<c-y>" : "\<c-g>u\<tab>"
+inoremap <expr><tab> pumvisible() ? coc#_select_confirm() : "\<c-g>u\<tab>"
 let g:UltiSnipsExpandTrigger = "<c-;>"
 nmap gd <Plug>(coc-definition)
 nmap <leader>gd <Plug>(coc-references)
@@ -277,6 +279,7 @@ let g:user_emmet_prev_key = '<c-k>'
 lua << EOF
   require('gitsigns').setup {
     current_line_blame = true,
+    update_debounce = 300,
     signs = {
       add          = {hl = 'GitSignsAdd',    text = '+', numhl = 'GitSignsAddNr',    linehl = 'GitSignsAddLn'},
       change       = {hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
@@ -288,8 +291,14 @@ lua << EOF
           vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
       end
 
-      map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
       map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr=true})
+      map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
+      map('n', '<leader>hr', ':Gitsigns reset_hunk<CR>')
+      map('v', '<leader>hr', ':Gitsigns reset_hunk<CR>')
+      map('n', '<leader>hs', ':Gitsigns stage_hunk<CR>')
+      map('v', '<leader>hs', ':Gitsigns stage_hunk<CR>')
+      map('o', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+      map('x', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
     end
   }
 EOF
@@ -315,7 +324,7 @@ let g:lexima_accept_pum_with_enter = 0
 
 " multi cursor
 let g:VM_maps = {}
-let g:VM_maps['Visual Cursors'] = '<c-m>'
+let g:VM_maps['Visual Cursors'] = '<c-l>'
 
 " lightline
 let g:lightline = {
@@ -387,7 +396,7 @@ let g:sort_json = {
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
       \ 'a': {'argument': [{'o': '[{(<[]', 'c': '[]>)}]', 's': ','}]},
-      \ 'b': {'pair': [{'o':'(', 'c':')'}]}
+      \ 'b': {'pair': [{'o':'(', 'c':')'}]},
       \ })
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 
@@ -428,12 +437,27 @@ nnoremap <leader>p :TodoTelescope<cr>
 lua << EOF
   require'todo-comments'.setup {
     highlight = {
+      keyword = 'bg',
       pattern = [[<(KEYWORDS)>]],
     },
     search = {
       pattern = [[\b(KEYWORDS)\b]],
     },
   }
+EOF
+
+" treesitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  context_commentstring = {
+    enable = true,
+  },
+  ensure_installed = {
+    "javascript",
+    "typescript",
+    "tsx",
+  },
+}
 EOF
 
 " undotree
