@@ -1,0 +1,13 @@
+---
+- name: install clashx
+  homebrew_cask:
+    name: ['clashx']
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy shadowsocks conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: ss.yml, dest: ~/.config/clash/ss.yaml }
+  when: ansible_distribution == 'MacOSX'
