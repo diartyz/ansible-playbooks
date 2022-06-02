@@ -411,8 +411,8 @@ lua << EOF
       mappings = {
         i = {
           ['<esc>'] = 'close',
-          ["<c-j>"] = require('telescope.actions').cycle_history_next,
-          ["<c-k>"] = require('telescope.actions').cycle_history_prev,
+          ["<c-j>"] = 'cycle_history_next',
+          ["<c-k>"] = 'cycle_history_prev',
         },
       },
     },
