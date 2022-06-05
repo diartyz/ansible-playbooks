@@ -5,12 +5,5 @@
   "suggest.enablePreview": true,
   "suggest.invalidInsertCharacters": [],
   "suggest.triggerAfterInsertEnter": true,
-  "typescript.suggest.completeFunctionCalls": false,
-  "languageserver": {
-    "graphql": {
-      "command": "graphql-lsp",
-      "args": ["server", "-m", "stream"],
-      "filetypes": ["typescript", "typescriptreact", "graphql"]
-    }
-  }
+  "typescript.suggest.completeFunctionCalls": false
 }

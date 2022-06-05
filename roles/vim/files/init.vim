@@ -147,6 +147,7 @@ call coc#add_extension(
       \ 'coc-prettier',
       \ 'coc-eslint',
       \ 'coc-vimlsp',
+      \ 'coc-graphql',
       \ )
 inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()

@@ -1,6 +1,5 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'AndrewRadev/tagalong.vim'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'arthurxavierx/vim-caser'
@@ -25,6 +24,7 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'osyo-manga/vim-over'
+Plug 'rbgrouleff/bclose.vim'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'tommcdo/vim-exchange'
@@ -53,8 +53,8 @@ set wildignore=*/dist/*,*/node_modules/*
 
 " mapping
 command! -nargs=0 E :edit $MYVIMRC
-command! -nargs=0 R :source $MYVIMRC
 command! -nargs=0 Jq :%!jq '--sort-keys'
+command! -nargs=0 R :source $MYVIMRC
 command! -nargs=0 W :noautocmd w
 command! OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 inoremap <c-o> <esc>O
@@ -63,11 +63,11 @@ nnoremap <bs> :nohlsearch<cr>
 nnoremap <c-h> :nohlsearch<cr>
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :w suda://%<cr>
-nnoremap <leader>d :BufOnly!<cr>
+nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :w<cr>
-nnoremap <leader>x :bd!<cr>
-nnoremap cf :let @+=expand("%")<cr>
+nnoremap <leader>x :Bclose<cr>
+nnoremap cp :let @+=expand("%")<cr>
 
 " search
 set hlsearch
@@ -134,7 +134,7 @@ let g:lexima_accept_pum_with_enter = 0
 
 " multi cursor
 let g:VM_maps = {}
-let g:VM_maps['Visual Cursors'] = '<c-m>'
+let g:VM_maps['Visual Cursors'] = '<c-l>'
 
 " ranger
 let g:ranger_map_keys = 0
@@ -143,7 +143,7 @@ nnoremap - :Ranger<cr>
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
       \ 'a': {'argument': [{'o': '[{(<[]', 'c': '[]>)}]', 's': ','}]},
-      \ 'b': {'pair': [{'o':'(', 'c':')'}]}
+      \ 'b': {'pair': [{'o':'(', 'c':')'}]},
       \ })
 let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 
