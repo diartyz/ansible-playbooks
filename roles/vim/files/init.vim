@@ -49,9 +49,9 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'sainnhe/everforest'
 Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
+Plug 'tanvirtin/vgit.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession' | Plug 'dhruvasagar/vim-prosession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
@@ -147,7 +147,6 @@ call coc#add_extension(
       \ 'coc-prettier',
       \ 'coc-eslint',
       \ 'coc-vimlsp',
-      \ 'coc-graphql',
       \ )
 inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()
@@ -278,37 +277,36 @@ let g:user_emmet_prev_key = '<c-k>'
 
 " gitsigns
 lua << EOF
-  require('gitsigns').setup {
-    current_line_blame = true,
-    update_debounce = 300,
-    signs = {
-      add          = {hl = 'GitSignsAdd',    text = '+', numhl = 'GitSignsAddNr',    linehl = 'GitSignsAddLn'},
-      change       = {hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
-      changedelete = {hl = 'GitSignsChange', text = '|', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
-    },
-    on_attach = function(bufnr)
-      local function map(mode, lhs, rhs, opts)
-          opts = vim.tbl_extend('force', {noremap = true, silent = true}, opts or {})
-          vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
-      end
-
-      map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr=true})
-      map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
-      map('n', '<leader>hr', ':Gitsigns reset_hunk<CR>')
-      map('v', '<leader>hr', ':Gitsigns reset_hunk<CR>')
-      map('n', '<leader>hs', ':Gitsigns stage_hunk<CR>')
-      map('v', '<leader>hs', ':Gitsigns stage_hunk<CR>')
-      map('o', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-      map('x', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+require('gitsigns').setup {
+  current_line_blame = true,
+  update_debounce = 300,
+  signs = {
+    add          = {hl = 'GitSignsAdd',    text = '+', numhl = 'GitSignsAddNr',    linehl = 'GitSignsAddLn'},
+    change       = {hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
+    changedelete = {hl = 'GitSignsChange', text = '-', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn'},
+  },
+  on_attach = function(bufnr)
+    local function map(mode, lhs, rhs, opts)
+        opts = vim.tbl_extend('force', {noremap = true, silent = true}, opts or {})
+        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
     end
-  }
+    map('n', '[c', "&diff ? '[c' : '<cmd>Gitsigns prev_hunk<CR>'", {expr=true})
+    map('n', ']c', "&diff ? ']c' : '<cmd>Gitsigns next_hunk<CR>'", {expr=true})
+    map('n', '<leader>hr', ':Gitsigns reset_hunk<CR>')
+    map('v', '<leader>hr', ':Gitsigns reset_hunk<CR>')
+    map('n', '<leader>hs', ':Gitsigns stage_hunk<CR>')
+    map('v', '<leader>hs', ':Gitsigns stage_hunk<CR>')
+    map('o', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    map('x', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
 EOF
 
 " hop
 noremap <leader>/ :HopPattern<cr>
 noremap <leader>t :HopChar2<cr>
 lua << EOF
-  require'hop'.setup()
+require'hop'.setup()
 EOF
 
 " indent
@@ -406,45 +404,45 @@ nnoremap <c-p> <cmd>Telescope find_files<cr>
 nnoremap <c-t> <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <leader>a <cmd>Telescope buffers<cr>
 lua << EOF
-  require'telescope'.setup {
-    defaults = require'telescope.themes'.get_dropdown{
-      file_ignore_patterns = { '^./.git/.*' },
+require'telescope'.setup {
+  defaults = require'telescope.themes'.get_dropdown{
+    file_ignore_patterns = { '^./.git/.*' },
+    mappings = {
+      i = {
+        ['<esc>'] = 'close',
+        ["<c-j>"] = 'cycle_history_next',
+        ["<c-k>"] = 'cycle_history_prev',
+      },
+    },
+  },
+  pickers = {
+    buffers = {
+      previewer = false,
       mappings = {
         i = {
-          ['<esc>'] = 'close',
-          ["<c-j>"] = 'cycle_history_next',
-          ["<c-k>"] = 'cycle_history_prev',
+          ['<c-d>'] = 'delete_buffer',
         },
       },
     },
-    pickers = {
-      buffers = {
-        previewer = false,
-        mappings = {
-          i = {
-            ['<c-d>'] = 'delete_buffer',
-          },
-        },
-      },
-      find_files = {
-        hidden = true,
-      }
-    },
-  }
+    find_files = {
+      hidden = true,
+    }
+  },
+}
 EOF
 
 " todo
 nnoremap <leader>p :TodoTelescope<cr>
 lua << EOF
-  require'todo-comments'.setup {
-    highlight = {
-      keyword = 'bg',
-      pattern = [[<(KEYWORDS)>]],
-    },
-    search = {
-      pattern = [[\b(KEYWORDS)\b]],
-    },
-  }
+require'todo-comments'.setup {
+  highlight = {
+    keyword = 'bg',
+    pattern = [[<(KEYWORDS)>]],
+  },
+  search = {
+    pattern = [[\b(KEYWORDS)\b]],
+  },
+}
 EOF
 
 " treesitter
@@ -464,6 +462,43 @@ EOF
 " undotree
 let g:undotree_SetFocusWhenToggle = 1
 nnoremap <leader>u :UndotreeToggle<cr>
+
+" vgit
+lua << EOF
+require('vgit').setup({
+  keymaps = {
+    ['n [c'] = 'hunk_up',
+    ['n ]c'] = 'hunk_down',
+    ['n <leader>gh'] = 'buffer_history_preview',
+    ['n <leader>gb'] = 'buffer_gutter_blame_preview',
+    ['n <leader>gf'] = 'project_diff_preview',
+  },
+  settings = {
+    live_blame = {
+      enabled = false,
+    },
+    live_gutter = {
+      enabled = false,
+    },
+    authorship_code_lens = {
+      enabled = false,
+    },
+    signs = {
+      definitions = {
+        GitSignsAdd = {
+          text = '+',
+        },
+        GitSignsDelete = {
+          text = '-',
+        },
+        GitSignsChange = {
+          text = '~',
+        },
+      },
+    },
+  }
+})
+EOF
 
 " word motion
 let g:wordmotion_prefix = '<leader>'
