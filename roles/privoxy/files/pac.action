@@ -12,6 +12,9 @@ https  = +redirect{s@http://@https://@}
 # feedly
 .feedly.com
 
+# inoreader
+.inoreader.com
+
 # medium
 .medium.com
 
