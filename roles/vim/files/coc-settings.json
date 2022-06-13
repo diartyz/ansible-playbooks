@@ -1,9 +1,11 @@
 {
   "coc.preferences.formatOnSaveFiletypes": ["*"],
   "eslint.autoFixOnSave": true,
+  "javascript.preferences.jsxAttributeCompletionStyle": "none",
   "javascript.suggest.completeFunctionCalls": false,
   "suggest.enablePreview": true,
   "suggest.invalidInsertCharacters": [],
   "suggest.triggerAfterInsertEnter": true,
+  "typescript.preferences.jsxAttributeCompletionStyle": "none",
   "typescript.suggest.completeFunctionCalls": false
 }
