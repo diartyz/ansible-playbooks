@@ -29,6 +29,7 @@ Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession' | Plug 'dhruvasagar/vim-prosession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
@@ -111,7 +112,7 @@ nmap <leader>t <Plug>(easymotion-overwin-f2)
 " emmet
 imap <expr><c-y> pumvisible() ? "\<c-y>\<Plug>(emmet-expand-abbr)" : "\<Plug>(emmet-expand-abbr)"
 let g:user_emmet_expandabbr_key = '<c-y>'
-let g:user_emmet_leader_key = '<c-z>'
+let g:user_emmet_leader_key = '<c-a>'
 let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
 

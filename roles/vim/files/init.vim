@@ -23,7 +23,6 @@ Plug 'diartyz/nvim-sort-json', { 'do': function('InstallNvimSortJson') }
 Plug 'dyng/ctrlsf.vim'
 Plug 'folke/todo-comments.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'francoiscabrol/ranger.vim'
-Plug 'github/copilot.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'itchyny/lightline.vim' | Plug 'mengelbrecht/lightline-bufferline'
@@ -52,6 +51,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tanvirtin/vgit.nvim' | Plug 'nvim-lua/plenary.nvim'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession' | Plug 'dhruvasagar/vim-prosession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
@@ -271,9 +271,12 @@ xmap ga <Plug>(EasyAlign)
 " emmet
 imap <expr><c-y> pumvisible() ? "\<c-y>\<Plug>(emmet-expand-abbr)" : "\<Plug>(emmet-expand-abbr)"
 let g:user_emmet_expandabbr_key = '<c-y>'
-let g:user_emmet_leader_key = '<c-z>'
+let g:user_emmet_leader_key = '<c-a>'
 let g:user_emmet_next_key = '<c-j>'
 let g:user_emmet_prev_key = '<c-k>'
+
+" git
+nnoremap <leader>gb :Git blame<cr>
 
 " gitsigns
 lua << EOF
@@ -303,8 +306,8 @@ require('gitsigns').setup {
 EOF
 
 " hop
-noremap <leader>/ :HopPattern<cr>
-noremap <leader>t :HopChar2<cr>
+nnoremap <leader>/ :HopPattern<cr>
+nnoremap <leader>t :HopChar2<cr>
 lua << EOF
 require'hop'.setup()
 EOF
@@ -376,6 +379,7 @@ let g:sort_json = {
       \   'version',
       \   'main',
       \   'module',
+      \   'type',
       \   'types',
       \   'typings',
       \   'files',
@@ -467,10 +471,7 @@ nnoremap <leader>u :UndotreeToggle<cr>
 lua << EOF
 require('vgit').setup({
   keymaps = {
-    ['n [c'] = 'hunk_up',
-    ['n ]c'] = 'hunk_down',
     ['n <leader>gh'] = 'buffer_history_preview',
-    ['n <leader>gb'] = 'buffer_gutter_blame_preview',
     ['n <leader>gf'] = 'project_diff_preview',
   },
   settings = {
