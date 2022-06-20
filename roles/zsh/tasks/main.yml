@@ -2,12 +2,12 @@
 - name: install packages
   become: true
   pacman:
-    name: ['zsh', 'xclip', 'scrot', 'fd', 'fzf', 'fasd']
+    name: ['zsh', 'xclip', 'scrot', 'fd', 'fzf', 'zoxide']
   when: ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
-    name: ['zsh', 'fd', 'fzf', 'fasd']
+    name: ['zsh', 'fd', 'fzf', 'zoxide']
   when: ansible_distribution == 'MacOSX'
 
 - name: clone oh-my-zsh
@@ -16,7 +16,10 @@
     dest: '{{ item.dest }}'
     update: no
   with_items:
-    - { repo: 'https://github.com/robbyrussell/oh-my-zsh.git', dest: ~/.oh-my-zsh }
+    - {
+        repo: 'https://github.com/robbyrussell/oh-my-zsh.git',
+        dest: ~/.oh-my-zsh,
+      }
 
 - name: clone zsh plugins
   git:
@@ -24,9 +27,18 @@
     dest: '{{ item.dest }}'
     update: no
   with_items:
-    - { repo: 'https://github.com/romkatv/powerlevel10k', dest: ~/.oh-my-zsh/custom//themes/powerlevel10k }
-    - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions }
-    - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting', dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting }
+    - {
+        repo: 'https://github.com/romkatv/powerlevel10k',
+        dest: ~/.oh-my-zsh/custom//themes/powerlevel10k,
+      }
+    - {
+        repo: 'https://github.com/zsh-users/zsh-autosuggestions',
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions,
+      }
+    - {
+        repo: 'https://github.com/zsh-users/zsh-syntax-highlighting',
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting,
+      }
 
 - name: copy zsh conf
   copy:

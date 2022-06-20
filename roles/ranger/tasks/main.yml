@@ -15,7 +15,18 @@
     path: '{{ item }}'
     state: directory
   with_items:
-    - ~/.config/ranger
+    - ~/.config/ranger/plugins
+
+- name: clone ranger plugins
+  git:
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+    update: no
+  with_items:
+    - {
+        repo: 'git@github.com:jchook/ranger-zoxide.git',
+        dest: ~/.config/ranger/plugins/zoxide,
+      }
 
 - name: copy ranger conf
   copy:
@@ -23,4 +34,3 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: rc.conf, dest: ~/.config/ranger/rc.conf }
-    - { src: commands.py, dest: ~/.config/ranger/commands.py }

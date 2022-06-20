@@ -32,15 +32,15 @@ fi
 
 plugins+=(colored-man-pages)
 plugins+=(docker-compose)
-plugins+=(fasd)
-plugins+=(history-substring-search)
-plugins+=(kubectl)
 plugins+=(git)
 plugins+=(git-flow-avh)
+plugins+=(history-substring-search)
+plugins+=(kubectl)
 plugins+=(nvm)
 plugins+=(tmux)
-plugins+=(zsh-syntax-highlighting)
+plugins+=(zoxide)
 plugins+=(zsh-autosuggestions)
+plugins+=(zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
