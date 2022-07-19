@@ -17,6 +17,7 @@
     update: no
   with_items:
     - {
+        depth: 1,
         repo: 'https://github.com/robbyrussell/oh-my-zsh.git',
         dest: ~/.oh-my-zsh,
       }
@@ -28,14 +29,17 @@
     update: no
   with_items:
     - {
+        depth: 1,
         repo: 'https://github.com/romkatv/powerlevel10k',
         dest: ~/.oh-my-zsh/custom//themes/powerlevel10k,
       }
     - {
+        depth: 1,
         repo: 'https://github.com/zsh-users/zsh-autosuggestions',
         dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions,
       }
     - {
+        depth: 1,
         repo: 'https://github.com/zsh-users/zsh-syntax-highlighting',
         dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting,
       }

@@ -1,6 +1,7 @@
 {
   "coc.preferences.formatOnSaveFiletypes": ["*"],
   "eslint.autoFixOnSave": true,
+  "graphql.filetypes": [],
   "javascript.preferences.jsxAttributeCompletionStyle": "none",
   "javascript.suggest.completeFunctionCalls": false,
   "suggest.enablePreview": true,

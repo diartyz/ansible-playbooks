@@ -5,7 +5,7 @@
     dest: '{{ item.dest }}'
     update: no
   with_items:
-    - { repo: 'https://github.com/creationix/nvm.git', dest: ~/.nvm }
+    - { depth: 1, repo: 'https://github.com/creationix/nvm.git', dest: ~/.nvm }
 
 - name: Check if node is installed
   command: which node

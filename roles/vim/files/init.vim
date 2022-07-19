@@ -1,3 +1,11 @@
+lua << EOF
+return require('packer').startup(function(use)
+
+  use 'wbthomason/packer.nvim'
+
+end)
+EOF
+
 call plug#begin('~/.vim/plugged')
 
 " Plug 'jose-elias-alvarez/null-ls.nvim'
@@ -146,11 +154,12 @@ call coc#add_extension(
       \ 'coc-tsserver',
       \ 'coc-prettier',
       \ 'coc-eslint',
+      \ 'coc-graphql',
       \ 'coc-vimlsp',
       \ )
 inoremap <expr><c-@> coc#refresh()
 inoremap <expr><c-space> coc#refresh()
-inoremap <expr><tab> pumvisible() ? coc#_select_confirm() : "\<c-g>u\<tab>"
+inoremap <expr><tab> coc#pum#visible() ? coc#pum#confirm() : "\<c-g>u\<tab>"
 let g:UltiSnipsExpandTrigger = "<c-;>"
 nmap gd <Plug>(coc-definition)
 nmap <leader>gd <Plug>(coc-references)
