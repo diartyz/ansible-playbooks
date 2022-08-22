@@ -18,8 +18,8 @@ fi
 export GOPROXY=https://goproxy.io
 export KEYTIMEOUT=1
 export LANG=en_US.UTF-8
-export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/shims:$GOPATH/bin:$HOME/.cargo/bin:$HOME/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/llvm/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
 export PYTHONUSERBASE="$HOME/.local"
 export ZSH=~/.oh-my-zsh
 # export http_proxy=http://127.0.0.1:1080
@@ -38,6 +38,7 @@ plugins+=(history-substring-search)
 plugins+=(kubectl)
 plugins+=(nvm)
 plugins+=(tmux)
+plugins+=(vi-mode)
 plugins+=(zoxide)
 plugins+=(zsh-autosuggestions)
 plugins+=(zsh-syntax-highlighting)
@@ -63,7 +64,3 @@ fkill() {
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# tabtab source for packages
-# uninstall by removing these lines
-[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true

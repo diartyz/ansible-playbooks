@@ -23,11 +23,11 @@
   npm:
     name: '{{ item }}'
     global: yes
-    registry: https://registry.npm.taobao.org
+    # registry: https://registry.npm.taobao.org
   with_items:
-    - yarn
-    - graphql-language-service-cli
-    - nx
+    - '@fsouza/prettierd'
+    - eslint_d
+    - neovim
 
 - name: copy node config
   copy:
