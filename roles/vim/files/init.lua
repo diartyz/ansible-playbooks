@@ -505,16 +505,8 @@ require 'mason-lspconfig'.setup {
     'vimls',
   },
 }
-local lsp_augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
 local lsp_config = {
   capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
-  on_attach = function(_, bufnr)
-    vim.api.nvim_create_autocmd('BufWritePre', {
-      group = lsp_augroup,
-      buffer = bufnr,
-      callback = function() vim.lsp.buf.format() end,
-    })
-  end,
 }
 require 'mason-lspconfig'.setup_handlers {
   function(server_name)
@@ -523,17 +515,9 @@ require 'mason-lspconfig'.setup_handlers {
   tsserver = function()
     require 'typescript'.setup {
       server = vim.tbl_extend('force', lsp_config, {
-        on_attach = function(client, bufnr)
+        on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = lsp_augroup,
-            buffer = bufnr,
-            callback = function()
-              require 'typescript'.actions.organizeImports { sync = true }
-              vim.lsp.buf.format()
-            end,
-          })
         end,
       })
     }
