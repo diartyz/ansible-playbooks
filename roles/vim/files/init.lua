@@ -38,6 +38,7 @@ Plug {
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-cmdline',
     'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-nvim-lua',
     'hrsh7th/cmp-path',
     'onsails/lspkind.nvim',
     { 'quangnguyen30192/cmp-nvim-ultisnips', requires = 'SirVer/ultisnips' },
@@ -204,6 +205,8 @@ cmp.setup {
     end,
   },
   sources = cmp.config.sources({
+    { name = 'nvim_lua' },
+  }, {
     { name = 'nvim_lsp' },
     { name = 'ultisnips' },
   }, {
@@ -515,6 +518,11 @@ require 'mason-lspconfig'.setup_handlers {
   tsserver = function()
     require 'typescript'.setup {
       server = vim.tbl_extend('force', lsp_config, {
+        init_options = {
+          preferences = {
+            importModuleSpecifierPreference = 'project-relative',
+          },
+        },
         on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
