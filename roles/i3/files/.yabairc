@@ -7,9 +7,10 @@ yabai -m config layout       bsp
 yabai -m config auto_balance on
 
 yabai -m config window_opacity on
-yabai -m config active_window_opacity 0.95
+yabai -m config active_window_opacity 1
 yabai -m config normal_window_opacity 0.9
 
 yabai -m rule --add app=Meld manage=off
+yabai -m rule --add app=iTerm2 opacity=.95
 
 YABAI_CERT=yabai-cert sh -c "$(curl -fsSL "https://git.io/update-yabai")" &
