@@ -509,7 +509,7 @@ require 'mason-lspconfig'.setup {
   },
 }
 local lsp_config = {
-  capabilities = require 'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+  capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
 }
 require 'mason-lspconfig'.setup_handlers {
   function(server_name)
@@ -520,7 +520,7 @@ require 'mason-lspconfig'.setup_handlers {
       server = vim.tbl_extend('force', lsp_config, {
         init_options = {
           preferences = {
-            importModuleSpecifierPreference = 'project-relative',
+            importModuleSpecifierPreference = 'relative',
           },
         },
         on_attach = function(client)
