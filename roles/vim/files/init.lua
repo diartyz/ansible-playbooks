@@ -263,22 +263,7 @@ cmp.setup.cmdline(':', {
 
 -- comment
 require 'Comment'.setup {
-  pre_hook = function(ctx)
-    if vim.bo.filetype == 'typescriptreact' then
-      local U = require 'Comment.utils'
-      local type = ctx.ctype == U.ctype.linewise and '__default' or '__multiline'
-      local location = nil
-      if ctx.ctype == U.ctype.blockwise then
-        location = require 'ts_context_commentstring.utils'.get_cursor_location()
-      elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-        location = require 'ts_context_commentstring.utils'.get_visual_start_location()
-      end
-      return require 'ts_context_commentstring.internal'.calculate_commentstring {
-        key = type,
-        location = location,
-      }
-    end
-  end,
+  pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook()
 }
 
 -- ctrlsf
@@ -508,8 +493,16 @@ require 'mason-lspconfig'.setup {
     'vimls',
   },
 }
+local lsp_augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
 local lsp_config = {
   capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
+  on_attach = function(_, bufnr)
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = lsp_augroup,
+      buffer = bufnr,
+      callback = function() vim.lsp.buf.format() end,
+    })
+  end,
 }
 require 'mason-lspconfig'.setup_handlers {
   function(server_name)
@@ -523,9 +516,14 @@ require 'mason-lspconfig'.setup_handlers {
             importModuleSpecifierPreference = 'relative',
           },
         },
-        on_attach = function(client)
+        on_attach = function(client, bufnr)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            group = lsp_augroup,
+            buffer = bufnr,
+            callback = function() vim.lsp.buf.format() end,
+          })
         end,
       })
     }
@@ -565,7 +563,10 @@ vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
 vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>')
 vim.keymap.set('n', 'gh', vim.lsp.buf.hover)
 vim.keymap.set('n', 'gi', '<cmd>Telescope lsp_implementations<cr>')
-vim.keymap.set('n', 'go', require 'typescript'.actions.organizeImports)
+vim.keymap.set('n', 'go', function()
+  require 'typescript'.actions.removeUnused({ sync = true })
+  require 'typescript'.actions.organizeImports({ sync = true })
+end)
 vim.keymap.set('n', 'gp', vim.lsp.buf.format)
 
 -- nvim-sort-json
