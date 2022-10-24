@@ -91,6 +91,7 @@ Plug {
 Plug 'akinsho/toggleterm.nvim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'lambdalisue/suda.vim'
+Plug 'lewis6991/impatient.nvim'
 Plug 'mbbill/undotree'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'sgur/vim-editorconfig'
@@ -112,7 +113,6 @@ Plug {
 Plug 'chemzqm/wxapp.vim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'rcarriga/nvim-notify'
 Plug 'sainnhe/everforest'
 Plug 'sheerun/vim-polyglot'
 Plug 'stevearc/dressing.nvim'
@@ -120,6 +120,8 @@ Plug { 'itchyny/lightline.vim', requires = 'mengelbrecht/lightline-bufferline' }
 Plug { 'tanvirtin/vgit.nvim', requires = 'nvim-lua/plenary.nvim' }
 
 vim.call 'plug#end'
+
+require 'impatient'
 
 -- general
 vim.opt.clipboard = { 'unnamed', 'unnamedplus' }
@@ -419,8 +421,6 @@ vim.keymap.set('n', '<leader>t', '<cmd>HopChar2<cr>')
 
 -- indent-blankline
 require 'indent_blankline'.setup()
-vim.opt.list = true
-vim.opt.listchars:append 'space:⋅'
 vim.keymap.set('n', '<c-g>', '<c-g><cmd>IndentBlanklineRefresh<cr>')
 
 -- lexima
@@ -701,6 +701,7 @@ require 'nvim-treesitter.configs'.setup {
   },
   context_commentstring = {
     enable = true,
+    enable_autocmd = false,
   },
 }
 
