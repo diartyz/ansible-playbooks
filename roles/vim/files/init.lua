@@ -118,6 +118,13 @@ Plug 'sheerun/vim-polyglot'
 Plug 'stevearc/dressing.nvim'
 Plug { 'itchyny/lightline.vim', requires = 'mengelbrecht/lightline-bufferline' }
 Plug { 'tanvirtin/vgit.nvim', requires = 'nvim-lua/plenary.nvim' }
+Plug {
+  'folke/noice.nvim',
+  requires = {
+    'MunifTanjim/nui.nvim',
+    'rcarriga/nvim-notify',
+  },
+}
 
 vim.call 'plug#end'
 
@@ -295,7 +302,6 @@ vim.fn['defx#custom#option']('_', {
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'defx',
   callback = function()
-    vim.keymap.set('n', 'U', [[<cmd>Defx -search_recursive=`expand('%:p')`<cr>]], { buffer = true })
     vim.keymap.set('n', 'q', function()
       vim.fn['defx#call_async_action'] 'quit'
     end, { buffer = true })
@@ -340,6 +346,7 @@ vim.api.nvim_create_autocmd('FileType', {
       vim.fn['defx#call_async_action'] 'new_multiple_files'
     end, { buffer = true })
     vim.keymap.set('n', 'R', function()
+      vim.api.nvim_command [[Defx -search_recursive=`expand('%:p')`]]
       vim.fn['defx#call_async_action'] 'redraw'
     end, { buffer = true })
     vim.keymap.set('n', 'v', function()
@@ -569,6 +576,12 @@ vim.keymap.set('n', 'go', function()
 end)
 vim.keymap.set('n', 'gp', vim.lsp.buf.format)
 
+-- noice
+require 'noice'.setup()
+require 'notify'.setup {
+  background_colour = '#252c31',
+}
+
 -- nvim-sort-json
 vim.g.sort_json = {
   orderOverride = {
@@ -693,8 +706,10 @@ vim.keymap.set('n', '<leader>p', '<cmd>TodoTelescope<cr>')
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = {
     'javascript',
-    'typescript',
+    'lua',
+    'regex',
     'tsx',
+    'typescript',
   },
   autotag = {
     enable = true,
