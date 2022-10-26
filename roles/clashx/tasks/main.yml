@@ -4,6 +4,11 @@
     name: ['clashx']
   when: ansible_distribution == 'MacOSX'
 
+- name: create config folder
+  file:
+    path: ~/.config/clash
+    state: directory
+
 - name: copy shadowsocks conf
   copy:
     src: '{{ item.src }}'

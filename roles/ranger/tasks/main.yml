@@ -25,7 +25,7 @@
   with_items:
     - {
         depth: 1,
-        repo: 'git@github.com:jchook/ranger-zoxide.git',
+        repo: 'https://github.com/jchook/ranger-zoxide.git',
         dest: ~/.config/ranger/plugins/zoxide,
       }
 

@@ -15,5 +15,5 @@
 
 - name: install cask packages
   homebrew_cask:
-    name: [iterm2, homebrew/cask-fonts/font-jetbrains-mono-nerd-font]
+    name: [iterm2, font-jetbrains-mono-nerd-font, font-fira-code-nerd-font]
   when: ansible_distribution == 'MacOSX'

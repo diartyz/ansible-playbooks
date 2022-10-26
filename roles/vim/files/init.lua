@@ -577,7 +577,19 @@ end)
 vim.keymap.set('n', 'gp', vim.lsp.buf.format)
 
 -- noice
-require 'noice'.setup()
+require 'noice'.setup {
+  cmdline = {
+    enabled = false,
+  },
+  messages = {
+    enabled = false,
+  },
+  lsp = {
+    progress = {
+      enabled = false,
+    },
+  },
+}
 require 'notify'.setup {
   background_colour = '#252c31',
 }
@@ -679,6 +691,7 @@ require 'toggleterm'.setup {
     width = function() return vim.o.columns end,
     height = function() return vim.o.lines end,
   },
+  open_mapping = [[<c-\>]],
 }
 local Terminal = require 'toggleterm.terminal'.Terminal
 local lazygit = Terminal:new {
