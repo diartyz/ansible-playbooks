@@ -48,23 +48,27 @@ Plug {
 -- edit
 Plug 'AndrewRadev/sideways.vim'
 Plug 'arthurxavierx/vim-caser'
+Plug 'bronson/vim-visual-star-search'
 Plug 'chaoren/vim-wordmotion'
 Plug 'diartyz/vim-utils'
-Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'inkarkat/vim-visualrepeat'
 Plug 'junegunn/vim-easy-align'
 Plug 'mattn/emmet-vim'
 Plug 'mg979/vim-visual-multi'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'nelstrom/vim-visual-star-search'
 Plug 'phaazon/hop.nvim'
 Plug 'tommcdo/vim-exchange'
+Plug 'tpope/vim-abolish'
 Plug 'wellle/targets.vim'
 Plug { 'diartyz/nvim-sort-json', ['do'] = install_nvim_sort_json }
 Plug { 'inkarkat/vim-AdvancedSorters', requires = 'inkarkat/vim-ingo-library' }
 Plug { 'kana/vim-textobj-entire', requires = 'kana/vim-textobj-user' }
 Plug { 'tpope/vim-surround', requires = 'tpope/vim-repeat' }
 Plug { 'tpope/vim-unimpaired', requires = 'tpope/vim-repeat' }
+Plug {
+  'inkarkat/vim-ReplaceWithRegister',
+  requires = { 'tpope/vim-repeat', 'inkarkat/vim-visualrepeat' }
+}
 Plug {
   'numToStr/Comment.nvim',
   requires = {
@@ -160,13 +164,12 @@ vim.api.nvim_create_user_command('OpenInVSCode',
 vim.api.nvim_create_user_command('R', 'w|source $MYVIMRC', { nargs = 0 })
 vim.api.nvim_create_user_command('W', 'noautocmd w', { nargs = 0 })
 vim.g.mapleader = ' '
-vim.keymap.set('i', '<c-o>', '<esc>O')
 vim.keymap.set('n', '<bs>', '<cmd>nohlsearch<cr>')
 vim.keymap.set('n', '<c-h>', '<cmd>nohlsearch<cr>')
 vim.keymap.set('n', '<leader><leader>q', '<cmd>qall!<cr>')
 vim.keymap.set('n', '<leader><leader>s', '<cmd>wall<cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>')
-vim.keymap.set('n', '<leader>s', '<cmd>w<cr>')
+vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')
 vim.keymap.set('n', 'cp', [[<cmd>let @+=expand('%') . ' ' . line('.') . ':' . col('.')<cr>]])
 
 -- search & tab
@@ -176,13 +179,13 @@ vim.opt.shiftround = true
 vim.opt.shiftwidth = 0
 vim.opt.smartcase = true
 vim.opt.tabstop = 2
+vim.opt.wrapscan = false
 
 -- ui
 vim.opt.colorcolumn = { 80, 120 }
 vim.opt.cursorline = true
 vim.opt.laststatus = 3
 vim.opt.number = true
-vim.opt.relativenumber = true
 vim.opt.showtabline = 2
 vim.opt.termguicolors = true
 
@@ -706,11 +709,12 @@ vim.keymap.set('n', '<c-l>', function() lazygit:toggle() end)
 -- todo-comments
 require 'todo-comments'.setup {
   highlight = {
+    after = '',
     keyword = 'bg',
     pattern = '<(KEYWORDS)>',
   },
   search = {
-    pattern = '\b(KEYWORDS)\b',
+    pattern = [[\b(KEYWORDS)\b]],
   },
 }
 vim.keymap.set('n', '<leader>p', '<cmd>TodoTelescope<cr>')
@@ -730,6 +734,9 @@ require 'nvim-treesitter.configs'.setup {
   context_commentstring = {
     enable = true,
     enable_autocmd = false,
+  },
+  highlight = {
+    enable = true,
   },
 }
 
