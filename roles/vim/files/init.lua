@@ -94,6 +94,7 @@ Plug {
 -- project
 Plug 'akinsho/toggleterm.nvim'
 Plug 'dyng/ctrlsf.vim'
+Plug 'keaising/im-select.nvim'
 Plug 'lambdalisue/suda.vim'
 Plug 'lewis6991/impatient.nvim'
 Plug 'mbbill/undotree'
@@ -428,6 +429,11 @@ require 'gitsigns'.setup {
 require 'hop'.setup()
 vim.keymap.set('n', '<leader>/', '<cmd>HopPattern<cr>')
 vim.keymap.set('n', '<leader>t', '<cmd>HopChar2<cr>')
+
+-- im-select
+require 'im_select'.setup {
+  default_im_select = 'com.apple.keylayout.ABC',
+}
 
 -- indent-blankline
 require 'indent_blankline'.setup()

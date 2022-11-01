@@ -5,9 +5,14 @@
     name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher']
   when: ansible_distribution == 'Archlinux'
 
+- name: homebrew tap
+  homebrew_tap:
+    name: daipeihust/tap
+  when: ansible_distribution == 'MacOSX'
+
 - name: install packages
   homebrew:
-    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher', 'jq', 'watchman']
+    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher', 'im-select', 'jq']
   when: ansible_distribution == 'MacOSX'
 
 - name: install python packages
