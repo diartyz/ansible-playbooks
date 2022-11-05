@@ -46,6 +46,7 @@
   with_items:
     - { src: .tigrc, dest: ~/.tigrc }
     - { src: .gitconfig-work, dest: ~/.gitconfig-work }
+    - { src: .gitconfig-zenvy, dest: ~/.gitconfig-zenvy }
     - {
         src: lazygit.yml,
         dest: ~/Library/Application Support/lazygit/config.yml,

@@ -8,6 +8,8 @@
 	proxy = socks5://127.0.0.1:1080
 [includeIf "gitdir:~/Work/"]
   path = .gitconfig-work
+[includeIf "gitdir:~/Zenvy/"]
+  path = .gitconfig-zenvy
 [diff]
   tool = meld
 [difftool "meld"]
