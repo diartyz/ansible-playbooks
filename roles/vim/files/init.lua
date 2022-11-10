@@ -42,6 +42,7 @@ Plug {
     'hrsh7th/cmp-path',
     'onsails/lspkind.nvim',
     { 'quangnguyen30192/cmp-nvim-ultisnips', requires = 'SirVer/ultisnips' },
+    { 'tzachar/cmp-tabnine', ['do'] = './install.sh' },
   }
 }
 
@@ -98,7 +99,6 @@ Plug 'keaising/im-select.nvim'
 Plug 'lambdalisue/suda.vim'
 Plug 'lewis6991/impatient.nvim'
 Plug 'mbbill/undotree'
-Plug 'rbgrouleff/bclose.vim'
 Plug 'sgur/vim-editorconfig'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/BufOnly.vim'
@@ -171,6 +171,7 @@ vim.keymap.set('n', '<leader><leader>q', '<cmd>qall!<cr>')
 vim.keymap.set('n', '<leader><leader>s', '<cmd>wall<cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>')
 vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')
+vim.keymap.set('n', '<leader>x', '<cmd>bd<cr>')
 vim.keymap.set('n', 'cp', [[<cmd>let @+=expand('%') . ' ' . line('.') . ':' . col('.')<cr>]])
 
 -- search & tab
@@ -196,15 +197,15 @@ require 'nvim-ts-autotag'.setup()
 -- bufOnly
 vim.keymap.set('n', '<leader>d', '<cmd>BufOnly<cr>')
 
--- bclose
-vim.g.bclose_no_plugin_maps = true
-vim.keymap.set('n', '<leader>x', '<cmd>Bclose<cr>')
-
 -- cmp
 local cmp = require 'cmp'
 cmp.setup {
   formatting = {
     format = function(entry, vim_item)
+      if entry.source.name == 'cmp_tabnine' and entry.completion_item.data ~= nil then
+        vim_item.kind = string.format("%s %s", '', 'Tabnine')
+        return vim_item
+      end
       return require 'lspkind'.cmp_format { mode = 'symbol_text' } (entry, vim_item)
     end
   },
@@ -220,6 +221,7 @@ cmp.setup {
   sources = cmp.config.sources({
     { name = 'nvim_lua' },
   }, {
+    { name = 'cmp_tabnine' },
     { name = 'nvim_lsp' },
     { name = 'ultisnips' },
   }, {
@@ -421,7 +423,7 @@ require 'gitsigns'.setup {
     map('n', '<leader>hd', gs.diffthis)
     map({ 'n', 'v' }, '<leader>hr', '<cmd>Gitsigns reset_hunk<cr>')
     map({ 'n', 'v' }, '<leader>hs', '<cmd>Gitsigns stage_hunk<cr>')
-    map({ 'o', 'x' }, 'ih', '<cmd><c-u>Gitsigns select_hunk<cr>')
+    map({ 'o', 'x' }, 'ih', '<cmd>Gitsigns select_hunk<cr>')
   end
 }
 
@@ -507,6 +509,7 @@ require 'mason-lspconfig'.setup {
     'sumneko_lua',
     'tsserver',
     'vimls',
+    'rust_analyzer',
   },
 }
 local lsp_augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
@@ -617,6 +620,7 @@ vim.g.sort_json = {
     'files',
     'publishConfig',
     'repository',
+    'license',
     'scripts'
   },
   orderUnderride = {
@@ -689,8 +693,8 @@ require 'telescope'.setup {
   },
 }
 vim.keymap.set('n', '<c-p>', '<cmd>Telescope find_files<cr>')
-vim.keymap.set('n', '<leader>a', '<cmd>Telescope buffers<cr>')
 vim.keymap.set('n', '<leader>m', '<cmd>Telescope marks<cr>')
+vim.keymap.set('n', '<leader>p', '<cmd>Telescope buffers<cr>')
 
 -- terminal
 require 'toggleterm'.setup {
@@ -723,7 +727,6 @@ require 'todo-comments'.setup {
     pattern = [[\b(KEYWORDS)\b]],
   },
 }
-vim.keymap.set('n', '<leader>p', '<cmd>TodoTelescope<cr>')
 
 -- treesitter
 require 'nvim-treesitter.configs'.setup {
@@ -755,8 +758,8 @@ require 'vgit'.setup {
   keymaps = {
     ['n ]h'] = 'hunk_down',
     ['n [h'] = 'hunk_up',
-    ['n <leader>gh'] = 'buffer_history_preview',
-    ['n <leader>gp'] = 'project_diff_preview',
+    ['n <leader>hg'] = 'buffer_history_preview',
+    ['n <leader>ha'] = 'project_diff_preview',
   },
   settings = {
     live_blame = {
