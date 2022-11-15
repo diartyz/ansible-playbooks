@@ -46,10 +46,12 @@ plugins+=(zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 alias cnpm="ELECTRON_MIRROR='https://npm.taobao.org/mirrors/electron/' npm --registry=https://registry.npm.taobao.org"
+alias cnpx="ELECTRON_MIRROR='https://npm.taobao.org/mirrors/electron/' npx --registry=https://registry.npm.taobao.org"
 alias cnvm="NVM_NODEJS_ORG_MIRROR='https://npm.taobao.org/mirrors/node/' nvm"
 alias lg="lazygit"
-alias p="pnpm"
 alias p4="proxychains4"
+alias p="pnpm"
+alias px="pnpx"
 alias sclip='scrot -s ~/temp.png && xclip -sel clip -t image/png ~/temp.png && rm ~/temp.png'
 alias vi="nvim"
 
