@@ -103,6 +103,7 @@ Plug 'sgur/vim-editorconfig'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/BufOnly.vim'
 Plug { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' }
+Plug { 'michaelb/sniprun', ['do'] = 'bash install.sh' }
 Plug { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' } }
 Plug { 'tpope/vim-obsession', requires = 'dhruvasagar/vim-prosession' }
 Plug {
@@ -162,7 +163,7 @@ vim.api.nvim_create_user_command('OpenInVSCode',
   [[exe "silent !code '" . getcwd() . "' --goto '" . expand('%') . ":" . line('.') . ":" . col('.') . "'"]],
   { nargs = 0 }
 )
-vim.api.nvim_create_user_command('R', 'w|source $MYVIMRC', { nargs = 0 })
+vim.api.nvim_create_user_command('R', 'update|source $MYVIMRC', { nargs = 0 })
 vim.api.nvim_create_user_command('W', 'noautocmd w', { nargs = 0 })
 vim.g.mapleader = ' '
 vim.keymap.set('n', '<bs>', '<cmd>nohlsearch<cr>')
@@ -188,6 +189,7 @@ vim.opt.colorcolumn = { 80, 120 }
 vim.opt.cursorline = true
 vim.opt.laststatus = 3
 vim.opt.number = true
+vim.opt.relativenumber = true
 vim.opt.showtabline = 2
 vim.opt.termguicolors = true
 
@@ -532,7 +534,8 @@ require 'mason-lspconfig'.setup_handlers {
       server = vim.tbl_extend('force', lsp_config, {
         init_options = {
           preferences = {
-            importModuleSpecifierPreference = 'relative',
+            importModuleSpecifierPreference = 'project-relative',
+            jsxAttributeCompletionStyle = 'none',
           },
         },
         on_attach = function(client, bufnr)
@@ -637,6 +640,14 @@ vim.keymap.set('n', '[a', '<cmd>SidewaysLeft<cr>')
 vim.keymap.set('n', ']a', '<cmd>SidewaysRight<cr>')
 vim.keymap.set('n', 'gA', '<cmd>SidewaysJumpLeft<cr>')
 vim.keymap.set('n', 'ga', '<cmd>SidewaysJumpRight<cr>')
+
+-- sniprun
+require 'sniprun'.setup {
+  display = {
+    'NvimNotify',
+  },
+}
+vim.keymap.set('x', '<leader>r', [[:SnipRun<cr>]])
 
 -- targets
 vim.g.targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
@@ -743,9 +754,6 @@ require 'nvim-treesitter.configs'.setup {
   context_commentstring = {
     enable = true,
     enable_autocmd = false,
-  },
-  highlight = {
-    enable = true,
   },
 }
 
