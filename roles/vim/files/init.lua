@@ -173,6 +173,7 @@ vim.keymap.set('n', '<leader><leader>s', '<cmd>wall<cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>')
 vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')
 vim.keymap.set('n', '<leader>x', '<cmd>bd<cr>')
+vim.keymap.set('n', 'cf', [[<cmd>let @+=expand('%:t')<cr>]])
 vim.keymap.set('n', 'cp', [[<cmd>let @+=expand('%') . ' ' . line('.') . ':' . col('.')<cr>]])
 
 -- search & tab
@@ -192,12 +193,38 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.showtabline = 2
 vim.opt.termguicolors = true
+vim.fn.sign_define {
+  {
+    name = 'DiagnosticSignError',
+    text = 'E',
+    texthl = 'DiagnosticSignError',
+    linehl = 'ErrorLine',
+  },
+  {
+    name = 'DiagnosticSignWarn',
+    text = 'W',
+    texthl = 'DiagnosticSignWarn',
+    linehl = 'WarningLine',
+  },
+  {
+    name = 'DiagnosticSignInfo',
+    text = 'I',
+    texthl = 'DiagnosticSignInfo',
+    linehl = 'InfoLine',
+  },
+  {
+    name = 'DiagnosticSignHint',
+    text = 'H',
+    texthl = 'DiagnosticSignHint',
+    linehl = 'HintLine',
+  },
+}
 
 -- autotag
 require 'nvim-ts-autotag'.setup()
 
 -- bufOnly
-vim.keymap.set('n', '<leader>d', '<cmd>BufOnly<cr>')
+vim.keymap.set('n', '<leader>d', '<cmd>BufOnly<cr><cmd>redrawtabline<cr>')
 
 -- cmp
 local cmp = require 'cmp'
@@ -585,10 +612,7 @@ vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
 vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>')
 vim.keymap.set('n', 'gh', vim.lsp.buf.hover)
 vim.keymap.set('n', 'gi', '<cmd>Telescope lsp_implementations<cr>')
-vim.keymap.set('n', 'go', function()
-  require 'typescript'.actions.removeUnused({ sync = true })
-  require 'typescript'.actions.organizeImports({ sync = true })
-end)
+vim.keymap.set('n', 'go', require 'typescript'.actions.organizeImports)
 vim.keymap.set('n', 'gp', vim.lsp.buf.format)
 
 -- noice

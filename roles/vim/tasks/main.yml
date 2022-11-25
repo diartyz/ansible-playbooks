@@ -62,3 +62,4 @@
     - { src: .vimrc, dest: ~/.vimrc }
     - { src: init.lua, dest: ~/.config/nvim/init.lua }
     - { src: coc-settings.json, dest: ~/.config/nvim/coc-settings.json }
+    - { src: typescriptreact.snippets, dest: ~/.config/nvim/UltiSnips/typescriptreact.snippets }

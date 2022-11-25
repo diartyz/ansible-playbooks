@@ -1,0 +1,17 @@
+snippet storybook "" b
+import { ComponentMeta, ComponentStory } from '@storybook/react'
+import { $1 } from './$1'
+
+export default {
+  component: $1,
+} as ComponentMeta<typeof $1>
+
+export const Default: ComponentStory<typeof $1> = (args) => (
+  <$1 {...args}>
+		$2
+	</$1>
+)
+Default.args = {
+	$0
+}
+endsnippet
