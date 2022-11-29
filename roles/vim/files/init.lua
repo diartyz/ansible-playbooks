@@ -48,6 +48,7 @@ Plug {
 
 -- edit
 Plug 'AndrewRadev/sideways.vim'
+Plug 'AndrewRadev/switch.vim'
 Plug 'arthurxavierx/vim-caser'
 Plug 'axelvc/template-string.nvim'
 Plug 'bronson/vim-visual-star-search'
@@ -607,7 +608,6 @@ require 'null-ls'.setup {
 }
 vim.keymap.set('n', '<c-j>', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<c-k>', vim.diagnostic.goto_prev)
-vim.keymap.set('n', '<c-t>', '<cmd>Telescope lsp_document_symbols<cr>')
 vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action)
 vim.keymap.set('n', '<leader>gd', '<cmd>Telescope lsp_references<cr>')
 vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
@@ -675,6 +675,19 @@ require 'sniprun'.setup {
 }
 vim.keymap.set('x', '<leader>r', [[:SnipRun<cr>]])
 
+-- switch
+vim.g.switch_mapping = '<leader>i'
+vim.g.switch_custom_definitions = {
+  {
+    ['\\(\\k\\+=\\)"\\(\\k\\+\\)"'] = '\\1{`\\2`}',
+    ['\\(\\k\\+=\\){[`"\']\\(\\k\\+\\)[`"\']}'] = '\\1"\\2"',
+  },
+  {
+    ['\\(\\k\\+=\\){\\(\\(\\k\\|\\.\\)\\+\\)}'] = '\\1{`${\\2}`}',
+    ['\\(\\k\\+=\\){`${\\(\\(\\k\\|\\.\\)\\+\\)}`}'] = '\\1{\\2}',
+  },
+}
+
 -- targets
 vim.g.targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
 vim.api.nvim_create_autocmd('User', {
@@ -730,6 +743,7 @@ require 'telescope'.setup {
   },
 }
 vim.keymap.set('n', '<c-p>', '<cmd>Telescope find_files<cr>')
+vim.keymap.set('n', '<c-t>', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
 vim.keymap.set('n', '<leader>m', '<cmd>Telescope marks<cr>')
 vim.keymap.set('n', '<leader>p', '<cmd>Telescope buffers<cr>')
 

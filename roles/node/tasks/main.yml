@@ -28,6 +28,8 @@
     - '@fsouza/prettierd'
     - eslint_d
     - neovim
+    - nx
+    - ts-node
 
 - name: copy node config
   copy:
