@@ -49,6 +49,7 @@ Plug {
 -- edit
 Plug 'AndrewRadev/sideways.vim'
 Plug 'arthurxavierx/vim-caser'
+Plug 'axelvc/template-string.nvim'
 Plug 'bronson/vim-visual-star-search'
 Plug 'chaoren/vim-wordmotion'
 Plug 'diartyz/vim-utils'
@@ -732,6 +733,11 @@ vim.keymap.set('n', '<c-p>', '<cmd>Telescope find_files<cr>')
 vim.keymap.set('n', '<leader>m', '<cmd>Telescope marks<cr>')
 vim.keymap.set('n', '<leader>p', '<cmd>Telescope buffers<cr>')
 
+-- template-string
+require 'template-string'.setup {
+  remove_template_string = true,
+}
+
 -- terminal
 require 'toggleterm'.setup {
   direction = 'float',
@@ -779,6 +785,9 @@ require 'nvim-treesitter.configs'.setup {
   context_commentstring = {
     enable = true,
     enable_autocmd = false,
+  },
+  highlight = {
+    enable = true,
   },
 }
 
