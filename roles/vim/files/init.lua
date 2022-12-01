@@ -70,6 +70,10 @@ Plug { 'kana/vim-textobj-entire', requires = 'kana/vim-textobj-user' }
 Plug { 'tpope/vim-surround', requires = 'tpope/vim-repeat' }
 Plug { 'tpope/vim-unimpaired', requires = 'tpope/vim-repeat' }
 Plug {
+  'abecodes/tabout.nvim',
+  requires = { 'nvim-treesitter/nvim-treesitter', ['do'] = ':TSUpdate' }
+}
+Plug {
   'inkarkat/vim-ReplaceWithRegister',
   requires = { 'tpope/vim-repeat', 'inkarkat/vim-visualrepeat' }
 }
@@ -230,6 +234,7 @@ require 'nvim-ts-autotag'.setup()
 vim.keymap.set('n', '<leader>d', '<cmd>BufOnly<cr><cmd>redrawtabline<cr>')
 
 -- cmp
+vim.g.UltiSnipsExpandTrigger = '<c-;>'
 local cmp = require 'cmp'
 cmp.setup {
   formatting = {
@@ -243,7 +248,13 @@ cmp.setup {
   },
   mapping = cmp.mapping.preset.insert {
     ['<c-space>'] = cmp.mapping.complete(),
-    ['<tab>'] = cmp.mapping.confirm { select = false },
+    ['<tab>'] = function(fallback)
+      if cmp.get_selected_entry() then
+        cmp.confirm { select = false }
+      else
+        fallback()
+      end
+    end,
   },
   snippet = {
     expand = function(args)
@@ -292,7 +303,7 @@ cmp.setup.cmdline(':', {
 --   if vim.call 'coc#pum#visible' then
 --     vim.call 'coc#pum#confirm'
 --   else
---     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<tab>', true, false, true), 'in', true)
+--     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<tab>', true, true, true), 'in', true)
 --   end
 -- end)
 -- vim.keymap.set('n', '<c-j>', '<Plug>(coc-diagnostic-next)')
@@ -641,6 +652,7 @@ vim.g.sort_json = {
     'name',
     'private',
     'version',
+    'description',
     'main',
     'module',
     'type',
@@ -687,6 +699,9 @@ vim.g.switch_custom_definitions = {
     ['\\(\\k\\+=\\){`${\\(\\(\\k\\|\\.\\)\\+\\)}`}'] = '\\1{\\2}',
   },
 }
+
+-- tabout
+require 'tabout'.setup()
 
 -- targets
 vim.g.targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'

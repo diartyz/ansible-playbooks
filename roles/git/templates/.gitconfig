@@ -5,7 +5,7 @@
 	ignorecase = false
   pager = diff-so-fancy | less
 [http "https://github.com"]
-	proxy = socks5://127.0.0.1:1080
+	proxy = http://127.0.0.1:8118
 [includeIf "gitdir:~/Work/"]
   path = .gitconfig-work
 [includeIf "gitdir:~/Zenvy/"]
