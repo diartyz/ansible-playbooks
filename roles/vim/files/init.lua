@@ -49,11 +49,11 @@ Plug {
 -- edit
 Plug 'AndrewRadev/sideways.vim'
 Plug 'AndrewRadev/switch.vim'
-Plug 'arthurxavierx/vim-caser'
 Plug 'axelvc/template-string.nvim'
 Plug 'bronson/vim-visual-star-search'
 Plug 'chaoren/vim-wordmotion'
 Plug 'diartyz/vim-utils'
+Plug 'gbprod/substitute.nvim'
 Plug 'gcmt/wildfire.vim'
 Plug 'inkarkat/vim-visualrepeat'
 Plug 'junegunn/vim-easy-align'
@@ -61,7 +61,6 @@ Plug 'mattn/emmet-vim'
 Plug 'mg979/vim-visual-multi'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'phaazon/hop.nvim'
-Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-abolish'
 Plug 'wellle/targets.vim'
 Plug { 'diartyz/nvim-sort-json', ['do'] = install_nvim_sort_json }
@@ -72,10 +71,6 @@ Plug { 'tpope/vim-unimpaired', requires = 'tpope/vim-repeat' }
 Plug {
   'abecodes/tabout.nvim',
   requires = { 'nvim-treesitter/nvim-treesitter', ['do'] = ':TSUpdate' }
-}
-Plug {
-  'inkarkat/vim-ReplaceWithRegister',
-  requires = { 'tpope/vim-repeat', 'inkarkat/vim-visualrepeat' }
 }
 Plug {
   'numToStr/Comment.nvim',
@@ -687,6 +682,23 @@ require 'sniprun'.setup {
 }
 vim.keymap.set('x', '<leader>r', [[:SnipRun<cr>]])
 
+-- substitute
+require 'substitute'.setup {
+  range = {
+    prefix = 'S',
+  }
+}
+vim.keymap.set('n', 'cx', require 'substitute.exchange'.operator)
+vim.keymap.set('n', 'cxx', require 'substitute.exchange'.line)
+vim.keymap.set('x', 'X', require 'substitute.exchange'.visual)
+vim.keymap.set('n', 'gR', require 'substitute'.eol)
+vim.keymap.set('n', 'gr', require 'substitute'.operator)
+vim.keymap.set('n', 'grr', require 'substitute'.line)
+vim.keymap.set('x', 'gr', require 'substitute'.visual)
+vim.keymap.set('n', 'gs', function() require 'substitute.range'.operator { motion1 = 'iw' } end)
+vim.keymap.set('n', 'gss', function() require 'substitute.range'.operator { motion1 = 'iw', motion2 = '_' } end)
+vim.keymap.set('x', 'gs', function() require 'substitute.range'.visual { prefix = 's' } end)
+
 -- switch
 vim.g.switch_mapping = '<leader>i'
 vim.g.switch_custom_definitions = {
@@ -701,7 +713,17 @@ vim.g.switch_custom_definitions = {
 }
 
 -- tabout
-require 'tabout'.setup()
+require 'tabout'.setup {
+  tabouts = {
+    { open = "'", close = "'" },
+    { open = '"', close = '"' },
+    { open = '`', close = '`' },
+    { open = '(', close = ')' },
+    { open = '[', close = ']' },
+    { open = '{', close = '}' },
+    { open = '<', close = '>' },
+  },
+}
 
 -- targets
 vim.g.targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
@@ -760,7 +782,7 @@ require 'telescope'.setup {
 vim.keymap.set('n', '<c-p>', '<cmd>Telescope find_files<cr>')
 vim.keymap.set('n', '<c-t>', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
 vim.keymap.set('n', '<leader>m', '<cmd>Telescope marks<cr>')
-vim.keymap.set('n', '<leader>p', '<cmd>Telescope buffers<cr>')
+vim.keymap.set('n', '<leader>a', '<cmd>Telescope buffers<cr>')
 
 -- template-string
 require 'template-string'.setup {
@@ -798,6 +820,7 @@ require 'todo-comments'.setup {
     pattern = [[\b(KEYWORDS)\b]],
   },
 }
+vim.keymap.set('n', '<leader>p', '<cmd>TodoTelescope<cr>')
 
 -- treesitter
 require 'nvim-treesitter.configs'.setup {

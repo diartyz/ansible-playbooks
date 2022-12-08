@@ -26,6 +26,7 @@ https  = +redirect{s@http://@https://@}
 # google
 .golang.org
 .google.com
+.google.com.hk
 .googleapis.com
 .googleusercontent.com
 .gstatic.com
