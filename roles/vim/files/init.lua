@@ -1,38 +1,36 @@
-local function Plug(args)
+local function use(args)
   if type(args) == 'string' then
     vim.fn['plug#'](args)
     return
   end
   local opts = vim.empty_dict()
   for key, value in pairs(args) do
-    if key ~= 1 and key ~= 'requires' then
+    if key == 1 then
+      goto continue
+    elseif key == 'run' then
+      opts['do'] = value
+    elseif key ~= 'requires' then
       opts[key] = value
     end
+    ::continue::
   end
   vim.fn['plug#'](args[1], opts)
-  if not args.requires then
-    return
-  end
+  if not args.requires then return end
   if type(args.requires) == 'string' or not vim.tbl_islist(args.requires) then
-    Plug(args.requires)
+    use(args.requires)
     return
   end
   for i = 1, #args.requires do
-    Plug(args.requires[i])
+    use(args.requires[i])
   end
-end
-
-local function install_nvim_sort_json(_)
-  vim.cmd '!yarn install --frozen-lockfile'
-  vim.cmd ':UpdateRemotePlugins'
 end
 
 vim.call 'plug#begin'
 
 -- cmp
-Plug 'cohama/lexima.vim'
+use 'cohama/lexima.vim'
 -- Plug { 'neoclide/coc.nvim', branch = 'release', requires = 'SirVer/ultisnips' }
-Plug {
+use {
   'hrsh7th/nvim-cmp',
   requires = {
     'hrsh7th/cmp-buffer',
@@ -42,75 +40,79 @@ Plug {
     'hrsh7th/cmp-path',
     'onsails/lspkind.nvim',
     { 'quangnguyen30192/cmp-nvim-ultisnips', requires = 'SirVer/ultisnips' },
-    { 'tzachar/cmp-tabnine', ['do'] = './install.sh' },
-  }
+    { 'tzachar/cmp-tabnine', run = './install.sh' },
+  },
 }
 
 -- edit
-Plug 'AndrewRadev/sideways.vim'
-Plug 'AndrewRadev/switch.vim'
-Plug 'axelvc/template-string.nvim'
-Plug 'bronson/vim-visual-star-search'
-Plug 'chaoren/vim-wordmotion'
-Plug 'diartyz/vim-utils'
-Plug 'gbprod/substitute.nvim'
-Plug 'gcmt/wildfire.vim'
-Plug 'inkarkat/vim-visualrepeat'
-Plug 'junegunn/vim-easy-align'
-Plug 'mattn/emmet-vim'
-Plug 'mg979/vim-visual-multi'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'phaazon/hop.nvim'
-Plug 'tpope/vim-abolish'
-Plug 'wellle/targets.vim'
-Plug { 'diartyz/nvim-sort-json', ['do'] = install_nvim_sort_json }
-Plug { 'inkarkat/vim-AdvancedSorters', requires = 'inkarkat/vim-ingo-library' }
-Plug { 'kana/vim-textobj-entire', requires = 'kana/vim-textobj-user' }
-Plug { 'tpope/vim-surround', requires = 'tpope/vim-repeat' }
-Plug { 'tpope/vim-unimpaired', requires = 'tpope/vim-repeat' }
-Plug {
-  'abecodes/tabout.nvim',
-  requires = { 'nvim-treesitter/nvim-treesitter', ['do'] = ':TSUpdate' }
+use 'AndrewRadev/sideways.vim'
+use 'AndrewRadev/switch.vim'
+use 'axelvc/template-string.nvim'
+use 'bronson/vim-visual-star-search'
+use 'chaoren/vim-wordmotion'
+use 'diartyz/vim-utils'
+use 'gbprod/substitute.nvim'
+use 'gcmt/wildfire.vim'
+use 'inkarkat/vim-visualrepeat'
+use 'junegunn/vim-easy-align'
+use 'mattn/emmet-vim'
+use 'mg979/vim-visual-multi'
+use 'michaeljsmith/vim-indent-object'
+use 'phaazon/hop.nvim'
+use 'tpope/vim-abolish'
+use 'wellle/targets.vim'
+use { 'abecodes/tabout.nvim', requires = { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' } }
+use { 'inkarkat/vim-AdvancedSorters', requires = 'inkarkat/vim-ingo-library' }
+use { 'kana/vim-textobj-entire', requires = 'kana/vim-textobj-user' }
+use { 'tpope/vim-surround', requires = 'tpope/vim-repeat' }
+use { 'tpope/vim-unimpaired', requires = 'tpope/vim-repeat' }
+use {
+  'diartyz/nvim-sort-json',
+  run = function()
+    vim.cmd '!yarn install --frozen-lockfile'
+    vim.cmd ':UpdateRemotePlugins'
+  end,
 }
-Plug {
+use {
   'numToStr/Comment.nvim',
   requires = {
     'JoosepAlviste/nvim-ts-context-commentstring',
-    requires = { 'nvim-treesitter/nvim-treesitter', ['do'] = ':TSUpdate' },
+    requires = { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
   },
 }
-Plug {
-  'windwp/nvim-ts-autotag', ['do'] = ':TSUpdate',
-  requires = { 'nvim-treesitter/nvim-treesitter', ['do'] = ':TSUpdate' }
+use {
+  'windwp/nvim-ts-autotag',
+  run = ':TSUpdate',
+  requires = { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
 }
 
 -- lsp
-Plug 'j-hui/fidget.nvim'
-Plug 'jose-elias-alvarez/null-ls.nvim'
-Plug 'jose-elias-alvarez/typescript.nvim'
-Plug 'neovim/nvim-lspconfig'
-Plug {
+use 'j-hui/fidget.nvim'
+use 'jose-elias-alvarez/typescript.nvim'
+use 'neovim/nvim-lspconfig'
+use { 'jose-elias-alvarez/null-ls.nvim', requires = 'nvim-lua/plenary.nvim' }
+use {
   'williamboman/mason.nvim',
-  requires = { 'williamboman/mason-lspconfig.nvim', 'WhoIsSethDaniel/mason-tool-installer.nvim' }
+  requires = { 'williamboman/mason-lspconfig.nvim', 'WhoIsSethDaniel/mason-tool-installer.nvim' },
 }
 
 -- project
-Plug 'akinsho/toggleterm.nvim'
-Plug 'dyng/ctrlsf.vim'
-Plug 'keaising/im-select.nvim'
-Plug 'lambdalisue/suda.vim'
-Plug 'lewis6991/impatient.nvim'
-Plug 'mbbill/undotree'
-Plug 'sgur/vim-editorconfig'
-Plug 'tpope/vim-fugitive'
-Plug 'vim-scripts/BufOnly.vim'
-Plug { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' }
-Plug { 'michaelb/sniprun', ['do'] = 'bash install.sh' }
-Plug { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' } }
-Plug { 'tpope/vim-obsession', requires = 'dhruvasagar/vim-prosession' }
-Plug {
+use 'akinsho/toggleterm.nvim'
+use 'dyng/ctrlsf.vim'
+use 'keaising/im-select.nvim'
+use 'lambdalisue/suda.vim'
+use 'lewis6991/impatient.nvim'
+use 'mbbill/undotree'
+use 'sgur/vim-editorconfig'
+use 'tpope/vim-fugitive'
+use 'vim-scripts/BufOnly.vim'
+use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' }
+use { 'michaelb/sniprun', run = 'bash install.sh' }
+use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' } }
+use { 'tpope/vim-obsession', requires = 'dhruvasagar/vim-prosession' }
+use {
   'Shougo/defx.nvim',
-  ['do'] = ':UpdateRemotePlugins',
+  run = ':UpdateRemotePlugins',
   requires = {
     'kristijanhusak/defx-git',
     'kristijanhusak/defx-icons',
@@ -118,15 +120,15 @@ Plug {
 }
 
 -- ui
-Plug 'chemzqm/wxapp.vim'
-Plug 'lewis6991/gitsigns.nvim'
-Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'sainnhe/everforest'
-Plug 'sheerun/vim-polyglot'
-Plug 'stevearc/dressing.nvim'
-Plug { 'itchyny/lightline.vim', requires = 'mengelbrecht/lightline-bufferline' }
-Plug { 'tanvirtin/vgit.nvim', requires = 'nvim-lua/plenary.nvim' }
-Plug {
+use 'chemzqm/wxapp.vim'
+use 'lewis6991/gitsigns.nvim'
+use 'lukas-reineke/indent-blankline.nvim'
+use 'sainnhe/everforest'
+use 'sheerun/vim-polyglot'
+use 'stevearc/dressing.nvim'
+use { 'itchyny/lightline.vim', requires = 'mengelbrecht/lightline-bufferline' }
+use { 'tanvirtin/vgit.nvim', requires = 'nvim-lua/plenary.nvim' }
+use {
   'folke/noice.nvim',
   requires = {
     'MunifTanjim/nui.nvim',
@@ -161,7 +163,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- mapping
 vim.api.nvim_create_user_command('E', 'edit $MYVIMRC', { nargs = 0 })
 vim.api.nvim_create_user_command('Jq', [[%!jq '--sort-keys']], { nargs = 0 })
-vim.api.nvim_create_user_command('OpenInVSCode',
+vim.api.nvim_create_user_command(
+  'OpenInVSCode',
   [[exe "silent !code '" . getcwd() . "' --goto '" . expand('%') . ":" . line('.') . ":" . col('.') . "'"]],
   { nargs = 0 }
 )
@@ -223,7 +226,7 @@ vim.fn.sign_define {
 }
 
 -- autotag
-require 'nvim-ts-autotag'.setup()
+require('nvim-ts-autotag').setup()
 
 -- bufOnly
 vim.keymap.set('n', '<leader>d', '<cmd>BufOnly<cr><cmd>redrawtabline<cr>')
@@ -235,11 +238,11 @@ cmp.setup {
   formatting = {
     format = function(entry, vim_item)
       if entry.source.name == 'cmp_tabnine' and entry.completion_item.data ~= nil then
-        vim_item.kind = string.format("%s %s", '', 'Tabnine')
+        vim_item.kind = string.format('%s %s', '', 'Tabnine')
         return vim_item
       end
-      return require 'lspkind'.cmp_format { mode = 'symbol_text' } (entry, vim_item)
-    end
+      return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
+    end,
   },
   mapping = cmp.mapping.preset.insert {
     ['<c-space>'] = cmp.mapping.complete(),
@@ -252,9 +255,7 @@ cmp.setup {
     end,
   },
   snippet = {
-    expand = function(args)
-      vim.fn['UltiSnips#Anon'](args.body)
-    end,
+    expand = function(args) vim.fn['UltiSnips#Anon'](args.body) end,
   },
   sources = cmp.config.sources({
     { name = 'nvim_lua' },
@@ -270,7 +271,7 @@ cmp.setup.cmdline('/', {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
     { name = 'buffer' },
-  }
+  },
 })
 cmp.setup.cmdline(':', {
   mapping = cmp.mapping.preset.cmdline(),
@@ -278,7 +279,7 @@ cmp.setup.cmdline(':', {
     { name = 'path' },
   }, {
     { name = 'cmdline' },
-  })
+  }),
 })
 
 -- -- coc
@@ -315,8 +316,8 @@ cmp.setup.cmdline(':', {
 -- vim.keymap.set({ 'o', 'x' }, 'if', '<Plug>(coc-funcobj-i)')
 
 -- comment
-require 'Comment'.setup {
-  pre_hook = require 'ts_context_commentstring.integrations.comment_nvim'.create_pre_hook()
+require('Comment').setup {
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
 
 -- ctrlsf
@@ -346,18 +347,15 @@ vim.fn['defx#custom#option']('_', {
 vim.api.nvim_create_autocmd('FileType', {
   pattern = 'defx',
   callback = function()
-    vim.keymap.set('n', 'q', function()
-      vim.fn['defx#call_async_action'] 'quit'
-    end, { buffer = true })
-    vim.keymap.set('n', '<c-e>', function()
-      vim.fn['defx#call_async_action'] 'quit'
-    end, { buffer = true })
-    vim.keymap.set('n', '<cr>', function()
-      vim.fn['defx#call_async_action']('multi', { 'drop', 'quit' })
-    end, { buffer = true })
-    vim.keymap.set('n', 'h', function()
-      vim.fn['defx#call_async_action'] 'close_tree'
-    end, { buffer = true })
+    vim.keymap.set('n', 'q', function() vim.fn['defx#call_async_action'] 'quit' end, { buffer = true })
+    vim.keymap.set('n', '<c-e>', function() vim.fn['defx#call_async_action'] 'quit' end, { buffer = true })
+    vim.keymap.set(
+      'n',
+      '<cr>',
+      function() vim.fn['defx#call_async_action']('multi', { 'drop', 'quit' }) end,
+      { buffer = true }
+    )
+    vim.keymap.set('n', 'h', function() vim.fn['defx#call_async_action'] 'close_tree' end, { buffer = true })
     vim.keymap.set('n', 'l', function()
       if vim.call 'defx#is_directory' then
         vim.fn['defx#call_async_action'] 'open_tree'
@@ -365,30 +363,19 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.fn['defx#call_async_action'] 'preview'
       end
     end, { buffer = true })
-    vim.keymap.set('n', 'o', function()
-      vim.fn['defx#call_async_action'] 'drop'
-    end, { buffer = true })
-    vim.keymap.set('n', 'p', function()
-      vim.fn['defx#call_async_action'] 'paste'
-    end, { buffer = true })
-    vim.keymap.set('n', 'cc', function()
-      vim.fn['defx#call_async_action'] 'rename'
-    end, { buffer = true })
-    vim.keymap.set('n', 'cp', function()
-      vim.fn['defx#call_async_action'] 'yank_path'
-    end, { buffer = true })
-    vim.keymap.set('n', 'dd', function()
-      vim.fn['defx#call_async_action'] 'move'
-    end, { buffer = true })
-    vim.keymap.set('n', 'yy', function()
-      vim.fn['defx#call_async_action'] 'copy'
-    end, { buffer = true })
-    vim.keymap.set('n', 'D', function()
-      vim.fn['defx#call_async_action']('remove_trash', { 'force' })
-    end, { buffer = true })
-    vim.keymap.set('n', 'M', function()
-      vim.fn['defx#call_async_action'] 'new_multiple_files'
-    end, { buffer = true })
+    vim.keymap.set('n', 'o', function() vim.fn['defx#call_async_action'] 'drop' end, { buffer = true })
+    vim.keymap.set('n', 'p', function() vim.fn['defx#call_async_action'] 'paste' end, { buffer = true })
+    vim.keymap.set('n', 'cc', function() vim.fn['defx#call_async_action'] 'rename' end, { buffer = true })
+    vim.keymap.set('n', 'cp', function() vim.fn['defx#call_async_action'] 'yank_path' end, { buffer = true })
+    vim.keymap.set('n', 'dd', function() vim.fn['defx#call_async_action'] 'move' end, { buffer = true })
+    vim.keymap.set('n', 'yy', function() vim.fn['defx#call_async_action'] 'copy' end, { buffer = true })
+    vim.keymap.set(
+      'n',
+      'D',
+      function() vim.fn['defx#call_async_action']('remove_trash', { 'force' }) end,
+      { buffer = true }
+    )
+    vim.keymap.set('n', 'M', function() vim.fn['defx#call_async_action'] 'new_multiple_files' end, { buffer = true })
     vim.keymap.set('n', 'R', function()
       vim.api.nvim_command [[Defx -search_recursive=`expand('%:p')`]]
       vim.fn['defx#call_async_action'] 'redraw'
@@ -397,17 +384,13 @@ vim.api.nvim_create_autocmd('FileType', {
       vim.fn['defx#call_async_action'] 'toggle_select'
       vim.api.nvim_feedkeys('j', 'in', true)
     end, { buffer = true })
-    vim.keymap.set('n', 'C', function()
-      vim.fn['defx#call_async_action'] 'clear_select_all'
-    end, { buffer = true })
-    vim.keymap.set('n', 'V', function()
-      vim.fn['defx#call_async_action'] 'toggle_select_all'
-    end, { buffer = true })
+    vim.keymap.set('n', 'C', function() vim.fn['defx#call_async_action'] 'clear_select_all' end, { buffer = true })
+    vim.keymap.set('n', 'V', function() vim.fn['defx#call_async_action'] 'toggle_select_all' end, { buffer = true })
   end,
 })
 
 -- dressing
-require 'dressing'.setup()
+require('dressing').setup()
 
 -- easy-align
 vim.keymap.set({ 'n', 'x' }, 'ga', '<plug>(EasyAlign)')
@@ -431,7 +414,7 @@ vim.api.nvim_command 'highlight Visual cterm=NONE ctermbg=241 gui=NONE guibg=#66
 vim.keymap.set('n', '<leader>gb', '<cmd>Git blame<cr>')
 
 -- gitsigns
-require 'gitsigns'.setup {
+require('gitsigns').setup {
   current_line_blame = true,
   signs = {
     add = { hl = 'GitSignsAdd', text = '+', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
@@ -462,21 +445,21 @@ require 'gitsigns'.setup {
     map({ 'n', 'v' }, '<leader>hr', '<cmd>Gitsigns reset_hunk<cr>')
     map({ 'n', 'v' }, '<leader>hs', '<cmd>Gitsigns stage_hunk<cr>')
     map({ 'o', 'x' }, 'ih', '<cmd>Gitsigns select_hunk<cr>')
-  end
+  end,
 }
 
 -- hop
-require 'hop'.setup()
+require('hop').setup()
 vim.keymap.set('n', '<leader>/', '<cmd>HopPattern<cr>')
 vim.keymap.set('n', '<leader>t', '<cmd>HopChar2<cr>')
 
 -- im-select
-require 'im_select'.setup {
+require('im_select').setup {
   default_im_select = 'com.apple.keylayout.ABC',
 }
 
 -- indent-blankline
-require 'indent_blankline'.setup()
+require('indent_blankline').setup()
 vim.keymap.set('n', '<c-g>', '<c-g><cmd>IndentBlanklineRefresh<cr>')
 
 -- lexima
@@ -529,7 +512,7 @@ vim.keymap.set('n', '<leader>8', '<plug>lightline#bufferline#go(8)')
 vim.keymap.set('n', '<leader>9', '<plug>lightline#bufferline#go(9)')
 
 -- lsp
-require 'fidget'.setup {
+require('fidget').setup {
   timer = {
     fidget_decay = 300,
     task_decay = 300,
@@ -538,78 +521,90 @@ require 'fidget'.setup {
     blend = 0,
   },
 }
-require 'mason'.setup()
-require 'mason-lspconfig'.setup {
+require('mason').setup()
+require('mason-lspconfig').setup {
   automatic_installation = true,
-  ensure_installed = {
-    'graphql',
-    'pylsp',
-    'sumneko_lua',
-    'tsserver',
-    'vimls',
-    'rust_analyzer',
-  },
 }
-local lsp_augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
-local lsp_config = {
-  capabilities = require 'cmp_nvim_lsp'.default_capabilities(),
-  on_attach = function(_, bufnr)
-    vim.api.nvim_create_autocmd('BufWritePre', {
-      group = lsp_augroup,
-      buffer = bufnr,
-      callback = function() vim.lsp.buf.format() end,
-    })
-  end,
-}
-require 'mason-lspconfig'.setup_handlers {
-  function(server_name)
-    require 'lspconfig'[server_name].setup(lsp_config)
-  end,
+local function lsp_config(overrides)
+  local on_attach = overrides and overrides.on_attach
+  return vim.tbl_extend('force', overrides or {}, {
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+    on_attach = function(_, bufnr)
+      if on_attach then on_attach(_, bufnr) end
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = vim.api.nvim_create_augroup('LspFormatting', { clear = true }),
+        buffer = bufnr,
+        callback = function() vim.lsp.buf.format() end,
+      })
+    end,
+  })
+end
+require('mason-lspconfig').setup_handlers {
+  function(server_name) require('lspconfig')[server_name].setup(lsp_config()) end,
   tsserver = function()
-    require 'typescript'.setup {
-      server = vim.tbl_extend('force', lsp_config, {
+    require('typescript').setup {
+      server = lsp_config {
         init_options = {
           preferences = {
             importModuleSpecifierPreference = 'project-relative',
             jsxAttributeCompletionStyle = 'none',
           },
         },
-        on_attach = function(client, bufnr)
+        on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
           client.server_capabilities.documentRangeFormattingProvider = false
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = lsp_augroup,
-            buffer = bufnr,
-            callback = function() vim.lsp.buf.format() end,
-          })
         end,
-      })
+      },
     }
   end,
   sumneko_lua = function()
-    require 'lspconfig'.sumneko_lua.setup(vim.tbl_extend('force', lsp_config, {
+    require('lspconfig').sumneko_lua.setup(lsp_config {
       settings = {
         Lua = {
           diagnostics = {
             globals = { 'vim' },
           },
+          format = {
+            enable = false,
+          },
         },
       },
-    }))
+    })
   end,
 }
-require 'mason-tool-installer'.setup {
+require('mason-tool-installer').setup {
   auto_update = true,
   ensure_installed = {
     'eslint_d',
+    'graphql-language-service-cli',
+    'lua-language-server',
     'prettierd',
-  }
+    'python-lsp-server',
+    'rust-analyzer',
+    'stylua',
+    'typescript-language-server',
+    'vim-language-server',
+  },
 }
-require 'null-ls'.setup {
+require('null-ls').setup {
   sources = {
-    require 'null-ls'.builtins.code_actions.eslint_d,
-    require 'null-ls'.builtins.diagnostics.eslint_d,
-    require 'null-ls'.builtins.formatting.prettierd,
+    require('null-ls').builtins.code_actions.eslint_d,
+    require('null-ls').builtins.diagnostics.eslint_d,
+    require('null-ls').builtins.formatting.prettierd,
+    require('null-ls').builtins.formatting.stylua.with {
+      extra_args = {
+        '--call-parentheses',
+        'None',
+        '--collapse-simple-statement',
+        'Always',
+        '--indent-type',
+        'Spaces',
+        '--indent-width',
+        2,
+        '--quote-style',
+        'AutoPreferSingle',
+      },
+    },
   },
 }
 vim.keymap.set('n', '<c-j>', vim.diagnostic.goto_next)
@@ -620,11 +615,14 @@ vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
 vim.keymap.set('n', 'gd', '<cmd>Telescope lsp_definitions<cr>')
 vim.keymap.set('n', 'gh', vim.lsp.buf.hover)
 vim.keymap.set('n', 'gi', '<cmd>Telescope lsp_implementations<cr>')
-vim.keymap.set('n', 'go', require 'typescript'.actions.organizeImports)
+vim.keymap.set('n', 'go', function()
+  require('typescript').actions.removeUnused { sync = true }
+  require('typescript').actions.organizeImports { sync = true }
+end)
 vim.keymap.set('n', 'gp', vim.lsp.buf.format)
 
 -- noice
-require 'noice'.setup {
+require('noice').setup {
   cmdline = {
     enabled = false,
   },
@@ -637,7 +635,7 @@ require 'noice'.setup {
     },
   },
 }
-require 'notify'.setup {
+require('notify').setup {
   background_colour = '#252c31',
 }
 
@@ -657,14 +655,14 @@ vim.g.sort_json = {
     'publishConfig',
     'repository',
     'license',
-    'scripts'
+    'scripts',
   },
   orderUnderride = {
     'resolutions',
     'dependencies',
     'devDependencies',
     'peerDependencies',
-    'source.organizeImports'
+    'source.organizeImports',
   },
 }
 
@@ -675,7 +673,7 @@ vim.keymap.set('n', 'gA', '<cmd>SidewaysJumpLeft<cr>')
 vim.keymap.set('n', 'ga', '<cmd>SidewaysJumpRight<cr>')
 
 -- sniprun
-require 'sniprun'.setup {
+require('sniprun').setup {
   display = {
     'NvimNotify',
   },
@@ -683,21 +681,21 @@ require 'sniprun'.setup {
 vim.keymap.set('x', '<leader>r', [[:SnipRun<cr>]])
 
 -- substitute
-require 'substitute'.setup {
+require('substitute').setup {
   range = {
     prefix = 'S',
-  }
+  },
 }
-vim.keymap.set('n', 'cx', require 'substitute.exchange'.operator)
-vim.keymap.set('n', 'cxx', require 'substitute.exchange'.line)
-vim.keymap.set('x', 'X', require 'substitute.exchange'.visual)
-vim.keymap.set('n', 'gR', require 'substitute'.eol)
-vim.keymap.set('n', 'gr', require 'substitute'.operator)
-vim.keymap.set('n', 'grr', require 'substitute'.line)
-vim.keymap.set('x', 'gr', require 'substitute'.visual)
-vim.keymap.set('n', 'gs', function() require 'substitute.range'.operator { motion1 = 'iw' } end)
-vim.keymap.set('n', 'gss', function() require 'substitute.range'.operator { motion1 = 'iw', motion2 = '_' } end)
-vim.keymap.set('x', 'gs', function() require 'substitute.range'.visual { prefix = 's' } end)
+vim.keymap.set('n', 'cx', require('substitute.exchange').operator)
+vim.keymap.set('n', 'cxx', require('substitute.exchange').line)
+vim.keymap.set('x', 'X', require('substitute.exchange').visual)
+vim.keymap.set('n', 'gR', require('substitute').eol)
+vim.keymap.set('n', 'gr', require('substitute').operator)
+vim.keymap.set('n', 'grr', require('substitute').line)
+vim.keymap.set('x', 'gr', require('substitute').visual)
+vim.keymap.set('n', 'gs', function() require('substitute.range').operator { motion1 = 'iw' } end)
+vim.keymap.set('n', 'gss', function() require('substitute.range').operator { motion1 = 'iw', motion2 = '_' } end)
+vim.keymap.set('x', 'gs', function() require('substitute.range').visual { prefix = 's' } end)
 
 -- switch
 vim.g.switch_mapping = '<leader>i'
@@ -713,7 +711,7 @@ vim.g.switch_custom_definitions = {
 }
 
 -- tabout
-require 'tabout'.setup {
+require('tabout').setup {
   tabouts = {
     { open = "'", close = "'" },
     { open = '"', close = '"' },
@@ -737,7 +735,7 @@ vim.api.nvim_create_autocmd('User', {
           {
             o = '[<{([]',
             c = '[])}>]',
-            s = ','
+            s = ',',
           },
         },
       },
@@ -754,8 +752,8 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 -- telescope
-require 'telescope'.setup {
-  defaults = require 'telescope.themes'.get_dropdown {
+require('telescope').setup {
+  defaults = require('telescope.themes').get_dropdown {
     file_ignore_patterns = { '^.git/.*' },
     mappings = {
       i = {
@@ -776,7 +774,7 @@ require 'telescope'.setup {
     },
     find_files = {
       hidden = true,
-    }
+    },
   },
 }
 vim.keymap.set('n', '<c-p>', '<cmd>Telescope find_files<cr>')
@@ -785,12 +783,12 @@ vim.keymap.set('n', '<leader>m', '<cmd>Telescope marks<cr>')
 vim.keymap.set('n', '<leader>a', '<cmd>Telescope buffers<cr>')
 
 -- template-string
-require 'template-string'.setup {
+require('template-string').setup {
   remove_template_string = true,
 }
 
 -- terminal
-require 'toggleterm'.setup {
+require('toggleterm').setup {
   direction = 'float',
   float_opts = {
     border = 'none',
@@ -799,7 +797,7 @@ require 'toggleterm'.setup {
   },
   open_mapping = [[<c-\>]],
 }
-local Terminal = require 'toggleterm.terminal'.Terminal
+local Terminal = require('toggleterm.terminal').Terminal
 local lazygit = Terminal:new {
   cmd = 'lazygit',
 }
@@ -810,7 +808,7 @@ vim.keymap.set('n', '-', function() ranger:toggle() end)
 vim.keymap.set('n', '<c-l>', function() lazygit:toggle() end)
 
 -- todo-comments
-require 'todo-comments'.setup {
+require('todo-comments').setup {
   highlight = {
     after = '',
     keyword = 'bg',
@@ -823,7 +821,7 @@ require 'todo-comments'.setup {
 vim.keymap.set('n', '<leader>p', '<cmd>TodoTelescope<cr>')
 
 -- treesitter
-require 'nvim-treesitter.configs'.setup {
+require('nvim-treesitter.configs').setup {
   ensure_installed = {
     'javascript',
     'lua',
@@ -848,7 +846,7 @@ vim.g.undotree_SetFocusWhenToggle = 1
 vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<cr>')
 
 -- vgit
-require 'vgit'.setup {
+require('vgit').setup {
   keymaps = {
     ['n ]h'] = 'hunk_down',
     ['n [h'] = 'hunk_up',
@@ -878,7 +876,7 @@ require 'vgit'.setup {
         },
       },
     },
-  }
+  },
 }
 
 -- vim-visual-multi
