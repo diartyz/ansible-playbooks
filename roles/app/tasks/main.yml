@@ -47,6 +47,7 @@
         firefox,
         macs-fan-control,
         monitorcontrol,
+        mpv,
         omnidisksweeper,
         prefs-editor,
         visual-studio-code,
@@ -55,7 +56,7 @@
 
 - name: install packages
   homebrew:
-    name: [mas, mpv, dfc, ncdu, htop, tree]
+    name: [mas, dfc, ncdu, htop, tree]
   when: ansible_distribution == 'MacOSX'
 
 - name: Install Apps

@@ -1,0 +1,8 @@
+return {
+  'github/copilot.vim',
+  config = function()
+    vim.g.copilot_assume_mapped = true
+    vim.keymap.set('i', '<c-j>', '<Plug>(copilot-next)')
+    vim.keymap.set('i', '<c-k>', '<Plug>(copilot-previous)')
+  end,
+}

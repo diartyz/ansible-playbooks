@@ -74,7 +74,7 @@ alt + cmd - up:    yabai -m window --grid 8:8:0:0:8:8
 alt + cmd - down:  yabai -m window --grid 8:8:1:1:6:6
 
 # make floating window fill left-half of screen
-alt + cmd - left:  yabai -m window --grid 8:8:0:0:4:4
+alt + cmd - left:  yabai -m window --grid 8:8:0:0:2:2
 
 # make floating window fill right-half of screen
-alt + cmd - right: yabai -m window --grid 8:8:6:6:8:8
+alt + cmd - right: yabai -m window --grid 8:8:4:4:8:8

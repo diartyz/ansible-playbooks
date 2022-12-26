@@ -15,3 +15,7 @@ defaults write /Users/diartyz/Library/Preferences/com.apple.Music.plist AppleLan
 
 # allow apps from anywhere
 sudo spctl --master-disable
+
+# set pwpolicy
+pwpolicy getaccountpolicies | awk 'NR>1' > ~/Download/pwpolicy.plist
+pwpolicy setaccountpolicies ~/Download/pwpolicy.plist

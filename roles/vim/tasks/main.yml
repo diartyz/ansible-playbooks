@@ -17,7 +17,7 @@
 
 - name: install python packages
   pip:
-    name: [neovim]
+    name: [pynvim]
     extra_args: --user
     executable: pip3
 
@@ -29,8 +29,6 @@
     - ~/.vim/autoload
     - ~/.local/share/nvim/site/autoload
     - ~/.config/nvim
-    - ~/.vim/UltiSnips
-    - ~/.config/nvim/UltiSnips
 
 - name: download packer
   git:
@@ -62,4 +60,5 @@
     - { src: .vimrc, dest: ~/.vimrc }
     - { src: init.lua, dest: ~/.config/nvim/init.lua }
     - { src: coc-settings.json, dest: ~/.config/nvim/coc-settings.json }
-    - { src: typescriptreact.snippets, dest: ~/.config/nvim/UltiSnips/typescriptreact.snippets }
+    - { src: lua, dest: ~/.config/nvim }
+    - { src: UltiSnips, dest: ~/.config/nvim }

@@ -4,8 +4,6 @@
 [core]
 	ignorecase = false
   pager = diff-so-fancy | less
-[http "https://github.com"]
-	proxy = http://127.0.0.1:8118
 [includeIf "gitdir:~/Work/"]
   path = .gitconfig-work
 [includeIf "gitdir:~/Zenvy/"]
@@ -22,6 +20,8 @@
   keepBackup = false
 [mergetool "meld"]
   cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
+[mergetool "vscode"]
+  cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
 [pull]
 	ff = only
 [push]

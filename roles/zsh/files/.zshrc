@@ -51,6 +51,7 @@ alias cnvm="NVM_NODEJS_ORG_MIRROR='https://npm.taobao.org/mirrors/node/' nvm"
 alias lg="lazygit"
 alias p4="proxychains4"
 alias p="pnpm"
+alias pw="pnpm --filter"
 alias px="pnpx"
 alias sclip='scrot -s ~/temp.png && xclip -sel clip -t image/png ~/temp.png && rm ~/temp.png'
 alias vi="nvim"
