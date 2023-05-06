@@ -3,7 +3,8 @@
   email = diartyz@gmail.com
 [core]
 	ignorecase = false
-  pager = diff-so-fancy | less
+  pager = diff-so-fancy | less -RFX
+	quotepath = false
 [includeIf "gitdir:~/Work/"]
   path = .gitconfig-work
 [includeIf "gitdir:~/Zenvy/"]
@@ -28,3 +29,5 @@
 	recurseSubmodules = on-demand
 [submodule]
 	recurse = true
+[diff-so-fancy]
+	markEmptyLines = false
