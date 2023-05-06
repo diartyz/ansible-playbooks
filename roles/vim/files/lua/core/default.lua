@@ -18,6 +18,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- search & tab
+vim.g.markdown_recommended_style = false
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
 vim.opt.shiftround = true
