@@ -14,6 +14,12 @@ return {
   },
   config = function()
     require('noice').setup {
+      cmdline = {
+        enabled = false,
+      },
+      messages = {
+        enabled = false,
+      },
       lsp = {
         progress = {
           enabled = false,
