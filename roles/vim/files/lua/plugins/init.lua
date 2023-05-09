@@ -63,5 +63,5 @@ return {
   require 'plugins/lightline',
   require 'plugins/markdown',
   require 'plugins/noice',
-  -- require 'plugins/vgit',
+  require 'plugins/vgit',
 }
