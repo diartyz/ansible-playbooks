@@ -1,12 +1,19 @@
 return {
   'michaelb/sniprun',
-  run = 'bash ./install.sh',
-  config = function()
-    require('sniprun').setup {
-      display = {
-        'NvimNotify',
-      },
-    }
-    vim.keymap.set('v', '<leader>r', '<Plug>SnipRun')
-  end,
+  build = 'bash ./install.sh',
+  dependencies = {
+    'rcarriga/nvim-notify',
+    opts = {
+      background_colour = '#252c31',
+      fps = 60,
+    },
+  },
+  keys = {
+    { '<leader>r', '<Plug>SnipRun' },
+  },
+  opts = {
+    display = {
+      'NvimNotify',
+    },
+  },
 }

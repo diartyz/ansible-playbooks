@@ -1,8 +1,8 @@
 return {
   'numToStr/Comment.nvim',
-  requires = {
+  dependencies = {
     'JoosepAlviste/nvim-ts-context-commentstring',
-    requires = 'nvim-treesitter/nvim-treesitter',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
   },
   config = function()
     require('Comment').setup {

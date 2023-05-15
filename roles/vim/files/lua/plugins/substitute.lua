@@ -1,21 +1,27 @@
 return {
   'gbprod/substitute.nvim',
-  requires = 'tpope/vim-abolish',
-  config = function()
-    require('substitute').setup {
-      range = {
-        prefix = 'S',
-      },
-    }
-    vim.keymap.set('n', 'cx', require('substitute.exchange').operator)
-    vim.keymap.set('n', 'cxx', require('substitute.exchange').line)
-    vim.keymap.set('x', 'X', require('substitute.exchange').visual)
-    vim.keymap.set('n', 'gR', require('substitute').eol)
-    vim.keymap.set('n', 'gr', require('substitute').operator)
-    vim.keymap.set('n', 'grr', require('substitute').line)
-    vim.keymap.set('x', 'gr', require('substitute').visual)
-    vim.keymap.set('n', 'gs', function() require('substitute.range').operator { motion1 = 'iw' } end)
-    vim.keymap.set('n', 'gss', function() require('substitute.range').operator { motion1 = 'iw', motion2 = '_' } end)
-    vim.keymap.set('x', 'gs', require('substitute.range').visual)
-  end,
+  dependencies = 'tpope/vim-abolish',
+  keys = {
+    { 'cx', function() require('substitute.exchange').operator() end },
+    { 'cxx', function() require('substitute.exchange').line() end },
+    { 'X', function() require('substitute.exchange').visual() end, mode = 'v' },
+    { 'gR', function() require('substitute').eol() end },
+    { 'gr', function() require('substitute').operator() end },
+    { 'grr', function() require('substitute').line() end },
+    { 'gr', function() require('substitute').visual() end, mode = 'v' },
+    { 'gs', function() require('substitute.range').operator { motion1 = 'iw' } end },
+    { 'gss', function() require('substitute.range').operator { motion1 = 'iw', motion2 = '_' } end },
+    {
+      'gs',
+      function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(':S///g<Left><Left><Left>', true, false, true), 'mi', true)
+      end,
+      mode = 'v',
+    },
+  },
+  opts = {
+    range = {
+      prefix = 'S',
+    },
+  },
 }

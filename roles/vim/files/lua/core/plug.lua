@@ -11,7 +11,9 @@ local function use(args)
     vim.fn['plug#'](args)
     return
   end
+
   local opts = vim.empty_dict()
+
   for key, value in pairs(args) do
     if key == 1 then
       goto continue
@@ -24,12 +26,16 @@ local function use(args)
     end
     ::continue::
   end
+
   vim.fn['plug#'](args[1], opts)
+
   if not args.requires then return end
+
   if type(args.requires) == 'string' or not vim.tbl_islist(args.requires) then
     use(args.requires)
     return
   end
+
   for i = 1, #args.requires do
     use(args.requires[i])
   end

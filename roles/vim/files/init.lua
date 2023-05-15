@@ -1,4 +1,5 @@
-local load = require 'core/packer'
+local load = require 'core/lazy'
+-- local load = require 'core/packer'
 -- local load = require 'core/plug'
 local plugins = require 'plugins'
 

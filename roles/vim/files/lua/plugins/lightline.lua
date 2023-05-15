@@ -1,7 +1,7 @@
 return {
   'itchyny/lightline.vim',
-  requires = 'mengelbrecht/lightline-bufferline',
-  config = function()
+  dependencies = 'mengelbrecht/lightline-bufferline',
+  init = function()
     vim.g.lightline = {
       colorscheme = 'everforest',
       active = {

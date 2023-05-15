@@ -1,6 +1,11 @@
 return {
   'nvim-telescope/telescope.nvim',
-  requires = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' },
+  dependencies = { 'nvim-lua/plenary.nvim', 'nvim-tree/nvim-web-devicons' },
+  keys = {
+    { '<c-p>', function() require('telescope.builtin').find_files() end },
+    { '<leader>a', function() require('telescope.builtin').buffers() end },
+    { '<leader>m', function() require('telescope.builtin').marks() end },
+  },
   config = function()
     require('telescope').setup {
       defaults = require('telescope.themes').get_dropdown {
@@ -27,8 +32,5 @@ return {
         },
       },
     }
-    vim.keymap.set('n', '<c-p>', require('telescope.builtin').find_files)
-    vim.keymap.set('n', '<leader>a', require('telescope.builtin').buffers)
-    vim.keymap.set('n', '<leader>m', require('telescope.builtin').marks)
   end,
 }

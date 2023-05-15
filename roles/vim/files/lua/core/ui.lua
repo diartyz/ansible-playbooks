@@ -4,6 +4,7 @@ vim.opt.laststatus = 3
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.showtabline = 2
+vim.opt.signcolumn = 'number'
 vim.opt.termguicolors = true
 vim.fn.sign_define {
   {
