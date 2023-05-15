@@ -8,7 +8,7 @@ return {
         left = {
           { 'mode', 'paste' },
           { 'readonly', 'filename', 'modified' },
-          { 'coc_status' },
+          { 'coc_status', 'codeium' },
         },
       },
       tabline = {
@@ -30,6 +30,7 @@ return {
       },
       component_function = {
         coc_status = 'coc#status',
+        codeium = 'codeium#GetStatusString',
       },
     }
     vim.g['lightline#bufferline#clickable'] = 1

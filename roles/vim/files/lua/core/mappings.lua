@@ -10,7 +10,7 @@ vim.api.nvim_create_user_command(
 vim.g.mapleader = ' '
 vim.keymap.set('n', '<bs>', '<cmd>nohlsearch<cr>')
 vim.keymap.set('n', '<c-h>', '<cmd>nohlsearch<cr>')
-vim.keymap.set('n', '<leader><leader>q', '<cmd>qall<cr>')
+vim.keymap.set('n', '<leader><leader>q', '<cmd>q!<cr>')
 vim.keymap.set('n', '<leader><leader>s', '<cmd>wall<cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>')
 vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')

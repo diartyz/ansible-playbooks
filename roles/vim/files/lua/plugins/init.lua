@@ -3,7 +3,8 @@ return {
 
   -- cmp
   require 'plugins/cmp',
-  require 'plugins/copilot',
+  -- require 'plugins/copilot',
+  require 'plugins/codeium',
   require 'plugins/lexima',
 
   -- edit
