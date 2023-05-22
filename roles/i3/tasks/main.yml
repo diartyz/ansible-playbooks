@@ -80,10 +80,7 @@
   when: ansible_distribution == 'MacOSX'
 
 - name: enable yabai & skhd
-  command: 'brew services restart {{ item }}'
-  with_items:
-    - yabai
-    - skhd
+  command: 'yabai --restart-service'
   when:
     - ansible_distribution == 'MacOSX'
     - yabai_conf.changed
