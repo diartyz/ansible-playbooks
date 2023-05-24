@@ -13,4 +13,13 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-return require('lazy').setup
+return function(plugins)
+  require('lazy').setup(plugins, {
+    checker = {
+      enabled = true,
+    },
+    install = {
+      colorscheme = { 'everforest' },
+    },
+  })
+end

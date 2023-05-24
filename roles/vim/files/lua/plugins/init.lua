@@ -55,12 +55,13 @@ return {
   -- ui
   'chemzqm/wxapp.vim',
   'sheerun/vim-polyglot',
+  require 'plugins/bufferline',
   require 'plugins/context',
   require 'plugins/dressing',
   require 'plugins/everforest',
   require 'plugins/gitsigns',
   require 'plugins/indent-blankline',
-  require 'plugins/lightline',
   require 'plugins/markdown',
+  require 'plugins/noice',
   require 'plugins/vgit',
 }

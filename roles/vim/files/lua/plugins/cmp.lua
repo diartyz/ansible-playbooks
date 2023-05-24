@@ -10,7 +10,7 @@ return {
     {
       'quangnguyen30192/cmp-nvim-ultisnips',
       dependencies = 'SirVer/ultisnips',
-      config = function() vim.g.UltiSnipsExpandTrigger = '<c-;>' end,
+      init = function() vim.g.UltiSnipsExpandTrigger = '<c-;>' end,
     },
     {
       'tzachar/cmp-tabnine',

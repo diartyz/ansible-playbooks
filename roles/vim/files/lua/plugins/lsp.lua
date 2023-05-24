@@ -1,6 +1,7 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
+    'nvim-treesitter/nvim-treesitter-textobjects',
     'hrsh7th/nvim-cmp',
     'nvim-telescope/telescope.nvim',
     'jose-elias-alvarez/typescript.nvim',
@@ -119,9 +120,15 @@ return {
     }
 
     local telescope = require 'telescope.builtin'
+    local typescript = require 'typescript'
+    local next_diagnostic_repeat, prev_diagnostic_repeat =
+      require('nvim-treesitter.textobjects.repeatable_move').make_repeatable_move_pair(
+        vim.diagnostic.goto_next,
+        vim.diagnostic.goto_prev
+      )
 
-    vim.keymap.set('n', '<c-j>', vim.diagnostic.goto_next)
-    vim.keymap.set('n', '<c-k>', vim.diagnostic.goto_prev)
+    vim.keymap.set('n', '<c-j>', next_diagnostic_repeat)
+    vim.keymap.set('n', '<c-k>', prev_diagnostic_repeat)
     vim.keymap.set('n', '<c-t>', telescope.lsp_document_symbols)
     vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action)
     vim.keymap.set('n', '<leader>gd', telescope.lsp_references)
@@ -131,8 +138,8 @@ return {
     vim.keymap.set('n', 'gi', telescope.lsp_implementations)
     vim.keymap.set('n', 'gp', vim.lsp.buf.format)
     vim.keymap.set('n', 'go', function()
-      require('typescript').actions.removeUnused { sync = true }
-      require('typescript').actions.organizeImports { sync = true }
+      typescript.actions.removeUnused { sync = true }
+      typescript.actions.organizeImports { sync = true }
     end)
   end,
 }

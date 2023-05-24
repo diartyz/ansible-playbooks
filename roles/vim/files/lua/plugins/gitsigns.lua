@@ -1,5 +1,6 @@
 return {
   'lewis6991/gitsigns.nvim',
+  dependencies = 'nvim-treesitter/nvim-treesitter-textobjects',
   opts = {
     current_line_blame = true,
     signs = {
@@ -8,23 +9,17 @@ return {
       changedelete = { hl = 'GitSignsChange', text = '-', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
     },
     on_attach = function(bufnr)
-      local gs = package.loaded.gitsigns
+      local gs = require 'gitsigns'
+      local next_hunk_repeat, prev_hunk_repeat =
+        require('nvim-treesitter.textobjects.repeatable_move').make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
       local function map(mode, l, r, opts)
         opts = opts or {}
         opts.buffer = bufnr
         vim.keymap.set(mode, l, r, opts)
       end
 
-      map('n', ']c', function()
-        if vim.wo.diff then return ']c' end
-        vim.schedule(function() gs.next_hunk() end)
-        return '<Ignore>'
-      end)
-      map('n', '[c', function()
-        if vim.wo.diff then return '[c' end
-        vim.schedule(function() gs.prev_hunk() end)
-        return '<Ignore>'
-      end)
+      map('n', ']c', next_hunk_repeat)
+      map('n', '[c', prev_hunk_repeat)
       map('n', '<leader>hR', gs.reset_buffer)
       map('n', '<leader>hS', gs.stage_buffer)
       map('n', '<leader>hd', gs.diffthis)
