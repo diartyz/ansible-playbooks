@@ -20,7 +20,7 @@ return {
       opts = {
         auto_update = true,
         ensure_installed = {
-          'eslint_d',
+          'eslint-lsp',
           'graphql-language-service-cli',
           'json-lsp',
           'lua-language-server',

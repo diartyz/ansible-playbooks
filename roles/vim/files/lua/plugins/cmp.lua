@@ -16,20 +16,10 @@ return {
       'tzachar/cmp-tabnine',
       build = './install.sh',
     },
-    {
-      'zbirenbaum/copilot-cmp',
-      dependencies = {
-        'zbirenbaum/copilot.lua',
-        opts = {
-          suggestion = { enabled = false },
-          panel = { enabled = false },
-        },
-      },
-      config = true,
-    },
   },
   config = function()
     local cmp = require 'cmp'
+    local types = require 'cmp.types'
 
     cmp.setup {
       formatting = {
@@ -49,16 +39,13 @@ return {
             return vim_item
           end
 
-          return require('lspkind').cmp_format {
-            mode = 'symbol_text',
-            symbol_map = { Copilot = '' },
-          }(entry, vim_item)
+          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
         end,
       },
 
-      mapping = cmp.mapping.preset.insert {
+      mapping = {
         ['<c-space>'] = cmp.mapping.complete(),
-        ['<c-e>'] = cmp.mapping.abort(),
+        ['<c-l>'] = cmp.mapping.abort(),
         ['<tab>'] = function(fallback)
           if cmp.get_active_entry() then
             cmp.confirm {
@@ -67,6 +54,20 @@ return {
             }
           else
             fallback()
+          end
+        end,
+        ['<c-n>'] = function()
+          if cmp.visible() then
+            cmp.select_next_item { behavior = types.cmp.SelectBehavior.Insert }
+          else
+            cmp.complete()
+          end
+        end,
+        ['<c-p>'] = function()
+          if cmp.visible() then
+            cmp.select_prev_item { behavior = types.cmp.SelectBehavior.Insert }
+          else
+            cmp.complete()
           end
         end,
       },
@@ -78,7 +79,6 @@ return {
       sources = cmp.config.sources({
         { name = 'nvim_lua' },
       }, {
-        { name = 'copilot' },
         { name = 'cmp_tabnine' },
         { name = 'nvim_lsp' },
         { name = 'ultisnips' },

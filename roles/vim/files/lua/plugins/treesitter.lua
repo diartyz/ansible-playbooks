@@ -11,9 +11,6 @@ return {
         'tsx',
         'typescript',
       },
-      -- autotag = {
-      --   enable = true,
-      -- },
       textobjects = {
         move = {
           enable = true,
@@ -48,10 +45,7 @@ return {
   },
   {
     'nvim-treesitter/nvim-treesitter-textobjects',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'ghostbuster91/nvim-next',
-    },
+    dependencies = 'nvim-treesitter/nvim-treesitter',
     config = function()
       local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
 

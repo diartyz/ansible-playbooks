@@ -3,8 +3,7 @@ return {
 
   -- cmp
   require 'plugins/cmp',
-  -- require 'plugins/copilot',
-  require 'plugins/codeium',
+  require 'plugins/copilot',
   require 'plugins/lexima',
 
   -- edit
@@ -23,7 +22,6 @@ return {
   require 'plugins/sort-json',
   require 'plugins/substitute',
   require 'plugins/switch',
-  require 'plugins/tabout',
   require 'plugins/targets',
   require 'plugins/template-string',
   require 'plugins/visual-multi',

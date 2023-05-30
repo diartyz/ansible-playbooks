@@ -1,9 +1,7 @@
 return {
   'folke/todo-comments.nvim',
   dependencies = 'nvim-lua/plenary.nvim',
-  keys = {
-    { '<leader>p', '<cmd>TodoTelescope<cr>' },
-  },
+  cmd = 'TodoTelescope',
   opts = {
     highlight = {
       after = '',

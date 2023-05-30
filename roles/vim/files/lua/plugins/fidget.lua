@@ -1,5 +1,6 @@
 return {
   'j-hui/fidget.nvim',
+  tag = 'legacy',
   opts = {
     timer = {
       fidget_decay = 300,

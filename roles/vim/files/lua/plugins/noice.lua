@@ -15,5 +15,21 @@ return {
         enabled = false,
       },
     },
+    routes = {
+      {
+        filter = {
+          event = 'msg_show',
+          find = 'written',
+        },
+        opts = { skip = true },
+      },
+      {
+        filter = {
+          event = 'msg_show',
+          find = 'search hit',
+        },
+        opts = { skip = true },
+      },
+    },
   },
 }
