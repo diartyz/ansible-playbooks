@@ -13,6 +13,11 @@
     - { src: .Xresources, dest: ~/.Xresources }
   when: ansible_distribution == 'Archlinux'
 
+- name: homebrew tap
+  homebrew_tap:
+    name: homebrew/cask-fonts
+  when: ansible_distribution == 'MacOSX'
+
 - name: install cask packages
   homebrew_cask:
     name: [iterm2, font-jetbrains-mono-nerd-font, font-fira-code-nerd-font]

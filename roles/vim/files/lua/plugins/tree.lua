@@ -29,7 +29,7 @@ return {
     },
     ui = {
       confirm = {
-        trash = false,
+        remove = false,
       },
     },
     on_attach = function(bufnr)
@@ -59,7 +59,7 @@ return {
       vim.keymap.set('n', 'dd', api.fs.cut, opts 'Cut')
       vim.keymap.set('n', 'yy', api.fs.copy.node, opts 'Copy')
       vim.keymap.set('n', 'p', api.fs.paste, opts 'Paste')
-      vim.keymap.set('n', 'D', api.fs.trash, opts 'Trash')
+      vim.keymap.set('n', 'D', api.fs.remove, opts 'Delete')
 
       vim.keymap.set('n', 'V', api.marks.clear, opts 'Clear all marks')
       vim.keymap.set('n', 'v', api.marks.toggle, opts 'Toggle Bookmark')

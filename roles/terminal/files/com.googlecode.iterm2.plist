@@ -888,8 +888,6 @@
 			<true/>
 			<key>Name</key>
 			<string>Default</string>
-			<key>Non Ascii Font</key>
-			<string>LXGWWenKaiMono-Regular 13</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
