@@ -2,7 +2,7 @@
 - name: install packages
   become: true
   pacman:
-    name: rxvt-unicode
+    name: alacritty
   when: ansible_distribution == 'Archlinux'
 
 - name: copy conf
@@ -10,6 +10,7 @@
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
+    - { src: .alacritty.yml, dest: ~/.alacritty.yml }
     - { src: .Xresources, dest: ~/.Xresources }
   when: ansible_distribution == 'Archlinux'
 

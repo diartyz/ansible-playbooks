@@ -10,6 +10,15 @@
     name: ['tmux', 'reattach-to-user-namespace']
   when: ansible_distribution == 'MacOSX'
 
+- name: clone oh-my-zsh
+  git:
+    depth: 1
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+    update: no
+  with_items:
+    - { repo: 'https://github.com/tmux-plugins/tpm', dest: ~/.tmux/plugins/tpm }
+
 - name: copy tmux conf
   copy:
     src: '{{ item.src }}'

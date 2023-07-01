@@ -1,10 +1,12 @@
+Xft.dpi: 120
+
 *termName: xterm-256color
 *metaSendsEscape: true
 
-xterm*faceName: Jetbrains Mono:size=9
+xterm*faceName: JetBrainsMono Nerd Font Mono:size=9
 xterm*faceNameDoublesize: WenQuanYi Micro Hei Mono:size=9
 
-urxvt*font: xft:Jetbrains Mono:size=9, xft:WenQuanYi Micro Hei Mono:size=9
+urxvt*font: xft:JetBrainsMono Nerd Font Mono:size=9, xft:WenQuanYi Micro Hei Mono:size=9
 urxvt.scrollBar: false
 urxvt.perl-ext-common: matcher,selection-to-clipboard
 urxvt.url-launcher: /usr/bin/xdg-open

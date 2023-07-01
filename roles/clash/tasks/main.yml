@@ -1,4 +1,52 @@
 ---
+# arch
+- name: install clash
+  become: true
+  pacman:
+    name: clash-premium-bin
+  when: ansible_distribution == 'Archlinux'
+
+- name: create config folder
+  file:
+    path: /etc/clash
+    state: directory
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy clash conf
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: config.yml, dest: /etc/clash/config.yaml }
+  register: clash_conf
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy clash service
+  become: true
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: clash.service, dest: /etc/systemd/system/clash.service }
+  when: ansible_distribution == 'Archlinux'
+  register: clash_conf
+
+- name: enable clash
+  become: true
+  systemd:
+    name: clash.service
+    enabled: yes
+  when: ansible_distribution == 'Archlinux'
+
+- name: reload clash
+  become: true
+  systemd:
+    name: clash.service
+    state: restarted
+  when: ansible_distribution == 'Archlinux' and clash_conf.changed
+
+# mac
 - name: install clashx
   homebrew_cask:
     name: ['clashx']
@@ -8,11 +56,13 @@
   file:
     path: ~/.config/clash
     state: directory
+  when: ansible_distribution == 'MacOSX'
 
-- name: copy shadowsocks conf
+- name: copy clash conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: ss.yml, dest: ~/.config/clash/ss.yaml }
+    - { src: config.yml, dest: ~/.config/clash/config.yaml }
+  register: clash_conf
   when: ansible_distribution == 'MacOSX'

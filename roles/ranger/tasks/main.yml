@@ -35,3 +35,4 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: rc.conf, dest: ~/.config/ranger/rc.conf }
+    - { src: rifle.conf, dest: ~/.config/ranger/rifle.conf }

@@ -2,7 +2,7 @@
 - name: install packages
   become: true
   pacman:
-    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher']
+    name: [vim, neovim, python-pynvim, ripgrep, the_silver_searcher]
   when: ansible_distribution == 'Archlinux'
 
 - name: homebrew tap
@@ -14,12 +14,6 @@
   homebrew:
     name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher', 'im-select', 'jq']
   when: ansible_distribution == 'MacOSX'
-
-- name: install python packages
-  pip:
-    name: [pynvim]
-    extra_args: --user
-    executable: pip3
 
 - name: create vim & nvim conf folder
   file:

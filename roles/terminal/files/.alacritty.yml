@@ -1,0 +1,24 @@
+font:
+  normal:
+    family: JetBrainsMono Nerd Font Mono
+  size: 9
+
+colors:
+  primary:
+    background: '#1c1c1c'
+    foreground: '#c5c8c6'
+  normal:
+    black: '#1d1f21'
+    red: '#cc6666'
+    green: '#b5bd68'
+    yellow: '#de935f'
+    blue: '#81a2be'
+    magenta: '#b294bb'
+    cyan: '#8abeb7'
+    white: '#c5c8c6'
+
+key_bindings:
+  - { key: V, mods: Control, action: Paste }
+
+window:
+  opacity: 0.98

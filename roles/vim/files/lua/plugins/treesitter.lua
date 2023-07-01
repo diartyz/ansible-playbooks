@@ -27,10 +27,10 @@ return {
             ['[]'] = '@function.outer',
           },
           goto_next = {
-            [']d'] = { query = { '@conditional.*', '@loop.*' } },
+            [']d'] = { query = { '@conditional.*', '@loop.outer' } },
           },
           goto_previous = {
-            ['[d'] = { query = { '@conditional.*', '@loop.*' } },
+            ['[d'] = { query = { '@conditional.*', '@loop.outer' } },
           },
         },
         select = {

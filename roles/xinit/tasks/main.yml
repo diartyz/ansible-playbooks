@@ -2,7 +2,22 @@
 - name: install xprofile packages
   become: true
   pacman:
-    name: [ xorg, xf86-video-intel, xf86-input-synaptics, wqy-microhei, ttf-jetbrains-mono, ttf-dejavu, feh, arandr, parcellite, lightdm-gtk-greeter ]
+    name:
+      - arandr
+      - blueberry
+      - bluez
+      - bluez-utils
+      - feh
+      - gnome-keyring
+      - lightdm-gtk-greeter
+      - parcellite
+      - ttf-jetbrains-mono-nerd
+      - udiskie
+      - wqy-microhei
+      - xdg-utils
+      - xf86-input-synaptics
+      - xf86-video-intel
+      - xorg
   when: ansible_distribution == 'Archlinux'
 
 - name: enable lightdm
@@ -11,6 +26,7 @@
     name: '{{ item }}'
     enabled: yes
   with_items:
+    - bluetooth
     - lightdm
   when: ansible_distribution == 'Archlinux'
 

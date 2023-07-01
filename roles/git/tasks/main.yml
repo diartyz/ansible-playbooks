@@ -21,6 +21,7 @@
     state: directory
   with_items:
     - ~/.config
+    - ~/.config/lazygit
     - ~/Library/Application Support/lazygit
 
 - name: copy .gitconfig
@@ -47,7 +48,25 @@
     - { src: .tigrc, dest: ~/.tigrc }
     - { src: .gitconfig-work, dest: ~/.gitconfig-work }
     - { src: .gitconfig-zenvy, dest: ~/.gitconfig-zenvy }
+
+- name: copy lazygit config
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
     - {
         src: lazygit.yml,
         dest: ~/Library/Application Support/lazygit/config.yml,
       }
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy lazygit config
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - {
+        src: lazygit.yml,
+        dest: ~/.config/lazygit/config.yml,
+      }
+  when: ansible_distribution == 'Archlinux'

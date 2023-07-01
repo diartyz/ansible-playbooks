@@ -7,7 +7,7 @@ fi
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-export EDITOR="vim"
+export EDITOR="nvim"
 export GO111MODULE=on
 if type go > /dev/null
 then
@@ -22,9 +22,9 @@ export PATH="$PYENV_ROOT/shims:$GOPATH/bin:$HOME/.cargo/bin:$HOME/.local/bin:/us
 export PYENV_ROOT="$HOME/.pyenv"
 export PYTHONUSERBASE="$HOME/.local"
 export ZSH=~/.oh-my-zsh
-# export http_proxy=http://127.0.0.1:1080
-# export https_proxy=http://127.0.0.1:1080
-# export all_proxy=socks5://127.0.0.1:1080
+export all_proxy=http://127.0.0.1:1080
+export http_proxy=http://127.0.0.1:1080
+export https_proxy=http://127.0.0.1:1080
 
 if which pyenv > /dev/null;
   then eval "$(pyenv init --path)";

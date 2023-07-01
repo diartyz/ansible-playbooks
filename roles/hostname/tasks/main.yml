@@ -2,6 +2,6 @@
 - name: set hostname
   become: true
   copy:
-    content: 'Lancelot'
+    content: 'Necromancer'
     dest: /etc/hostname
   when: ansible_distribution == 'Archlinux'

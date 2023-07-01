@@ -39,7 +39,9 @@ return {
             return vim_item
           end
 
-          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
+          return require('lspkind').cmp_format {
+            mode = 'symbol_text',
+          }(entry, vim_item)
         end,
       },
 

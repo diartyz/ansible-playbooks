@@ -1,10 +1,9 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
-    'nvim-treesitter/nvim-treesitter-textobjects',
     'hrsh7th/nvim-cmp',
     'nvim-telescope/telescope.nvim',
-    'jose-elias-alvarez/typescript.nvim',
+    'nvim-treesitter/nvim-treesitter',
     {
       'williamboman/mason.nvim',
       config = true,
@@ -56,20 +55,18 @@ return {
       function(server_name) require('lspconfig')[server_name].setup(lsp_config()) end,
 
       tsserver = function()
-        require('typescript').setup {
-          server = lsp_config {
-            init_options = {
-              preferences = {
-                importModuleSpecifierPreference = 'project-relative',
-                jsxAttributeCompletionStyle = 'none',
-              },
+        require('lspconfig').tsserver.setup(lsp_config {
+          init_options = {
+            preferences = {
+              importModuleSpecifierPreference = 'project-relative',
+              jsxAttributeCompletionStyle = 'none',
             },
-            on_attach = function(client)
-              client.server_capabilities.documentFormattingProvider = false
-              client.server_capabilities.documentRangeFormattingProvider = false
-            end,
           },
-        }
+          on_attach = function(client)
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          end,
+        })
       end,
 
       lua_ls = function()
@@ -120,7 +117,7 @@ return {
     }
 
     local telescope = require 'telescope.builtin'
-    local typescript = require 'typescript'
+    local typescript = require 'plugins/typescript'
     local next_diagnostic_repeat, prev_diagnostic_repeat =
       require('nvim-treesitter.textobjects.repeatable_move').make_repeatable_move_pair(
         vim.diagnostic.goto_next,
@@ -138,8 +135,9 @@ return {
     vim.keymap.set('n', 'gi', telescope.lsp_implementations)
     vim.keymap.set('n', 'gp', vim.lsp.buf.format)
     vim.keymap.set('n', 'go', function()
-      typescript.actions.removeUnused { sync = true }
-      typescript.actions.organizeImports { sync = true }
+      typescript.add_missing_imports()
+      typescript.remove_unused_imports()
+      typescript.sort_imports()
     end)
   end,
 }

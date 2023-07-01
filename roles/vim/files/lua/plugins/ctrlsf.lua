@@ -14,5 +14,6 @@ return {
       rg = '--hidden -g "!.git/" --color=never',
     }
     vim.g.ctrlsf_populate_qflist = 1
+    vim.g.ctrlsf_regex_pattern = 1
   end,
 }

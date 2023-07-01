@@ -29,6 +29,7 @@
     name: [httpie, send2trash, virtualenv]
     extra_args: --user
     executable: pip3
+  when: ansible_distribution == 'MacOSX'
 
 - name: create folder '~/bin'
   file: path=~/.local/bin

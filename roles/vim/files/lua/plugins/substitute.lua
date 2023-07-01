@@ -9,8 +9,11 @@ return {
     { 'gr', function() require('substitute').operator() end },
     { 'grr', function() require('substitute').line() end },
     { 'gr', function() require('substitute').visual() end, mode = 'v' },
-    { 'gs', function() require('substitute.range').operator { motion1 = 'iw' } end },
-    { 'gss', function() require('substitute.range').operator { motion1 = 'iw', motion2 = '_' } end },
+    { 'gs', function() require('substitute.range').operator { subject = { motion = 'iw' } } end },
+    {
+      'gss',
+      function() require('substitute.range').operator { subject = { motion = 'iw' }, range = { motion = '_' } } end,
+    },
     {
       'gs',
       function()

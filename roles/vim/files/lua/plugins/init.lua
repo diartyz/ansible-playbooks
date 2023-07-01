@@ -7,6 +7,7 @@ return {
   require 'plugins/lexima',
 
   -- edit
+  'arthurxavierx/vim-caser',
   'bronson/vim-visual-star-search',
   'diartyz/vim-utils',
   'gcmt/wildfire.vim',
@@ -17,7 +18,6 @@ return {
   require 'plugins/easy-align',
   require 'plugins/emmet',
   require 'plugins/hop',
-  require 'plugins/im-select',
   require 'plugins/sideways',
   require 'plugins/sort-json',
   require 'plugins/substitute',
@@ -52,7 +52,6 @@ return {
 
   -- ui
   'chemzqm/wxapp.vim',
-  'sheerun/vim-polyglot',
   require 'plugins/bufferline',
   require 'plugins/context',
   require 'plugins/dressing',
@@ -61,5 +60,6 @@ return {
   require 'plugins/indent-blankline',
   require 'plugins/markdown',
   require 'plugins/noice',
+  require 'plugins/syntax',
   require 'plugins/vgit',
 }

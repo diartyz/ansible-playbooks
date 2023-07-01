@@ -1,4 +1,5 @@
 ---
+# arch
 - name: set no_xmodmap
   debug:
     msg: 'set no_xmodmap'
@@ -54,6 +55,13 @@
   tags:
     - kbdlight
 
+- name: install brightnessctl
+  become: true
+  pacman:
+    name: brightnessctl
+  when: ansible_distribution == 'Archlinux'
+
+# mac
 - name: install cask packages
   homebrew_cask:
     name: ['karabiner-elements']

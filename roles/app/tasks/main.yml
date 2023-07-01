@@ -6,7 +6,7 @@
     block: |
       [archlinuxcn]
       SigLevel = Optional TrustAll
-      Server = http://mirrors.163.com/archlinux-cn/$arch
+      Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
   register: pacmanConf
   when: ansible_distribution == 'Archlinux'
 
@@ -24,18 +24,14 @@
     name:
       [
         firefox,
-        hardinfo,
         pulsemixer,
-        bluez,
-        bluez-utils,
         cmus,
         mpv,
-        besttrace,
         dfc,
         ncdu,
         htop,
         tree,
-        yaourt,
+        yay,
       ]
   when: ansible_distribution == 'Archlinux'
 

@@ -22,6 +22,8 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
+bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+semicolon workspace back_and_forth
 bindsym $mod+0 workspace 0
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
@@ -44,6 +46,7 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+r reload
 bindsym $mod+Shift+q exec --no-startup-id i3lock -c 000000
+bindsym $mod+Shift+w exec --no-startup-id i3lock -c 000000 && systemctl suspend
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 bindsym $mod+r mode "resize"
@@ -58,6 +61,7 @@ mode "resize" {
 }
 
 focus_follows_mouse no
+focus_on_window_activation focus
 font pango:Jetbrains Mono 9
 hide_edge_borders both
 new_window pixel 1
@@ -72,13 +76,12 @@ bar {
     }
 }
 
-exec --no-startup-id i3-msg 'workspace 1; exec chromium'
+exec --no-startup-id i3-msg 'workspace 1; exec firefox'
 exec --no-startup-id i3-msg 'workspace 2; exec i3-sensible-terminal'
-exec --no-startup-id i3-msg 'workspace 3; exec blueberry'
-exec --no-startup-id i3-msg 'workspace 4; exec virtualbox; layout tabbed'
 
-assign [class="Chromium"] 1
-assign [class="VirtualBox"] 4
+assign [class="firefox"] 1
+assign [class="Alacritty"] 2
+assign [class="Code"] 3
 
 workspace 1 output VGA1
 workspace 2 output VGA1
@@ -87,8 +90,8 @@ workspace 4 output DP1
 
 bindsym XF86MonBrightnessUp exec xbacklight -inc 2
 bindsym XF86MonBrightnessDown exec xbacklight -dec 2
-bindsym XF86KbdBrightnessUp exec kbdlight up 2
-bindsym XF86KbdBrightnessDown exec kbdlight down 2
+bindsym XF86KbdBrightnessUp exec brightnessctl --device 'asus::kbd_backlight' set +1
+bindsym XF86KbdBrightnessDown exec brightnessctl --device 'asus::kbd_backlight' set 1-
 bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -3%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +3%

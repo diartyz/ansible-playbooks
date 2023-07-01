@@ -38,7 +38,7 @@ return {
 
       vim.keymap.set('n', 'q', api.tree.close, opts 'Close')
       vim.keymap.set('n', '<c-e>', api.tree.close, opts 'Close')
-      vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help')
+      vim.keymap.set('n', 'g?', api.tree.toggle_help, opts 'Help')
       vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts 'Toggle Git Ignore')
       vim.keymap.set('n', 'R', api.tree.reload, opts 'Refresh')
 
@@ -63,7 +63,7 @@ return {
 
       vim.keymap.set('n', 'V', api.marks.clear, opts 'Clear all marks')
       vim.keymap.set('n', 'v', api.marks.toggle, opts 'Toggle Bookmark')
-      vim.keymap.set('n', 'b', api.marks.bulk.move, opts 'Move Bookmarked')
+      vim.keymap.set('n', 'm', api.marks.bulk.move, opts 'Move Bookmarked')
     end,
   },
 }
