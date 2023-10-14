@@ -1,5 +1,6 @@
 return {
   'AndrewRadev/switch.vim',
+  keys = '<leader>i',
   init = function()
     vim.g.switch_mapping = '<leader>i'
     vim.api.nvim_create_autocmd('FileType', {

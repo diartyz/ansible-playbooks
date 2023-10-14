@@ -9,7 +9,7 @@ return {
     },
   },
   keys = {
-    { '<leader>r', '<Plug>SnipRun', mode = 'v' },
+    { '<leader>r', '<Plug>SnipRun', mode = 'x' },
   },
   opts = {
     display = {
