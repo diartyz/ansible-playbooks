@@ -3,39 +3,38 @@
   become: true
   pacman:
     name: python-pip
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
-    name: [python, pyenv, pyenv-virtualenv]
-  when: ansible_distribution == 'MacOSX'
+    name: python
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
+
+- name: install packages
+  become: true
+  apt:
+    name:
+      - python3
+      - python-is-python3
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
 
 - name: create pip conf folder
   file:
     path: '{{ item }}'
     state: directory
   with_items:
-    - ~/.pip
+    - ~/.config/pip
 
 - name: copy pip conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: pip.conf, dest: ~/.pip/pip.conf }
-
-- name: install python packages
-  pip:
-    name: [httpie, send2trash, virtualenv]
-    extra_args: --user
-    executable: pip3
-  when: ansible_distribution == 'MacOSX'
-
-- name: create folder '~/bin'
-  file: path=~/.local/bin
-    state=directory
-
-- name: install ve
-  get_url: url=https://raw.githubusercontent.com/erning/ve/master/ve
-    dest=~/.local/bin/ve
-    mode=0755
+    - { src: pip.conf, dest: ~/.config/pip/pip.conf }
