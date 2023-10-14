@@ -3,7 +3,9 @@
   become: true
   pacman:
     name: openssh
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: create ssh folder
   file:
@@ -19,8 +21,6 @@
   with_items:
     - { src: id_rsa, dest: ~/.ssh/id_rsa, mode: '0600' }
     - { src: id_rsa.pub, dest: ~/.ssh/id_rsa.pub, mode: '0644' }
-    - { src: teletraan, dest: ~/.ssh/teletraan, mode: '0600' }
-    - { src: teletraan.pub, dest: ~/.ssh/teletraan.pub, mode: '0644' }
     - { src: zenvy-ghost, dest: ~/.ssh/zenvy-ghost, mode: '0600' }
     - { src: zenvy-ghost.pub, dest: ~/.ssh/zenvy-ghost.pub, mode: '0644' }
 
@@ -38,7 +38,7 @@
     mode: 0400
   with_items:
     - { src: id_rsa.pub, dest: ~/.ssh/authorized_keys }
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Archlinux'
+  when: ansible_distribution == 'CentOS'
 
 - name: update sshd config
   become: true
