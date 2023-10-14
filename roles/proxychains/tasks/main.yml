@@ -26,3 +26,4 @@
     dest: '{{ confdir }}/proxychains.conf'
     line: 'socks5 127.0.0.1 1080'
     regexp: '^socks'
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'

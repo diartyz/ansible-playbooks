@@ -4,7 +4,7 @@ ibus-daemon -d -x
 xset r rate 200 39
 # feh --bg-fill /usr/share/pixmaps/wallpaper.jpg
 # sh ~/.screenlayout/default.sh
-xbacklight -set 10
+# xbacklight -set 20
 battery &
 parcellite &
 udiskie -t &
