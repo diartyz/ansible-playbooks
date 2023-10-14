@@ -1,24 +1,17 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
-    'hrsh7th/nvim-cmp',
-    'nvim-telescope/telescope.nvim',
-    'nvim-treesitter/nvim-treesitter',
-    {
-      'williamboman/mason.nvim',
-      config = true,
-    },
-    {
-      'williamboman/mason-lspconfig.nvim',
-      opts = {
-        automatic_installation = true,
-      },
-    },
+    { 'ray-x/lsp_signature.nvim', lazy = true },
+    { 'williamboman/mason.nvim', config = true },
+    { 'williamboman/mason-lspconfig.nvim', opts = { automatic_installation = true } },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
         auto_update = true,
         ensure_installed = {
+          'black',
+          'clangd',
+          'emmet-language-server',
           'eslint-lsp',
           'graphql-language-service-cli',
           'json-lsp',
@@ -26,6 +19,7 @@ return {
           'prettierd',
           'python-lsp-server',
           'rust-analyzer',
+          'shfmt',
           'stylua',
           'typescript-language-server',
           'vim-language-server',
@@ -35,42 +29,45 @@ return {
   },
   config = function()
     local augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
+    local isModuleAvailable = require('core/utils').isModuleAvailable
+    local lsp = require 'lspconfig'
     local function lsp_config(overrides)
       local on_attach = overrides and overrides.on_attach
-
       return vim.tbl_extend('force', overrides or {}, {
-        capabilities = require('cmp_nvim_lsp').default_capabilities(),
-        on_attach = function(_, bufnr)
-          if on_attach then on_attach(_, bufnr) end
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = augroup,
-            buffer = bufnr,
-            callback = function() vim.lsp.buf.format() end,
-          })
+        capabilities = isModuleAvailable 'cmp_nvim_lsp' and require('cmp_nvim_lsp').default_capabilities() or nil,
+        on_attach = function(client, bufnr)
+          if on_attach then on_attach(client, bufnr) end
+          require('lsp_signature').on_attach(nil, bufnr)
         end,
       })
     end
+    local function disable_format(client)
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+    end
 
     require('mason-lspconfig').setup_handlers {
-      function(server_name) require('lspconfig')[server_name].setup(lsp_config()) end,
+      function(server_name) lsp[server_name].setup(lsp_config()) end,
 
-      tsserver = function()
-        require('lspconfig').tsserver.setup(lsp_config {
+      clangd = function()
+        if vim.g.disable_clangd then return end
+        lsp.clangd.setup(lsp_config(vim.g.clangd_config or { cmd = { 'clangd' } }))
+      end,
+
+      ts_ls = function()
+        lsp.ts_ls.setup(lsp_config {
           init_options = {
             preferences = {
               importModuleSpecifierPreference = 'project-relative',
               jsxAttributeCompletionStyle = 'none',
             },
           },
-          on_attach = function(client)
-            client.server_capabilities.documentFormattingProvider = false
-            client.server_capabilities.documentRangeFormattingProvider = false
-          end,
+          on_attach = disable_format,
         })
       end,
 
       lua_ls = function()
-        require('lspconfig').lua_ls.setup(lsp_config {
+        lsp.lua_ls.setup(lsp_config {
           settings = {
             Lua = {
               diagnostics = {
@@ -85,7 +82,7 @@ return {
       end,
 
       jsonls = function()
-        require('lspconfig').jsonls.setup(lsp_config {
+        lsp.jsonls.setup(lsp_config {
           settings = {
             json = {
               schemas = {
@@ -114,30 +111,98 @@ return {
           },
         })
       end,
+
+      pylsp = function()
+        lsp.pylsp.setup(lsp_config {
+          on_attach = disable_format,
+        })
+      end,
     }
 
-    local telescope = require 'telescope.builtin'
     local typescript = require 'plugins/typescript'
-    local next_diagnostic_repeat, prev_diagnostic_repeat =
-      require('nvim-treesitter.textobjects.repeatable_move').make_repeatable_move_pair(
-        vim.diagnostic.goto_next,
-        vim.diagnostic.goto_prev
-      )
+    local pos_equal = function(p1, p2)
+      local r1, c1 = (table.unpack or unpack)(p1)
+      local r2, c2 = (table.unpack or unpack)(p2)
+      return r1 == r2 and c1 == c2
+    end
 
-    vim.keymap.set('n', '<c-j>', next_diagnostic_repeat)
-    vim.keymap.set('n', '<c-k>', prev_diagnostic_repeat)
-    vim.keymap.set('n', '<c-t>', telescope.lsp_document_symbols)
-    vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action)
-    vim.keymap.set('n', '<leader>gd', telescope.lsp_references)
-    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
-    vim.keymap.set('n', 'gd', telescope.lsp_definitions)
-    vim.keymap.set('n', 'gh', vim.lsp.buf.hover)
-    vim.keymap.set('n', 'gi', telescope.lsp_implementations)
-    vim.keymap.set('n', 'gp', vim.lsp.buf.format)
-    vim.keymap.set('n', 'go', function()
-      typescript.add_missing_imports()
-      typescript.remove_unused_imports()
-      typescript.sort_imports()
+    vim.keymap.set('n', '<c-j>', function()
+      local pos = vim.api.nvim_win_get_cursor(0)
+      vim.diagnostic.goto_next { severity = vim.diagnostic.severity.ERROR }
+      local pos2 = vim.api.nvim_win_get_cursor(0)
+      if pos_equal(pos, pos2) then vim.diagnostic.goto_next() end
     end)
+    vim.keymap.set('n', '<c-k>', function()
+      local pos = vim.api.nvim_win_get_cursor(0)
+      vim.diagnostic.goto_prev { severity = vim.diagnostic.severity.ERROR }
+      local pos2 = vim.api.nvim_win_get_cursor(0)
+      if pos_equal(pos, pos2) then vim.diagnostic.goto_prev() end
+    end)
+    vim.keymap.set('n', '<c-t>', function()
+      if isModuleAvailable 'telescope.builtin' then
+        require('telescope.builtin').lsp_document_symbols { symbol_width = 39 }
+      else
+        vim.lsp.buf.document_symbol()
+      end
+    end)
+    vim.keymap.set('n', '<f2>', vim.lsp.buf.rename)
+    vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action)
+    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
+    vim.keymap.set('n', 'gd', function()
+      if isModuleAvailable 'telescope.builtin' then
+        require('telescope.builtin').lsp_definitions()
+      else
+        vim.lsp.buf.definition()
+      end
+    end)
+    vim.keymap.set('n', 'gh', vim.lsp.buf.hover)
+    vim.keymap.set('n', 'gi', function()
+      if isModuleAvailable 'fzf-lua' then
+        require('fzf-lua').lsp_references()
+      else
+        vim.lsp.buf.references()
+      end
+    end)
+    vim.keymap.set({ 'n', 'x' }, 'gp', vim.lsp.buf.format)
+
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = augroup,
+      callback = function()
+        if not isModuleAvailable 'gitsigns' then
+          vim.lsp.buf.format()
+          return
+        end
+        local hunks = require('gitsigns').get_hunks()
+        if hunks == nil then
+          vim.lsp.buf.format()
+          return
+        end
+        for i = #hunks, 1, -1 do
+          local hunk = hunks[i]
+          if hunk ~= nil and hunk.type ~= 'delete' then
+            local start = hunk.added.start
+            local last = start + hunk.added.count
+            local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
+            local range = { start = { start, 0 }, ['end'] = { last - 1, last_hunk_line:len() } }
+            vim.lsp.buf.format { range = range }
+          end
+        end
+      end,
+    })
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'cpp',
+      callback = function() vim.keymap.set('n', '<leader>gd', '<cmd>ClangdSwitchSourceHeader<cr>') end,
+    })
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'typescript,typescriptreact',
+      callback = function()
+        vim.keymap.set('n', 'go', function()
+          typescript.add_missing_imports()
+          typescript.remove_unused_imports()
+          typescript.sort_imports()
+        end)
+      end,
+    })
+    vim.lsp.inlay_hint.enable()
   end,
 }
