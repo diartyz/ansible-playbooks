@@ -11,6 +11,7 @@
       - gnome-keyring
       - lightdm-gtk-greeter
       - parcellite
+      - ttf-firacode-nerd
       - ttf-jetbrains-mono-nerd
       - udiskie
       - wqy-microhei
@@ -48,3 +49,17 @@
     - { regexp: '^#?autologin-user=', line: 'autologin-user=diartyz' }
     - { regexp: '^#?autologin-user-timeout=', line: 'autologin-user-timeout=0' }
   when: ansible_distribution == 'Archlinux'
+
+- name: create fontconfig folder
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.config/fontconfig
+
+- name: copy fonts.conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: fonts.conf, dest: ~/.config/fontconfig/fonts.conf }
