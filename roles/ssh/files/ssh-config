@@ -1,15 +1,9 @@
 Host github.com
   Hostname ssh.github.com
-  Port 443
   IdentityFile ~/.ssh/id_rsa
-  ProxyCommand nc -X 5 -x 127.0.0.1:1080 %h %p
+  Port 443
 
 Host github.com-zenvy
   Hostname ssh.github.com
-  Port 443
   IdentityFile ~/.ssh/zenvy-ghost
-  ProxyCommand nc -X 5 -x 127.0.0.1:1080 %h %p
-
-Host code.teletraan.io
-  HostName code.teletraan.io
-  IdentityFile ~/.ssh/teletraan
+  Port 443

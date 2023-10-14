@@ -1,14 +1,27 @@
 ---
-- name: install ranger
+- name: install packages
   become: true
   pacman:
     name: ranger
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
-- name: install ranger
+- name: install packages
   homebrew:
     name: ranger
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
+
+- name: install ranger
+  become: true
+  apt:
+    name: ranger
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
 
 - name: create conf folder
   file:
@@ -21,13 +34,15 @@
   git:
     repo: '{{ item.repo }}'
     dest: '{{ item.dest }}'
+    depth: 1
     update: no
   with_items:
     - {
-        depth: 1,
         repo: 'https://github.com/jchook/ranger-zoxide.git',
         dest: ~/.config/ranger/plugins/zoxide,
       }
+  when:
+    - offline is not defined
 
 - name: copy ranger conf
   copy:
