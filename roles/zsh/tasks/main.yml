@@ -2,47 +2,112 @@
 - name: install packages
   become: true
   pacman:
-    name: ['zsh', 'xclip', 'scrot', 'fd', 'fzf', 'zoxide']
-  when: ansible_distribution == 'Archlinux'
+    name:
+      - zsh
+      - fd
+      - zoxide
+      - xclip
+      - scrot
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
-    name: ['zsh', 'fd', 'fzf', 'zoxide']
-  when: ansible_distribution == 'MacOSX'
+    name:
+      - zsh
+      - fd
+      - zoxide
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
+
+- name: install packages
+  become: true
+  apt:
+    name:
+      - zsh
+      - fd-find
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: clone fzf
+  git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: ~/.fzf
+    depth: 1
+    update: no
+  when:
+    - offline is not defined
+
+- name: check if fzf is installed
+  command: which fzf
+  ignore_errors: yes
+  register: fzf_check
+  changed_when: false
+  when:
+    - offline is not defined
+
+- name: execute script if fzf is not installed
+  shell: |
+    ~/.fzf/install --all
+  when:
+    - offline is not defined
+    - fzf_check.failed == true
+
+- name: check if zoxide is installed
+  command: which zoxide
+  ignore_errors: yes
+  register: zoxide_check
+  changed_when: false
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: execute script if zoxide is not installed
+  shell: |
+    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu' and zoxide_check.failed == true
 
 - name: clone oh-my-zsh
   git:
     repo: '{{ item.repo }}'
     dest: '{{ item.dest }}'
+    depth: 1
     update: no
   with_items:
     - {
-        depth: 1,
         repo: 'https://github.com/robbyrussell/oh-my-zsh.git',
         dest: ~/.oh-my-zsh,
       }
+  when:
+    - offline is not defined
 
 - name: clone zsh plugins
   git:
     repo: '{{ item.repo }}'
     dest: '{{ item.dest }}'
+    depth: 1
     update: no
   with_items:
     - {
-        depth: 1,
         repo: 'https://github.com/romkatv/powerlevel10k',
         dest: ~/.oh-my-zsh/custom//themes/powerlevel10k,
       }
     - {
-        depth: 1,
         repo: 'https://github.com/zsh-users/zsh-autosuggestions',
         dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions,
       }
     - {
-        depth: 1,
         repo: 'https://github.com/zsh-users/zsh-syntax-highlighting',
         dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting,
       }
+  when:
+    - offline is not defined
 
 - name: copy zsh conf
   copy:
@@ -50,10 +115,11 @@
     dest: '{{ item.dest }}'
   with_items:
     - { src: .zshrc, dest: ~/.zshrc }
-    - { src: .p10k.zsh, dest: ~/.p10k.zsh }
 
 - name: change default shell to zsh
   become: true
   user:
     name: '{{ ansible_user_id }}'
     shell: /bin/zsh
+  when:
+    - no_sudo is not defined

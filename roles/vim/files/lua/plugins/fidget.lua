@@ -1,13 +1,11 @@
 return {
   'j-hui/fidget.nvim',
-  tag = 'legacy',
+  event = 'LspAttach',
   opts = {
-    timer = {
-      fidget_decay = 300,
-      task_decay = 300,
-    },
-    window = {
-      blend = 0,
+    notification = {
+      window = {
+        winblend = 0,
+      },
     },
   },
 }
