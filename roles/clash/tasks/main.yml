@@ -3,10 +3,11 @@
 - name: install clash
   become: true
   pacman:
-    name: clash-premium-bin
+    name: clash-meta
   when: ansible_distribution == 'Archlinux'
 
 - name: create config folder
+  become: true
   file:
     path: /etc/clash
     state: directory

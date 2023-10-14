@@ -8,18 +8,26 @@ return {
     'hrsh7th/cmp-path',
     'onsails/lspkind.nvim',
     {
-      'quangnguyen30192/cmp-nvim-ultisnips',
-      dependencies = 'SirVer/ultisnips',
-      init = function() vim.g.UltiSnipsExpandTrigger = '<c-;>' end,
+      'L3MON4D3/LuaSnip',
+      version = 'v2.*',
+      build = 'make install_jsregexp',
+      dependencies = 'saadparwaiz1/cmp_luasnip',
+      config = function()
+        local luasnip = require 'luasnip'
+        vim.keymap.set({ 'i', 's' }, '<c-j>', function() luasnip.jump(1) end)
+        vim.keymap.set({ 'i', 's' }, '<c-k>', function() luasnip.jump(-1) end)
+      end,
     },
     {
       'tzachar/cmp-tabnine',
       build = './install.sh',
     },
   },
+  event = 'InsertEnter',
   config = function()
     local cmp = require 'cmp'
     local types = require 'cmp.types'
+    local luasnip = require 'luasnip'
 
     cmp.setup {
       formatting = {
@@ -39,9 +47,7 @@ return {
             return vim_item
           end
 
-          return require('lspkind').cmp_format {
-            mode = 'symbol_text',
-          }(entry, vim_item)
+          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
         end,
       },
 
@@ -54,20 +60,22 @@ return {
               behavior = cmp.ConfirmBehavior.Replace,
               select = false,
             }
+          elseif luasnip.jumpable() then
+            luasnip.jump(1)
           else
             fallback()
           end
         end,
         ['<c-n>'] = function()
           if cmp.visible() then
-            cmp.select_next_item { behavior = types.cmp.SelectBehavior.Insert }
+            cmp.select_next_item { behavior = types.cmp.SelectBehavior.Select }
           else
             cmp.complete()
           end
         end,
         ['<c-p>'] = function()
           if cmp.visible() then
-            cmp.select_prev_item { behavior = types.cmp.SelectBehavior.Insert }
+            cmp.select_prev_item { behavior = types.cmp.SelectBehavior.Select }
           else
             cmp.complete()
           end
@@ -75,15 +83,15 @@ return {
       },
 
       snippet = {
-        expand = function(args) vim.fn['UltiSnips#Anon'](args.body) end,
+        expand = function(args) require('luasnip').lsp_expand(args.body) end,
       },
 
       sources = cmp.config.sources({
         { name = 'nvim_lua' },
       }, {
-        { name = 'cmp_tabnine' },
         { name = 'nvim_lsp' },
-        { name = 'ultisnips' },
+        { name = 'cmp_tabnine' },
+        { name = 'luasnip' },
       }, {
         { name = 'buffer' },
       }),

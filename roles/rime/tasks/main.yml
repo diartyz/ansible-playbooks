@@ -19,6 +19,7 @@
   file:
     path: '{{ confdir }}'
     state: directory
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
 - name: copy conf
   copy:
@@ -27,3 +28,4 @@
   with_items:
     - { src: default.custom.yaml, dest: '{{ confdir }}/default.custom.yaml' }
     - { src: luna_pinyin_simp.custom.yaml, dest: '{{ confdir }}/luna_pinyin_simp.custom.yaml' }
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'

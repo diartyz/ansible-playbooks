@@ -14,6 +14,9 @@ return {
       progress = {
         enabled = false,
       },
+      signature = {
+        enabled = false,
+      },
     },
     routes = {
       {
