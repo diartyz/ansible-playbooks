@@ -8,88 +8,106 @@ return {
     'hrsh7th/cmp-path',
     'onsails/lspkind.nvim',
     {
-      'quangnguyen30192/cmp-nvim-ultisnips',
-      dependencies = 'SirVer/ultisnips',
-      init = function() vim.g.UltiSnipsExpandTrigger = '<c-;>' end,
+      'L3MON4D3/LuaSnip',
+      version = 'v2.*',
+      build = 'make install_jsregexp',
+      dependencies = { 'rafamadriz/friendly-snippets', 'saadparwaiz1/cmp_luasnip' },
+      config = function()
+        local luasnip = require 'luasnip'
+        vim.keymap.set({ 'i', 's' }, '<c-j>', function() luasnip.jump(1) end)
+        vim.keymap.set({ 'i', 's' }, '<c-k>', function() luasnip.jump(-1) end)
+        require('luasnip.loaders.from_vscode').lazy_load()
+      end,
     },
     {
       'tzachar/cmp-tabnine',
       build = './install.sh',
+      enabled = not vim.g.disable_ai,
     },
   },
+  event = { 'CmdlineEnter', 'InsertEnter' },
   config = function()
     local cmp = require 'cmp'
-    local types = require 'cmp.types'
+    local luasnip = require 'luasnip'
+    local feedkeys = require 'cmp.utils.feedkeys'
+    local keymap = require 'cmp.utils.keymap'
+    local keymap_cinkeys = function(expr)
+      return string.format(keymap.t '<Cmd>set cinkeys=%s<CR>', expr and vim.fn.escape(expr, '| \t\\') or '')
+    end
 
     cmp.setup {
+      completion = { completeopt = 'menu,menuone,noinsert' },
       formatting = {
         format = function(entry, vim_item)
           if entry.source.name == 'cmp_tabnine' then
             vim_item.kind = ' Tabnine'
             vim_item.menu = ''
-
             if (entry.completion_item.data or {}).multiline then vim_item.kind = vim_item.kind .. '*' end
-
             local detail = (entry.completion_item.labelDetails or {}).detail
-
             if detail and detail:find '.*%%.*' then
               vim_item.kind = string.format('%s%s %s', vim_item.kind, ':', detail)
             end
-
             return vim_item
           end
-
-          return require('lspkind').cmp_format {
-            mode = 'symbol_text',
-          }(entry, vim_item)
+          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
         end,
       },
-
       mapping = {
-        ['<c-space>'] = cmp.mapping.complete(),
-        ['<c-l>'] = cmp.mapping.abort(),
+        ['<c-]>'] = function()
+          if cmp.visible() then
+            cmp.abort()
+          else
+            cmp.complete()
+          end
+        end,
         ['<tab>'] = function(fallback)
-          if cmp.get_active_entry() then
+          if cmp.visible() then
+            feedkeys.call(keymap_cinkeys(), 'n')
             cmp.confirm {
               behavior = cmp.ConfirmBehavior.Replace,
               select = false,
             }
+            feedkeys.call(keymap_cinkeys(vim.bo.cinkeys), 'n')
+          elseif luasnip.jumpable() then
+            luasnip.jump(1)
           else
             fallback()
           end
         end,
         ['<c-n>'] = function()
           if cmp.visible() then
-            cmp.select_next_item { behavior = types.cmp.SelectBehavior.Insert }
+            cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
           else
             cmp.complete()
           end
         end,
         ['<c-p>'] = function()
           if cmp.visible() then
-            cmp.select_prev_item { behavior = types.cmp.SelectBehavior.Insert }
+            cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
           else
             cmp.complete()
           end
         end,
       },
-
       snippet = {
-        expand = function(args) vim.fn['UltiSnips#Anon'](args.body) end,
+        expand = function(args) require('luasnip').lsp_expand(args.body) end,
       },
-
-      sources = cmp.config.sources({
+      sources = cmp.config.sources(vim.g.disable_ai and {
         { name = 'nvim_lua' },
-      }, {
-        { name = 'cmp_tabnine' },
         { name = 'nvim_lsp' },
-        { name = 'ultisnips' },
+        { name = 'luasnip' },
+      } or {
+        { name = 'nvim_lua' },
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'cmp_tabnine' },
       }, {
         { name = 'buffer' },
       }),
     }
 
     cmp.setup.cmdline({ '/', '?' }, {
+      completion = { completeopt = 'menu,menuone,noselect' },
       mapping = cmp.mapping.preset.cmdline(),
       sources = {
         { name = 'buffer' },
@@ -97,6 +115,7 @@ return {
     })
 
     cmp.setup.cmdline(':', {
+      completion = { completeopt = 'menu,menuone,noselect' },
       mapping = cmp.mapping.preset.cmdline(),
       sources = cmp.config.sources({
         { name = 'path' },

@@ -1,0 +1,71 @@
+[colors.normal]
+black = "#1d1f21"
+blue = "#81a2be"
+cyan = "#8abeb7"
+green = "#b5bd68"
+magenta = "#b294bb"
+red = "#cc6666"
+white = "#c5c8c6"
+yellow = "#de935f"
+
+[colors.primary]
+background = "#1c1c1c"
+foreground = "#c5c8c6"
+
+[font]
+size = {{ font_size }}
+offset = { x = 0, y = 0 }
+
+[font.normal]
+family = "FiraCode Nerd Font Mono"
+
+[[keyboard.bindings]]
+action = "CreateNewWindow"
+key = "N"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "ClearLogNotice"
+key = "Q"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "PageDown"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "PageUp"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Slash"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001e"
+key = "Key6"
+mods = "Control"
+
+[[mouse.bindings]]
+action = "Paste"
+mouse = "Right"
+
+[window]
+opacity = 0.98
+startup_mode = "Maximized"
