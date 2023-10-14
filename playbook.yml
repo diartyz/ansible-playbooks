@@ -12,6 +12,7 @@
     - { role: i3, tags: ['i3'] }
     - { role: keyboard, tags: ['keyboard'] }
     - { role: locale, tags: ['locale'] }
+    - { role: mail, tags: ['mail'] }
     - { role: mirrorlist, tags: ['mirrorlist'] }
     - { role: nginx, tags: ['nginx'] }
     - { role: node, tags: ['node'] }
@@ -21,6 +22,7 @@
     - { role: python, tags: ['python'] }
     - { role: ranger, tags: ['ranger'] }
     - { role: rime, tags: ['rime'] }
+    - { role: rust, tags: ['rust'] }
     - { role: ssh, tags: ['ssh'] }
     - { role: system, tags: ['system'] }
     - { role: terminal, tags: ['terminal'] }
@@ -31,8 +33,6 @@
     - { role: xinit, tags: ['xinit'] }
     - { role: zsh, tags: ['zsh'] }
 
-- hosts: debian
+- hosts: ubuntu
   roles:
-    - { role: debug, tags: ['debug'] }
-    - { role: shadowsocks-server, tags: ['shadowsocks-server'] }
-    - { role: sshd, tags: ['sshd'] }
+    - { role: ssh, tags: ['ssh'] }

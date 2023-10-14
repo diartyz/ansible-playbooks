@@ -1,14 +1,13 @@
 return {
   'gbprod/substitute.nvim',
-  dependencies = 'tpope/vim-abolish',
+  dependencies = { 'tpope/vim-abolish', keys = 'cr' },
   keys = {
+    { 'X', function() require('substitute.exchange').visual() end, mode = 'x' },
     { 'cx', function() require('substitute.exchange').operator() end },
     { 'cxx', function() require('substitute.exchange').line() end },
-    { 'X', function() require('substitute.exchange').visual() end, mode = 'v' },
-    { 'gR', function() require('substitute').eol() end },
     { 'gr', function() require('substitute').operator() end },
     { 'grr', function() require('substitute').line() end },
-    { 'gr', function() require('substitute').visual() end, mode = 'v' },
+    { 'gr', function() require('substitute').visual() end, mode = 'x' },
     { 'gs', function() require('substitute.range').operator { subject = { motion = 'iw' } } end },
     {
       'gss',
@@ -19,7 +18,7 @@ return {
       function()
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(':S///g<Left><Left><Left>', true, false, true), 'mi', true)
       end,
-      mode = 'v',
+      mode = 'x',
     },
   },
   opts = {

@@ -6,6 +6,9 @@ defaults write com.apple.dock ResetLaunchPad -bool true; killall Dock
 # clean Dock
 defaults write com.apple.dock persistent-apps -array; killall Dock
 
+# show hidden files
+defaults write com.apple.finder AppleShowAllFiles -boolean true ; killall Finder
+
 # enable PressAndHold
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false

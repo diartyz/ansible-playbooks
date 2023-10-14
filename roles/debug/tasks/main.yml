@@ -1,4 +1,8 @@
 ---
+# - name: show facts available on the system
+#   debug:
+#     var: ansible_facts
+
 - name: show ansible_distribution
   debug:
     msg: '{{ ansible_distribution }}'
@@ -14,3 +18,7 @@
 - name: show ansible_user_dir
   debug:
     msg: '{{ ansible_user_dir }}'
+
+- name: show ansible_kernel
+  debug:
+    msg: '{{ ansible_kernel }}'
