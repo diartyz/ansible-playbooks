@@ -3,23 +3,54 @@
   become: true
   pacman:
     name: alacritty
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
+
+- name: install packages
+  homebrew_cask:
+    name:
+      - alacritty
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: copy conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: .alacritty.yml, dest: ~/.alacritty.yml }
     - { src: .Xresources, dest: ~/.Xresources }
   when: ansible_distribution == 'Archlinux'
+
+- name: copy .alacritty.toml
+  vars:
+    font_size: 13
+  template:
+    src: .alacritty.toml
+    dest: ~/.alacritty.toml
+  when: ansible_distribution == 'MacOSX'
+
+- name: copy .alacritty.toml
+  vars:
+    font_size: 11
+  template:
+    src: .alacritty.toml
+    dest: ~/.alacritty.toml
+  when: ansible_distribution != 'MacOSX'
 
 - name: homebrew tap
   homebrew_tap:
     name: homebrew/cask-fonts
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: install cask packages
   homebrew_cask:
-    name: [iterm2, font-jetbrains-mono-nerd-font, font-fira-code-nerd-font]
-  when: ansible_distribution == 'MacOSX'
+    name:
+      - font-jetbrains-mono-nerd-font
+      - font-fira-code-nerd-font
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'

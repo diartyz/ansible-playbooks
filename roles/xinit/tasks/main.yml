@@ -11,6 +11,7 @@
       - gnome-keyring
       - lightdm-gtk-greeter
       - parcellite
+      - ttf-firacode-nerd
       - ttf-jetbrains-mono-nerd
       - udiskie
       - wqy-microhei
