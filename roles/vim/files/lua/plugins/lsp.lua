@@ -19,6 +19,7 @@ return {
       opts = {
         auto_update = true,
         ensure_installed = {
+          'clangd',
           'eslint-lsp',
           'graphql-language-service-cli',
           'json-lsp',

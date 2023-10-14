@@ -15,6 +15,9 @@ return {
         git_placement = 'signcolumn',
       },
     },
+    filters = {
+      git_ignored = false,
+    },
     update_focused_file = {
       enable = true,
       update_root = true,
@@ -61,7 +64,7 @@ return {
       vim.keymap.set('n', 'p', api.fs.paste, opts 'Paste')
       vim.keymap.set('n', 'D', api.fs.remove, opts 'Delete')
 
-      vim.keymap.set('n', 'V', api.marks.clear, opts 'Clear all marks')
+      vim.keymap.set('n', 'C', api.marks.clear, opts 'Clear all marks')
       vim.keymap.set('n', 'v', api.marks.toggle, opts 'Toggle Bookmark')
       vim.keymap.set('n', 'm', api.marks.bulk.move, opts 'Move Bookmarked')
     end,

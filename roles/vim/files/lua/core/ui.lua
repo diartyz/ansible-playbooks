@@ -2,8 +2,6 @@ vim.opt.colorcolumn = { 80, 120 }
 vim.opt.cursorline = true
 vim.opt.laststatus = 0
 vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.signcolumn = 'yes'
 vim.opt.termguicolors = true
 vim.fn.sign_define {
   {
