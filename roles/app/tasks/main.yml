@@ -15,6 +15,7 @@
   pacman:
     update_cache: yes
   when:
+    - offline is not defined
     - ansible_distribution == 'Archlinux'
     - pacmanConf.changed
 
@@ -26,14 +27,16 @@
         firefox,
         pulsemixer,
         cmus,
-        mpv,
         dfc,
         ncdu,
         htop,
         tree,
+        unzip,
         yay,
       ]
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install cask packages
   homebrew_cask:
@@ -42,21 +45,26 @@
         alfred,
         firefox,
         macs-fan-control,
-        mpv,
         omnidisksweeper,
         prefs-editor,
         visual-studio-code,
       ]
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: install packages
   homebrew:
     name: [mas, dfc, ncdu, htop, tree]
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: Install Apps
   community.general.mas:
     id:
       - 993841014 # CopyLess 2
     state: present
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'

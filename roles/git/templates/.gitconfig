@@ -1,33 +1,38 @@
 [user]
-  name = diartyz
-  email = diartyz@gmail.com
+	name = diartyz
+	email = diartyz@gmail.com
 [core]
 	ignorecase = false
-  pager = diff-so-fancy | less -RFX
+	pager = diff-so-fancy | less -RX
 	quotepath = false
-[includeIf "gitdir:~/Work/"]
-  path = .gitconfig-work
-[includeIf "gitdir:~/Zenvy/"]
-  path = .gitconfig-zenvy
-[diff]
-  tool = meld
-[difftool "meld"]
-  cmd = {{ meld }} $LOCAL $REMOTE
-[init]
-	defaultBranch = master
+[diff-so-fancy]
+	markEmptyLines = false
+[color]
+	ui = auto
+[credential]
+	helper = store
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 [merge]
-  tool = meld
+	tool = meld
 [mergetool]
-  keepBackup = false
+	keepBackup = false
 [mergetool "meld"]
-  cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
+	cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
 [mergetool "vscode"]
-  cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
+	cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
 [pull]
 	ff = only
 [push]
 	recurseSubmodules = on-demand
 [submodule]
 	recurse = true
-[diff-so-fancy]
-	markEmptyLines = false
+[includeIf "gitdir:~/Coding/"]
+	path = .gitconfig-me
+[includeIf "gitdir:~/Work/"]
+	path = .gitconfig-work
+[includeIf "gitdir:~/Zenvy/"]
+	path = .gitconfig-zenvy

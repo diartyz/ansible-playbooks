@@ -1,15 +1,21 @@
 return {
   'nvim-telescope/telescope.nvim',
-  dependencies = { 'nvim-lua/plenary.nvim', 'nvim-tree/nvim-web-devicons' },
-  keys = {
-    { '<c-p>', function() require('telescope.builtin').find_files() end },
-    { '<leader>a', function() require('telescope.builtin').buffers() end },
-    { '<leader>m', function() require('telescope.builtin').marks() end },
+  branch = '0.1.x',
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    'nvim-tree/nvim-web-devicons',
+    {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
+    },
   },
+  cmd = 'Telescope',
+  keys = { { '<leader>a', '<cmd>Telescope buffers<cr>', mode = { 'n', 'x' } } },
   config = function()
     require('telescope').setup {
       defaults = require('telescope.themes').get_dropdown {
-        file_ignore_patterns = { '^.git/.*' },
+        file_ignore_patterns = { '^.cache/', '^.git/', '^out/' },
+        layout_config = { width = 0.9 },
         mappings = {
           i = {
             ['<esc>'] = 'close',
@@ -18,8 +24,16 @@ return {
           },
         },
       },
+      extensions = {
+        fzf = {
+          fuzzy = true,
+          override_generic_sorter = true,
+          override_file_sorter = true,
+        },
+      },
       pickers = {
         buffers = {
+          layout_config = { height = 0.9 },
           previewer = false,
           mappings = {
             i = {
@@ -32,5 +46,6 @@ return {
         },
       },
     }
+    require('telescope').load_extension 'fzf'
   end,
 }

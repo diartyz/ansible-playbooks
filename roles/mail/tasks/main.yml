@@ -1,0 +1,39 @@
+---
+- name: install packages
+  homebrew:
+    name:
+      - mutt
+      - msmtp
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
+    - ansible_distribution_major_version | int > 11
+
+- name: install packages
+  macports:
+    name:
+      - mutt
+      - msmtp
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
+    - ansible_distribution_major_version | int <= 11
+
+- name: install packages
+  become: true
+  apt:
+    name:
+      - mutt
+      - msmtp
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: copy mail config
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    mode: 0600
+  with_items:
+    - { src: .msmtprc, dest: ~/.msmtprc }

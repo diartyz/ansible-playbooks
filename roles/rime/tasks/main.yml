@@ -3,6 +3,7 @@
   become: true
   pacman:
     name: ibus-rime
+  register: rime
   when: ansible_distribution == 'Archlinux'
 
 - name: set confdir
@@ -19,6 +20,28 @@
   file:
     path: '{{ confdir }}'
     state: directory
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+
+- name: clone rime-ice repo
+  git:
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+    depth: 1
+    update: no
+  with_items:
+    - { repo: 'https://github.com/rime/plum', dest: '{{ confdir }}/plum' }
+  when:
+    - offline is not defined
+    - rime.changed
+
+- name: Execute script
+  shell: bash rime-install iDvel/rime-ice:others/recipes/full
+  args:
+    executable: /bin/bash
+    chdir: '{{ confdir }}/plum'
+  when:
+    - offline is not defined
+    - rime.changed
 
 - name: copy conf
   copy:
@@ -27,3 +50,5 @@
   with_items:
     - { src: default.custom.yaml, dest: '{{ confdir }}/default.custom.yaml' }
     - { src: luna_pinyin_simp.custom.yaml, dest: '{{ confdir }}/luna_pinyin_simp.custom.yaml' }
+    - { src: rime_ice.custom.yaml, dest: '{{ confdir }}/rime_ice.custom.yaml' }
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'

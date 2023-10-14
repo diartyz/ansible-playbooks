@@ -2,16 +2,14 @@ return {
   'folke/noice.nvim',
   dependencies = {
     'MunifTanjim/nui.nvim',
-    {
-      'rcarriga/nvim-notify',
-      opts = {
-        background_colour = '#252c31',
-      },
-    },
+    'rcarriga/nvim-notify',
   },
   opts = {
     lsp = {
       progress = {
+        enabled = false,
+      },
+      signature = {
         enabled = false,
       },
     },
@@ -19,14 +17,21 @@ return {
       {
         filter = {
           event = 'msg_show',
-          find = 'written',
+          find = 'Backend Failure. Error messages:',
         },
         opts = { skip = true },
       },
       {
         filter = {
           event = 'msg_show',
-          find = 'search hit',
+          find = 'E486: Pattern not found:',
+        },
+        opts = { skip = true },
+      },
+      {
+        filter = {
+          event = 'msg_show',
+          find = 'written',
         },
         opts = { skip = true },
       },

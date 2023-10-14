@@ -3,10 +3,11 @@
 - name: install clash
   become: true
   pacman:
-    name: clash-premium-bin
+    name: clash-meta
   when: ansible_distribution == 'Archlinux'
 
 - name: create config folder
+  become: true
   file:
     path: /etc/clash
     state: directory
@@ -47,9 +48,9 @@
   when: ansible_distribution == 'Archlinux' and clash_conf.changed
 
 # mac
-- name: install clashx
+- name: install clash-verge-rev
   homebrew_cask:
-    name: ['clashx']
+    name: ['clash-verge-rev']
   when: ansible_distribution == 'MacOSX'
 
 - name: create config folder

@@ -12,7 +12,7 @@
     line: '{{ item.line }}'
     regexp: '{{ item.regexp }}'
   with_items:
-    - { line: 'GRUB_CMDLINE_LINUX_DEFAULT="acpi_osi=linux acpi_backlight=vendor"', regexp: ^GRUB_CMDLINE_LINUX_DEFAULT }
+    - { line: 'GRUB_CMDLINE_LINUX_DEFAULT="acpi_osi= acpi_backlight=video"', regexp: ^GRUB_CMDLINE_LINUX_DEFAULT }
     - { line: 'GRUB_TIMEOUT=1', regexp: ^GRUB_TIMEOUT }
   register: grub_conf
   when: ansible_distribution == 'Archlinux'

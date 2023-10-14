@@ -2,18 +2,52 @@
 - name: install packages
   become: true
   pacman:
-    name: [vim, neovim, python-pynvim, ripgrep, the_silver_searcher]
-  when: ansible_distribution == 'Archlinux'
-
-- name: homebrew tap
-  homebrew_tap:
-    name: daipeihust/tap
-  when: ansible_distribution == 'MacOSX'
+    name:
+      - gvim
+      - neovim
+      - ripgrep
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
-    name: ['vim', 'neovim', 'ripgrep', 'the_silver_searcher', 'im-select', 'jq']
-  when: ansible_distribution == 'MacOSX'
+    name:
+      - vim
+      - neovim
+      - ripgrep
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
+
+- name: install packages
+  become: true
+  apt:
+    name:
+      - vim-gtk3
+      - neovim
+      - ripgrep
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: install packages
+  become: true
+  pacman:
+    name:
+      - python-pynvim
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
+
+- name: install packages
+  pip:
+    name: pynvim
+    extra_args: --user
+  when:
+    - offline is not defined
+    - ansible_distribution != 'Archlinux'
 
 - name: create vim & nvim conf folder
   file:
@@ -24,27 +58,12 @@
     - ~/.local/share/nvim/site/autoload
     - ~/.config/nvim
 
-- name: download packer
-  git:
-    repo: '{{ item.repo }}'
-    dest: '{{ item.dest }}'
-    update: no
-  with_items:
-    - {
-        depth: 1,
-        repo: 'https://github.com/wbthomason/packer.nvim',
-        dest: ~/.local/share/nvim/site/pack/packer/start/packer.nvim,
-      }
-
 - name: download vim-plug for vim
   get_url:
     url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     dest: ~/.vim/autoload/plug.vim
-
-- name: download vim-plug for nvim
-  get_url:
-    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    dest: ~/.local/share/nvim/site/autoload/plug.vim
+  when:
+    - offline is not defined
 
 - name: copy vim conf
   copy:
@@ -53,6 +72,24 @@
   with_items:
     - { src: .vimrc, dest: ~/.vimrc }
     - { src: init.lua, dest: ~/.config/nvim/init.lua }
-    - { src: coc-settings.json, dest: ~/.config/nvim/coc-settings.json }
     - { src: lua, dest: ~/.config/nvim }
-    - { src: UltiSnips, dest: ~/.config/nvim }
+
+- name: check if win32yank is installed
+  command: which win32yank.exe
+  ignore_errors: yes
+  register: win32yank_check
+  changed_when: false
+  when:
+    - ansible_kernel.find('microsoft-standard-WSL2') != -1
+
+- name: execute script if win32yank is not installed
+  shell: |
+    curl -Lo /tmp/win32yank.zip https://github.com/equalsraf/win32yank/releases/download/v0.1.1/win32yank-x64.zip
+    unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank.exe
+    chmod +x /tmp/win32yank.exe
+    sudo mv /tmp/win32yank.exe /usr/local/bin/
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_kernel.find('microsoft-standard-WSL2') != -1
+    - win32yank_check.failed == true

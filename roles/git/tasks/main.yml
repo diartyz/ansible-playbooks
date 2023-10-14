@@ -2,35 +2,98 @@
 - name: install packages
   become: true
   pacman:
-    name: ['git', 'tig', 'diff-so-fancy', 'meld', 'openbsd-netcat']
-  when: ansible_distribution == 'Archlinux'
+    name:
+      - git
+      - diff-so-fancy
+      - lazygit
+      - tig
+      - meld
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
-    name: ['tig', 'diff-so-fancy', 'jesseduffield/lazygit/lazygit']
-  when: ansible_distribution == 'MacOSX'
+    name:
+      - git
+      - diff-so-fancy
+      - lazygit
+      - tig
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: install cask packages
   homebrew_cask:
-    name: [fork, meld, sublime-merge]
-  when: ansible_distribution == 'MacOSX'
+    name: meld
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
-- name: create folder ~/.config
+- name: add repository from PPA
+  become: true
+  apt_repository:
+    repo: ppa:aos1/diff-so-fancy
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: install packages
+  become: true
+  apt:
+    name:
+      - git
+      - diff-so-fancy
+      - tig
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: check if lazygit is installed
+  command: which lazygit
+  ignore_errors: yes
+  register: lazygit_check
+  changed_when: false
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: execute script if lazygit is not installed
+  shell: |
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf /tmp/lazygit.tar.gz -C /tmp
+    sudo install /tmp/lazygit /usr/local/bin
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+    - lazygit_check.failed == true
+
+- name: create folder
   file:
     name: '{{ item }}'
     state: directory
   with_items:
     - ~/.config
-    - ~/.config/lazygit
-    - ~/Library/Application Support/lazygit
 
-- name: copy .gitconfig
-  vars:
-    meld: 'meld'
-  template:
-    src: .gitconfig
-    dest: ~/.gitconfig
-  when: ansible_distribution == 'Archlinux'
+- name: create folder
+  file:
+    name: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/Library/Application Support/lazygit
+  when: ansible_distribution == 'MacOSX'
+
+- name: create folder
+  file:
+    name: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.config/lazygit
+  when: ansible_distribution != 'MacOSX'
 
 - name: copy .gitconfig
   vars:
@@ -40,12 +103,28 @@
     dest: ~/.gitconfig
   when: ansible_distribution == 'MacOSX'
 
+- name: copy .gitconfig
+  vars:
+    meld: 'meld.exe'
+  template:
+    src: .gitconfig
+    dest: ~/.gitconfig
+  when: ansible_kernel.find('microsoft-standard-WSL2') != -1
+
+- name: copy .gitconfig
+  vars:
+    meld: 'meld'
+  template:
+    src: .gitconfig
+    dest: ~/.gitconfig
+  when: ansible_distribution != 'MacOSX' and ansible_kernel.find('microsoft-standard-WSL2') == -1
+
 - name: copy git config
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: .tigrc, dest: ~/.tigrc }
+    - { src: .gitconfig-me, dest: ~/.gitconfig-me }
     - { src: .gitconfig-work, dest: ~/.gitconfig-work }
     - { src: .gitconfig-zenvy, dest: ~/.gitconfig-zenvy }
 
@@ -65,8 +144,5 @@
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - {
-        src: lazygit.yml,
-        dest: ~/.config/lazygit/config.yml,
-      }
-  when: ansible_distribution == 'Archlinux'
+    - { src: lazygit.yml, dest: ~/.config/lazygit/config.yml }
+  when: ansible_distribution != 'MacOSX'

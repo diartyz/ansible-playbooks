@@ -2,22 +2,41 @@
 - name: install packages
   become: true
   pacman:
-    name: tmux
-  when: ansible_distribution == 'Archlinux'
+    name:
+      - tmux
+      - bc
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
-    name: ['tmux', 'reattach-to-user-namespace']
-  when: ansible_distribution == 'MacOSX'
+    name:
+      - tmux
+      - reattach-to-user-namespace
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
-- name: clone oh-my-zsh
+- name: install packages
+  become: true
+  apt:
+    name: tmux
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: clone tpm
   git:
-    depth: 1
     repo: '{{ item.repo }}'
     dest: '{{ item.dest }}'
+    depth: 1
     update: no
   with_items:
     - { repo: 'https://github.com/tmux-plugins/tpm', dest: ~/.tmux/plugins/tpm }
+  when:
+    - offline is not defined
 
 - name: copy tmux conf
   copy:

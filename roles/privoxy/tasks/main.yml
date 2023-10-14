@@ -40,6 +40,7 @@
         line: '# forward-socks5t / 127.0.0.1:1080 .',
         regexp: '^(#\s)?forward-socks5t / 127.0.0.1:1080 .',
       }
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
 - name: copy privoxy pac
   become: true
@@ -49,6 +50,7 @@
   register: privoxy_conf
   with_items:
     - { src: pac.action, dest: '{{ confdir }}/privoxy/pac.action' }
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
 - name: enable privoxy
   become: true
