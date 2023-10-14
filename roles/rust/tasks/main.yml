@@ -1,0 +1,25 @@
+---
+- name: install packages
+  become: true
+  apt:
+    name:
+      - cargo
+      - rustc
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: create cargo conf folder
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.cargo
+
+- name: copy cargo conf
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: config, dest: ~/.cargo/config }
