@@ -1,7 +1,8 @@
 return {
   'tanvirtin/vgit.nvim',
   dependencies = 'nvim-lua/plenary.nvim',
-  keys = '<leader>hg',
+  cmd = 'VGit',
+  keys = { '<leader>gb', '<leader>gh' },
   config = function()
     local vgit = require 'vgit'
     local next_hunk_repeat, prev_hunk_repeat =
@@ -11,7 +12,8 @@ return {
       keymaps = {
         ['n ]h'] = next_hunk_repeat,
         ['n [h'] = prev_hunk_repeat,
-        ['n <leader>hg'] = 'buffer_history_preview',
+        ['n <leader>gb'] = 'buffer_gutter_blame_preview',
+        ['n <leader>gh'] = 'buffer_history_preview',
       },
       settings = {
         live_blame = {

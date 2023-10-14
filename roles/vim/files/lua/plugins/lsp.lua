@@ -1,24 +1,16 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
-    'hrsh7th/nvim-cmp',
-    'nvim-telescope/telescope.nvim',
-    'nvim-treesitter/nvim-treesitter',
-    {
-      'williamboman/mason.nvim',
-      config = true,
-    },
-    {
-      'williamboman/mason-lspconfig.nvim',
-      opts = {
-        automatic_installation = true,
-      },
-    },
+    { 'hrsh7th/cmp-nvim-lsp', lazy = true },
+    { 'ray-x/lsp_signature.nvim', lazy = true },
+    { 'williamboman/mason.nvim', config = true },
+    { 'williamboman/mason-lspconfig.nvim', opts = { automatic_installation = true } },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
         auto_update = true,
         ensure_installed = {
+          'clangd',
           'eslint-lsp',
           'graphql-language-service-cli',
           'json-lsp',
@@ -35,17 +27,34 @@ return {
   },
   config = function()
     local augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
+    local function format()
+      local hunks = require('gitsigns').get_hunks()
+      if hunks == nil then
+        vim.lsp.buf.format()
+      else
+        for i = #hunks, 1, -1 do
+          local hunk = hunks[i]
+          if hunk ~= nil and hunk.type ~= 'delete' then
+            local start = hunk.added.start
+            local last = start + hunk.added.count
+            local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
+            local range = { start = { start, 0 }, ['end'] = { last - 1, last_hunk_line:len() } }
+            vim.lsp.buf.format { range = range }
+          end
+        end
+      end
+    end
     local function lsp_config(overrides)
       local on_attach = overrides and overrides.on_attach
-
       return vim.tbl_extend('force', overrides or {}, {
         capabilities = require('cmp_nvim_lsp').default_capabilities(),
-        on_attach = function(_, bufnr)
-          if on_attach then on_attach(_, bufnr) end
+        on_attach = function(client, bufnr)
+          if on_attach then on_attach(client, bufnr) end
+          require('lsp_signature').on_attach({}, bufnr)
           vim.api.nvim_create_autocmd('BufWritePre', {
             group = augroup,
             buffer = bufnr,
-            callback = function() vim.lsp.buf.format() end,
+            callback = format,
           })
         end,
       })
@@ -53,6 +62,8 @@ return {
 
     require('mason-lspconfig').setup_handlers {
       function(server_name) require('lspconfig')[server_name].setup(lsp_config()) end,
+
+      clangd = function() require('lspconfig').clangd.setup(lsp_config(vim.g.clangd_config or {})) end,
 
       tsserver = function()
         require('lspconfig').tsserver.setup(lsp_config {
@@ -116,28 +127,35 @@ return {
       end,
     }
 
-    local telescope = require 'telescope.builtin'
     local typescript = require 'plugins/typescript'
-    local next_diagnostic_repeat, prev_diagnostic_repeat =
-      require('nvim-treesitter.textobjects.repeatable_move').make_repeatable_move_pair(
-        vim.diagnostic.goto_next,
-        vim.diagnostic.goto_prev
-      )
 
-    vim.keymap.set('n', '<c-j>', next_diagnostic_repeat)
-    vim.keymap.set('n', '<c-k>', prev_diagnostic_repeat)
-    vim.keymap.set('n', '<c-t>', telescope.lsp_document_symbols)
+    vim.keymap.set('n', '<c-j>', vim.diagnostic.goto_next)
+    vim.keymap.set('n', '<c-k>', vim.diagnostic.goto_prev)
+    vim.keymap.set('n', '<c-t>', function() require('telescope.builtin').lsp_document_symbols { symbol_width = 39 } end)
+    vim.keymap.set('n', '<f2>', vim.lsp.buf.rename)
     vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action)
-    vim.keymap.set('n', '<leader>gd', telescope.lsp_references)
     vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
-    vim.keymap.set('n', 'gd', telescope.lsp_definitions)
+    vim.keymap.set('n', 'gd', function() require('telescope.builtin').lsp_definitions() end)
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover)
-    vim.keymap.set('n', 'gi', telescope.lsp_implementations)
-    vim.keymap.set('n', 'gp', vim.lsp.buf.format)
-    vim.keymap.set('n', 'go', function()
-      typescript.add_missing_imports()
-      typescript.remove_unused_imports()
-      typescript.sort_imports()
-    end)
+    vim.keymap.set('n', 'gi', function() require('fzf-lua').lsp_references() end)
+    vim.keymap.set({ 'n', 'v' }, 'gp', vim.lsp.buf.format)
+
+    vim.api.nvim_create_user_command('F', format, { nargs = 0 })
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'cpp',
+      callback = function() vim.keymap.set('n', '<leader>gd', '<cmd>ClangdSwitchSourceHeader<cr>') end,
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'typescript,typescriptreact',
+      callback = function()
+        vim.keymap.set('n', 'go', function()
+          typescript.add_missing_imports()
+          typescript.remove_unused_imports()
+          typescript.sort_imports()
+        end)
+      end,
+    })
   end,
 }
