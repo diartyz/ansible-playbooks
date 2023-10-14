@@ -14,19 +14,22 @@ return {
       progress = {
         enabled = false,
       },
+      signature = {
+        enabled = false,
+      },
     },
     routes = {
       {
         filter = {
           event = 'msg_show',
-          find = 'written',
+          find = 'Backend Failure. Error messages: File system loop found:',
         },
         opts = { skip = true },
       },
       {
         filter = {
           event = 'msg_show',
-          find = 'search hit',
+          find = 'written',
         },
         opts = { skip = true },
       },
