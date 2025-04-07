@@ -49,6 +49,13 @@ vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')
 vim.keymap.set('n', '<leader>x', '<cmd>bdelete<cr>')
 vim.keymap.set('n', 'cf', [[<cmd>let @+=expand('%')<cr>]])
 vim.keymap.set('n', 'cp', [[<cmd>let @+=expand('%:p')<cr>]])
+if vim.fn.has 'nvim-0.11' == 1 then
+  vim.keymap.del('n', 'gO')
+  vim.keymap.del('n', 'gri')
+  vim.keymap.del('n', 'grn')
+  vim.keymap.del('n', 'grr')
+  vim.keymap.del({ 'n', 'x' }, 'gra')
+end
 
 -- syntax
 -- vim.cmd 'syntax off'

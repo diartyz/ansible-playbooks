@@ -9,6 +9,7 @@ return {
     vim.g.everforest_transparent_background = 1
     vim.api.nvim_command 'colorscheme everforest'
     vim.api.nvim_command 'highlight Visual cterm=NONE ctermbg=241 gui=NONE guibg=#665c54'
+    vim.api.nvim_set_hl(0, 'TabLineFill', { link = 'TabLineFill' })
     vim.fn.sign_define {
       {
         name = 'DiagnosticSignError',
