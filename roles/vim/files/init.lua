@@ -258,7 +258,6 @@ load_plugins {
   { 'folke/which-key.nvim', cmd = 'WhichKey', opts = { delay = 300 } },
   { 'kevinhwang91/nvim-bqf', ft = 'qf' },
   { 'ntpeters/vim-better-whitespace', event = 'VeryLazy' },
-  { 'romainl/vim-cool', event = 'VeryLazy' },
   --   { 'sheerun/vim-polyglot', config = function() vim.g.vim_markdown_no_default_key_mappings = 1 end },
   { 'stevearc/dressing.nvim', event = 'VeryLazy', config = true },
   {

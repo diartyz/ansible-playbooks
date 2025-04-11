@@ -26,7 +26,6 @@ Plug 'nelstrom/vim-visual-star-search'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ojroques/vim-oscyank', { 'branch': 'main' }
 " Plug 'osyo-manga/vim-over'
-Plug 'romainl/vim-cool'
 Plug 'sainnhe/everforest'
 " Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
