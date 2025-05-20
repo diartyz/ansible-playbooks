@@ -34,6 +34,33 @@ return {
     local keymap_cinkeys = function(expr)
       return string.format(keymap.t '<Cmd>set cinkeys=%s<CR>', expr and vim.fn.escape(expr, '| \t\\') or '')
     end
+    local mapping_next = function()
+      if cmp.visible() then
+        cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+      else
+        cmp.complete()
+      end
+    end
+    local mapping_prev = function()
+      if cmp.visible() then
+        cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
+      else
+        cmp.complete()
+      end
+    end
+    local mapping_toggle = function()
+      if cmp.visible() then
+        cmp.abort()
+      else
+        cmp.complete()
+      end
+    end
+    local mapping_cmdline = {
+      ['<tab>'] = { c = cmp.mapping.confirm({ select = false }) },
+      ['<c-n>'] = { c = mapping_next },
+      ['<c-p>'] = { c = mapping_prev },
+      ['<c-]>'] = { c = mapping_toggle },
+    }
 
     cmp.setup {
       completion = { completeopt = 'menu,menuone,noinsert' },
@@ -49,17 +76,11 @@ return {
             end
             return vim_item
           end
-          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
+          return require('lspkind').cmp_format { mode = 'symbol_text' } (entry, vim_item)
         end,
       },
       mapping = {
-        ['<c-]>'] = function()
-          if cmp.visible() then
-            cmp.abort()
-          else
-            cmp.complete()
-          end
-        end,
+        ['<c-]>'] = mapping_toggle,
         ['<tab>'] = function(fallback)
           if cmp.visible() then
             feedkeys.call(keymap_cinkeys(), 'n')
@@ -74,20 +95,8 @@ return {
             fallback()
           end
         end,
-        ['<c-n>'] = function()
-          if cmp.visible() then
-            cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-          else
-            cmp.complete()
-          end
-        end,
-        ['<c-p>'] = function()
-          if cmp.visible() then
-            cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
-          else
-            cmp.complete()
-          end
-        end,
+        ['<c-n>'] = mapping_next,
+        ['<c-p>'] = mapping_prev,
       },
       snippet = {
         expand = function(args) require('luasnip').lsp_expand(args.body) end,
@@ -107,16 +116,16 @@ return {
     }
 
     cmp.setup.cmdline({ '/', '?' }, {
-      completion = { completeopt = 'menu,menuone,noselect' },
-      mapping = cmp.mapping.preset.cmdline(),
+      completion = { completeopt = 'menu,menuone,noinsert' },
+      mapping = mapping_cmdline,
       sources = {
         { name = 'buffer' },
       },
     })
 
     cmp.setup.cmdline(':', {
-      completion = { completeopt = 'menu,menuone,noselect' },
-      mapping = cmp.mapping.preset.cmdline(),
+      completion = { completeopt = 'menu,menuone,noinsert' },
+      mapping = mapping_cmdline,
       sources = cmp.config.sources({
         { name = 'path' },
       }, {

@@ -1,9 +1,9 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
-    { 'ray-x/lsp_signature.nvim', lazy = true },
-    { 'williamboman/mason.nvim', config = true },
-    { 'williamboman/mason-lspconfig.nvim', opts = { automatic_installation = true } },
+    { 'ray-x/lsp_signature.nvim',          lazy = true },
+    { 'williamboman/mason.nvim',           config = true },
+    { 'williamboman/mason-lspconfig.nvim', config = true },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
@@ -30,7 +30,6 @@ return {
   config = function()
     local augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
     local isModuleAvailable = require('core/utils').isModuleAvailable
-    local lsp = require 'lspconfig'
     local function lsp_config(overrides)
       local on_attach = overrides and overrides.on_attach
       return vim.tbl_extend('force', overrides or {}, {
@@ -46,78 +45,61 @@ return {
       client.server_capabilities.documentRangeFormattingProvider = false
     end
 
-    require('mason-lspconfig').setup_handlers {
-      function(server_name) lsp[server_name].setup(lsp_config()) end,
-
-      clangd = function()
-        if vim.g.disable_clangd then return end
-        lsp.clangd.setup(lsp_config(vim.g.clangd_config or { cmd = { 'clangd' } }))
-      end,
-
-      ts_ls = function()
-        lsp.ts_ls.setup(lsp_config {
-          init_options = {
-            preferences = {
-              importModuleSpecifierPreference = 'project-relative',
-              jsxAttributeCompletionStyle = 'none',
+    vim.lsp.config('*', lsp_config())
+    vim.lsp.config('clangd', lsp_config(vim.g.clangd_config or { cmd = { 'clangd' } }))
+    vim.lsp.enable('clangd', not vim.g.disable_clangd)
+    vim.lsp.config('ts_ls', lsp_config({
+      init_options = {
+        preferences = {
+          importModuleSpecifierPreference = 'project-relative',
+          jsxAttributeCompletionStyle = 'none',
+        },
+      },
+      on_attach = disable_format,
+    }))
+    vim.lsp.config('lua_ls', lsp_config({
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = { 'vim' },
+          },
+          format = {
+            enable = false,
+          },
+        },
+      },
+    }))
+    vim.lsp.config('jsonls', lsp_config({
+      settings = {
+        json = {
+          schemas = {
+            {
+              fileMatch = { 'package.json' },
+              url = 'https://json.schemastore.org/package.json',
+            },
+            {
+              fileMatch = { 'tsconfig*.json' },
+              url = 'https://json.schemastore.org/tsconfig.json',
+            },
+            {
+              fileMatch = { '.babelrc', '.babelrc.json', 'babel.config.json' },
+              url = 'https://json.schemastore.org/babelrc.json',
+            },
+            {
+              fileMatch = { '.eslintrc', '.eslintrc.json' },
+              url = 'https://json.schemastore.org/eslintrc.json',
+            },
+            {
+              fileMatch = { '.prettierrc', '.prettierrc.json', 'prettier.config.json' },
+              url = 'https://json.schemastore.org/prettierrc.json',
             },
           },
-          on_attach = disable_format,
-        })
-      end,
-
-      lua_ls = function()
-        lsp.lua_ls.setup(lsp_config {
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { 'vim' },
-              },
-              format = {
-                enable = false,
-              },
-            },
-          },
-        })
-      end,
-
-      jsonls = function()
-        lsp.jsonls.setup(lsp_config {
-          settings = {
-            json = {
-              schemas = {
-                {
-                  fileMatch = { 'package.json' },
-                  url = 'https://json.schemastore.org/package.json',
-                },
-                {
-                  fileMatch = { 'tsconfig*.json' },
-                  url = 'https://json.schemastore.org/tsconfig.json',
-                },
-                {
-                  fileMatch = { '.babelrc', '.babelrc.json', 'babel.config.json' },
-                  url = 'https://json.schemastore.org/babelrc.json',
-                },
-                {
-                  fileMatch = { '.eslintrc', '.eslintrc.json' },
-                  url = 'https://json.schemastore.org/eslintrc.json',
-                },
-                {
-                  fileMatch = { '.prettierrc', '.prettierrc.json', 'prettier.config.json' },
-                  url = 'https://json.schemastore.org/prettierrc.json',
-                },
-              },
-            },
-          },
-        })
-      end,
-
-      pylsp = function()
-        lsp.pylsp.setup(lsp_config {
-          on_attach = disable_format,
-        })
-      end,
-    }
+        },
+      },
+    }))
+    vim.lsp.config('pylsp', lsp_config {
+      on_attach = disable_format,
+    })
 
     local typescript = require 'plugins/typescript'
     local pos_equal = function(p1, p2)
