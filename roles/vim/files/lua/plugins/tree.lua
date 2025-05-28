@@ -5,38 +5,40 @@ return {
     { '<c-e>', '<cmd>NvimTreeFocus<cr>' },
   },
   opts = {
+    actions = {
+      open_file = {
+        quit_on_open = true,
+      },
+    },
+    diagnostics = {
+      enable = true,
+    },
     filesystem_watchers = {
       enable = false,
     },
-    prefer_startup_root = true,
-    view = {
-      width = 39,
+    filters = {
+      git_ignored = false,
     },
+    prefer_startup_root = true,
     renderer = {
       indent_width = 1,
       icons = {
         git_placement = 'signcolumn',
       },
     },
-    filters = {
-      git_ignored = false,
+    respect_buf_cwd = true,
+    sync_root_with_cwd = true,
+    ui = {
+      confirm = {
+        remove = false,
+      },
     },
     update_focused_file = {
       enable = true,
       update_root = true,
     },
-    diagnostics = {
-      enable = true,
-    },
-    actions = {
-      open_file = {
-        quit_on_open = true,
-      },
-    },
-    ui = {
-      confirm = {
-        remove = false,
-      },
+    view = {
+      width = 39,
     },
     on_attach = function(bufnr)
       local api = require 'nvim-tree.api'
