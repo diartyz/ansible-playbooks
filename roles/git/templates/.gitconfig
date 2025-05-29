@@ -3,7 +3,7 @@
 	email = diartyz@gmail.com
 [core]
 	ignorecase = false
-	pager = diff-so-fancy | less -RX
+	pager = diff-so-fancy | less -FRX
 	quotepath = false
 [diff-so-fancy]
 	markEmptyLines = false
