@@ -98,7 +98,7 @@ load_plugins {
   require 'plugins/targets',
   { 'abecodes/tabout.nvim', dependencies = 'nvim-treesitter/nvim-treesitter', event = 'InsertEnter', config = true },
   --   { 'axelvc/template-string.nvim', opts = { remove_template_string = true } },
-  --   { 'inkarkat/vim-AdvancedSorters', dependencies = 'inkarkat/vim-ingo-library' },
+  { 'inkarkat/vim-AdvancedSorters', dependencies = 'inkarkat/vim-ingo-library' },
   { 'junegunn/vim-easy-align', keys = { { 'ga', '<plug>(EasyAlign)', mode = { 'n', 'x' } } } },
   { 'kana/vim-textobj-entire', dependencies = 'kana/vim-textobj-user', event = 'VeryLazy' },
   { 'michaeljsmith/vim-indent-object', event = 'VeryLazy' },

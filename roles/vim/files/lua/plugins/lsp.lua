@@ -1,8 +1,8 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
-    { 'ray-x/lsp_signature.nvim',          lazy = true },
-    { 'williamboman/mason.nvim',           config = true },
+    { 'ray-x/lsp_signature.nvim', lazy = true },
+    { 'williamboman/mason.nvim', config = true },
     { 'williamboman/mason-lspconfig.nvim', config = true },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -44,11 +44,14 @@ return {
       client.server_capabilities.documentFormattingProvider = false
       client.server_capabilities.documentRangeFormattingProvider = false
     end
+    local function merge_config(name, config)
+      vim.lsp.config(name, lsp_config(vim.tbl_extend('force', vim.lsp.config[name], config or {})))
+    end
 
     vim.lsp.config('*', lsp_config())
-    vim.lsp.config('clangd', lsp_config(vim.g.clangd_config or { cmd = { 'clangd' } }))
+    merge_config('clangd', vim.g.clangd_config)
     vim.lsp.enable('clangd', not vim.g.disable_clangd)
-    vim.lsp.config('ts_ls', lsp_config({
+    merge_config('ts_ls', {
       init_options = {
         preferences = {
           importModuleSpecifierPreference = 'project-relative',
@@ -56,8 +59,8 @@ return {
         },
       },
       on_attach = disable_format,
-    }))
-    vim.lsp.config('lua_ls', lsp_config({
+    })
+    merge_config('lua_ls', {
       settings = {
         Lua = {
           diagnostics = {
@@ -68,8 +71,8 @@ return {
           },
         },
       },
-    }))
-    vim.lsp.config('jsonls', lsp_config({
+    })
+    merge_config('jsonls', {
       settings = {
         json = {
           schemas = {
@@ -96,8 +99,8 @@ return {
           },
         },
       },
-    }))
-    vim.lsp.config('pylsp', lsp_config {
+    })
+    merge_config('pylsp', {
       on_attach = disable_format,
     })
 
@@ -173,7 +176,7 @@ return {
     })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'cpp',
-      callback = function() vim.keymap.set('n', '<leader>gd', '<cmd>ClangdSwitchSourceHeader<cr>') end,
+      callback = function() vim.keymap.set('n', '<leader>gd', '<cmd>LspClangdSwitchSourceHeader<cr>') end,
     })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'typescript,typescriptreact',
