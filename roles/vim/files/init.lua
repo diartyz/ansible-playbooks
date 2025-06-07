@@ -105,11 +105,7 @@ load_plugins {
   { 'tpope/vim-surround', dependencies = 'tpope/vim-repeat', event = 'VeryLazy' },
   { 'tpope/vim-unimpaired', dependencies = 'tpope/vim-repeat', keys = { '[', ']', 'yo' } },
   --   { 'windwp/nvim-ts-autotag', dependencies = 'nvim-treesitter/nvim-treesitter', config = true },
-  {
-    'chaoren/vim-wordmotion',
-    event = 'VeryLazy',
-    init = function() vim.g.wordmotion_prefix = '<leader>' end,
-  },
+  { 'chaoren/vim-wordmotion', event = 'VeryLazy', init = function() vim.g.wordmotion_prefix = '<leader>' end },
   --   {
   --     'danymat/neogen',
   --     dependencies = { 'nvim-treesitter/nvim-treesitter', 'L3MON4D3/LuaSnip' },
@@ -178,11 +174,7 @@ load_plugins {
       vim.keymap.set('i', '<c-y>', '<Plug>(copilot-accept-word)')
     end,
   },
-  {
-    'j-hui/fidget.nvim',
-    event = 'LspAttach',
-    opts = { notification = { window = { winblend = 0 } } },
-  },
+  { 'j-hui/fidget.nvim', event = 'LspAttach', opts = { notification = { window = { winblend = 0 } } } },
   {
     'olimorris/codecompanion.nvim',
     dependencies = {

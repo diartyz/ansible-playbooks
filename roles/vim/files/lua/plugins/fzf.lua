@@ -36,6 +36,9 @@ return {
         find_opts = [[-type f -not -path '*/\.cache/*' -not -path '*/\.git/*' -not -path '*/out/*' -printf '%P\n']],
         rg_opts = [[--files --color=never --hidden -g "!.cache" -g "!.git" -g "!out"]],
       },
+      fzf_opts = {
+        ['--history'] = vim.fn.stdpath 'data' .. '/fzf-lua-history',
+      },
       winopts = {
         preview = {
           layout = 'vertical',
