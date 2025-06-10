@@ -39,6 +39,14 @@ return {
       fzf_opts = {
         ['--history'] = vim.fn.stdpath 'data' .. '/fzf-lua-history',
       },
+      keymap = {
+        fzf = {
+          ['ctrl-j'] = 'next-history',
+          ['ctrl-k'] = 'prev-history',
+          ['ctrl-n'] = 'down',
+          ['ctrl-p'] = 'up',
+        },
+      },
       winopts = {
         preview = {
           layout = 'vertical',

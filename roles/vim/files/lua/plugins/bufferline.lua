@@ -25,7 +25,7 @@ return {
     vim.keymap.set('n', '<leader>7', '<cmd>BufferLineGoToBuffer 7<cr>')
     vim.keymap.set('n', '<leader>8', '<cmd>BufferLineGoToBuffer 8<cr>')
     vim.keymap.set('n', '<leader>9', '<cmd>BufferLineGoToBuffer 9<cr>')
-    vim.keymap.set('n', '<leader>0', '<cmd>BufferLineGoToBuffer 0<cr>')
+    vim.keymap.set('n', '<leader>0', '<cmd>BufferLineGoToBuffer 10<cr>')
     vim.keymap.set('n', '<leader>X', '<cmd>BufferLinePickClose<cr>')
     vim.keymap.set('n', '<leader>d', '<cmd>BufferLineCloseOthers<cr>')
     vim.keymap.set('n', '<leader>t', '<cmd>BufferLinePick<cr>')
