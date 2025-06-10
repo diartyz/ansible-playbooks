@@ -29,6 +29,7 @@ Plug 'ojroques/vim-oscyank', { 'branch': 'main' }
 Plug 'sainnhe/everforest'
 " Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
+Plug 'svermeulen/vim-subversive' | Plug 'tpope/vim-abolish'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -76,14 +77,12 @@ inoremap <c-a> <c-o>I
 inoremap <c-e> <c-o>A
 nnoremap <bs> :nohlsearch<cr>
 nnoremap <c-h> :nohlsearch<cr>
-nnoremap <leader><leader>q :qa!<cr>
-nnoremap <leader><leader>s :x<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :update<cr>
 nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>x :bd<cr>
-nnoremap cf :let @+=expand("%")<cr>
-nnoremap cp :let @+=expand("%:p")<cr>
+nnoremap cf :let @+=expand("%")<cr>:OSCYankRegister +<cr>
+nnoremap cp :let @+=expand("%:p")<cr>:OSCYankRegister +<cr>
 
 " search
 set hlsearch
@@ -219,12 +218,9 @@ let g:EasyMotion_smartcase = 1
 " everforest
 let g:everforest_background = 'hard'
 let g:everforest_better_performance = 1
-let g:everforest_diagnostic_line_highlight = 1
+" let g:everforest_diagnostic_line_highlight = 1
 let g:everforest_disable_italic_comment = 1
 let g:everforest_transparent_background = 1
-let g:indent_guides_auto_colors = 0
-colorscheme everforest
-highlight Visual cterm=NONE ctermbg=241 gui=NONE guibg=#665c54
 
 " fugitive
 nnoremap <leader>gb :G blame<cr>
@@ -235,15 +231,14 @@ xnoremap <leader>gh :Gclog<cr>
 let g:highlightedyank_highlight_duration = 300
 
 " indent
+let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
 let indent_guides_guide_size = 1
 
 " leaderf
 let g:Lf_CommandMap = {'<c-j>': ['<c-n>'], '<c-k>': ['<c-p>'], '<down>': ['<c-j>'], '<up>': ['<c-k>'], '<c-p>': ['<c-l>']}
-let g:Lf_PreviewInPopup = 1
 let g:Lf_ShortcutB = "<leader>t"
 let g:Lf_ShortcutF = "<c-p>"
-let g:Lf_ShowDevIcons = 1
 let g:Lf_ShowHidden = 1
 let g:Lf_WindowPosition = 'popup'
 
@@ -254,10 +249,9 @@ let g:lexima_accept_pum_with_enter = 0
 " multi cursor
 let g:VM_maps = {}
 let g:VM_maps['Visual Cursors'] = '<c-e>'
-highlight link VM_Mono DiffAdd
 
 " oscyank
-if getenv('SSH_TTY') != v:null
+if (getenv('SSH_TTY') != v:null && !has('clipboard_working'))
   let s:VimOSCYankPostRegisters = ['', '+', '*']
   function! s:VimOSCYankPostCallback(event)
     if a:event.operator == 'y' && index(s:VimOSCYankPostRegisters, a:event.regname) != -1
@@ -274,6 +268,10 @@ endif
 let g:ranger_map_keys = 0
 nnoremap + :Ranger<cr>
 
+" subversive
+nmap gs <plug>(SubversiveSubvertWordRange)
+xmap gs <plug>(SubversiveSubvertRange)
+
 " targets
 autocmd User targets#mappings#user call targets#mappings#extend({
       \ 'a': {'argument': [{'o': '[{(<[]', 'c': '[]>)}]', 's': ','}]},
@@ -287,3 +285,7 @@ nnoremap <leader>u :UndotreeToggle<cr>
 
 " wordmotion
 let g:wordmotion_prefix = '<leader>'
+
+colorscheme everforest
+highlight Visual cterm=NONE ctermbg=241 gui=NONE guibg=#665c54
+highlight link VM_Mono DiffAdd
