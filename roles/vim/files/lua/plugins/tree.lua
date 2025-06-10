@@ -46,7 +46,7 @@ return {
 
       vim.keymap.set('n', 'q', api.tree.close, opts 'Close')
       vim.keymap.set('n', '<c-e>', api.tree.close, opts 'Close')
-      vim.keymap.set('n', 'g?', api.tree.toggle_help, opts 'Help')
+      vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help')
       vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts 'Toggle Git Ignore')
       vim.keymap.set('n', 'R', api.tree.reload, opts 'Refresh')
 
