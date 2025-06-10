@@ -4,7 +4,9 @@
   pacman:
     name: ibus-rime
   register: rime
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: set confdir
   set_fact:

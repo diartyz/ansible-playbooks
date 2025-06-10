@@ -3,7 +3,9 @@
   become: true
   pacman:
     name: trojan
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: homebrew tap
   homebrew_tap:
@@ -13,7 +15,9 @@
 - name: install packages
   homebrew:
     name: trojan
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: copy trojan conf
   become: true

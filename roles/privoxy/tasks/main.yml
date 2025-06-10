@@ -3,12 +3,16 @@
   become: true
   pacman:
     name: privoxy
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
     name: privoxy
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: set sysconfdir
   set_fact:
@@ -19,6 +23,11 @@
   set_fact:
     confdir: '/etc'
   when: ansible_distribution == 'Archlinux'
+
+- name: check that the privoxy conf exists
+  stat:
+    path: '{{ confdir }}/privoxy/config'
+  register: stat_result
 
 - name: update privoxy conf
   become: true
@@ -40,7 +49,9 @@
         line: '# forward-socks5t / 127.0.0.1:1080 .',
         regexp: '^(#\s)?forward-socks5t / 127.0.0.1:1080 .',
       }
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+  when:
+    - stat_result.stat.exists
+    - ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
 - name: copy privoxy pac
   become: true
@@ -50,7 +61,9 @@
   register: privoxy_conf
   with_items:
     - { src: pac.action, dest: '{{ confdir }}/privoxy/pac.action' }
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+  when:
+    - stat_result.stat.exists
+    - ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
 - name: enable privoxy
   become: true
@@ -60,10 +73,12 @@
     state: started
   with_items:
     - privoxy
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - privoxy_conf.changed
+    - ansible_distribution == 'Archlinux'
 
 - name: enable privoxy
   command: 'brew services restart privoxy'
   when:
-    - ansible_distribution == 'MacOSX'
     - privoxy_conf.changed
+    - ansible_distribution == 'MacOSX'

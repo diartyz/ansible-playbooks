@@ -4,7 +4,9 @@
   apt:
     name: shadowsocks-libev
     update_cache: yes
-  when: ansible_distribution == 'Debian'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Debian'
 
 - name: copy shadowsocks conf
   become: true

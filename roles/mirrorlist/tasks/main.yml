@@ -3,7 +3,9 @@
   become: true
   pacman:
     name: pacman-contrib
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
   tags:
     - rankmirrors
 

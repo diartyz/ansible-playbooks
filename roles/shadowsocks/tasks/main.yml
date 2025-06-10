@@ -3,12 +3,16 @@
   become: true
   pacman:
     name: shadowsocks
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
     name: shadowsocks-libev
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: copy shadowsocks conf
   become: true

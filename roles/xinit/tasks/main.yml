@@ -19,7 +19,9 @@
       - xf86-input-synaptics
       - xf86-video-intel
       - xorg
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: enable lightdm
   become: true

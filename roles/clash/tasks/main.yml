@@ -4,7 +4,9 @@
   become: true
   pacman:
     name: clash-meta
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: create config folder
   become: true
@@ -51,7 +53,9 @@
 - name: install clash-verge-rev
   homebrew_cask:
     name: ['clash-verge-rev']
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: create config folder
   file:

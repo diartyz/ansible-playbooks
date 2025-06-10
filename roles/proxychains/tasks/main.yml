@@ -3,12 +3,16 @@
   become: true
   pacman:
     name: proxychains-ng
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install packages
   homebrew:
     name: proxychains-ng
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: set sysconfdir
   set_fact:
@@ -20,10 +24,17 @@
     confdir: '/etc'
   when: ansible_distribution == 'Archlinux'
 
+- name: check that the privoxy conf exists
+  stat:
+    path: '{{ confdir }}/proxychains.conf'
+  register: stat_result
+
 - name: update proxychains conf
   become: true
   lineinfile:
     dest: '{{ confdir }}/proxychains.conf'
     line: 'socks5 127.0.0.1 1080'
     regexp: '^socks'
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+  when:
+    - stat_result.stat.exists
+    - ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'

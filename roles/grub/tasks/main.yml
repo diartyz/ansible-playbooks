@@ -3,7 +3,9 @@
   become: true
   pacman:
     name: [grub, efibootmgr, intel-ucode]
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: update grub conf
   become: true

@@ -2,12 +2,16 @@
   become: true
   pacman:
     name: nginx
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'Archlinux'
 
 - name: install nginx
   homebrew:
     name: nginx
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - offline is not defined
+    - ansible_distribution == 'MacOSX'
 
 - name: create nginx conf folder
   become: true
