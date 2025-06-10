@@ -28,7 +28,6 @@ return {
   event = { 'CmdlineEnter', 'InsertEnter' },
   config = function()
     local cmp = require 'cmp'
-    local luasnip = require 'luasnip'
     local feedkeys = require 'cmp.utils.feedkeys'
     local keymap = require 'cmp.utils.keymap'
     local keymap_cinkeys = function(expr)
@@ -56,7 +55,7 @@ return {
       end
     end
     local mapping_cmdline = {
-      ['<tab>'] = { c = cmp.mapping.confirm({ select = false }) },
+      ['<tab>'] = { c = cmp.mapping.confirm { select = false } },
       ['<c-n>'] = { c = mapping_next },
       ['<c-p>'] = { c = mapping_prev },
       ['<c-]>'] = { c = mapping_toggle },
@@ -76,7 +75,7 @@ return {
             end
             return vim_item
           end
-          return require('lspkind').cmp_format { mode = 'symbol_text' } (entry, vim_item)
+          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
         end,
       },
       mapping = {
@@ -89,8 +88,8 @@ return {
               select = false,
             }
             feedkeys.call(keymap_cinkeys(vim.bo.cinkeys), 'n')
-          elseif luasnip.jumpable() then
-            luasnip.jump(1)
+          elseif require('luasnip').jumpable() then
+            require('luasnip').jump(1)
           else
             fallback()
           end

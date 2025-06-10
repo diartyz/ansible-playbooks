@@ -153,27 +153,27 @@ window_rules:
   - commands: ["move --workspace 2", "focus --workspace 2"]
     match:
       - window_process: { equals: "alacritty" }
+      - window_process: { equals: "WindowsTerminal" }
 
   - commands: ["move --workspace 3", "focus --workspace 3"]
     match:
       - window_process: { equals: "explorer" }
 
-  - commands: ["move --workspace 4", "focus --workspace 4"]
-    match:
-      - window_process: { equals: "WindowsTerminal" }
-
-  - commands: ["move --workspace 5", "focus --workspace 5"]
+  - commands: ["move --workspace 4", "focus --workspace 5"]
     match:
       - window_process: { equals: "WeLink" }
 
-  - commands: ["move --workspace 6", "focus --workspace 6"]
+  - commands: ["move --workspace 5", "focus --workspace 6"]
     match:
       - window_process: { equals: "Spotify" }
+
+  - commands: ["move --workspace 6", "focus --workspace 4"]
+    match:
+      - window_process: { equals: "cmd" }
 
   - commands: ["move --workspace 7", "focus --workspace 7"]
     match:
       - window_process: { equals: "SumatraPDF" }
-      - window_process: { equals: "cmd" }
 
   - commands: ["move --workspace 8", "focus --workspace 8"]
     match:
@@ -255,7 +255,7 @@ keybindings:
 
   # Change focus from tiling windows -> floating -> fullscreen.
   - commands: ["wm-cycle-focus"]
-    bindings: ["alt+`"]
+    bindings: ["alt+w"]
 
   # Change the focused window to be floating.
   - commands: ["toggle-floating --centered"]
