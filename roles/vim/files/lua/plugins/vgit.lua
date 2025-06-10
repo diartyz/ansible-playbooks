@@ -1,22 +1,20 @@
 return {
   'tanvirtin/vgit.nvim',
   dependencies = 'nvim-lua/plenary.nvim',
-  cmd = 'VGit',
-  keys = '<leader>gh',
+  event = 'VeryLazy',
   config = function()
     local vgit = require 'vgit'
-    local isModuleAvailable = require('core/utils').isModuleAvailable
     local next_hunk_repeat, prev_hunk_repeat =
-      isModuleAvailable 'nvim-treesitter.textobjects.repeatable_move' and require(
-        'nvim-treesitter.textobjects.repeatable_move'
-      ).make_repeatable_move_pair(vgit.hunk_down, vgit.hunk_up) or vgit.hunk_down,
-      vgit.hunk_up
+      require('core/utils').make_repeatable_move_pair(vgit.hunk_down, vgit.hunk_up)
 
     vgit.setup {
       keymaps = {
-        ['n ]h'] = next_hunk_repeat,
-        ['n [h'] = prev_hunk_repeat,
+        ['n ]c'] = next_hunk_repeat,
+        ['n [c'] = prev_hunk_repeat,
         ['n <leader>gh'] = 'buffer_history_preview',
+        ['n ga'] = 'buffer_conflict_accept_both',
+        ['n gb'] = 'buffer_conflict_accept_incoming',
+        ['n gc'] = 'buffer_conflict_accept_current',
       },
       settings = {
         live_blame = {

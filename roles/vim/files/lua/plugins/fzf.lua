@@ -1,7 +1,7 @@
 return {
   'ibhagwan/fzf-lua',
-  dependencies = { 'nvim-tree/nvim-web-devicons' },
-  cmd = { 'FzfLua' },
+  dependencies = 'nvim-tree/nvim-web-devicons',
+  cmd = 'FzfLua',
   keys = {
     { '<c-p>', function() require('fzf-lua').files() end },
     {
@@ -16,18 +16,6 @@ return {
         end
       end,
     },
-    {
-      '<leader>/',
-      function()
-        if vim.g.fzf_search_path then
-          require('fzf-lua').live_grep_resume {
-            cmd = 'rg --line-number --color=never --hidden ' .. vim.g.fzf_search_path .. ' -g "!.git"',
-          }
-        else
-          require('fzf-lua').live_grep_resume()
-        end
-      end,
-    },
   },
   config = function()
     require('fzf-lua').setup {
@@ -38,6 +26,14 @@ return {
       },
       fzf_opts = {
         ['--history'] = vim.fn.stdpath 'data' .. '/fzf-lua-history',
+      },
+      keymap = {
+        fzf = {
+          ['ctrl-j'] = 'next-history',
+          ['ctrl-k'] = 'prev-history',
+          ['ctrl-n'] = 'down',
+          ['ctrl-p'] = 'up',
+        },
       },
       winopts = {
         preview = {

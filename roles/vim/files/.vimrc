@@ -11,7 +11,7 @@ Plug 'cohama/lexima.vim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion', { 'on': '<Plug>(easymotion-overwin-f2)' }
 Plug 'francoiscabrol/ranger.vim'
-" Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
+Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'junegunn/vim-easy-align'
 Plug 'kana/vim-textobj-entire' | Plug 'kana/vim-textobj-user'
@@ -41,7 +41,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'wellle/targets.vim'
 Plug 'wsdjeg/vim-fetch'
-" Plug 'dstein64/vim-startuptime', { 'on': 'StartupTime' }
+Plug 'dstein64/vim-startuptime', { 'on': 'StartupTime' }
 
 call plug#end()
 
@@ -70,19 +70,30 @@ endif
 command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :update|source $MYVIMRC
 command! -nargs=0 Q :qa!
-command! -nargs=0 W :noautocmd update
+command! -nargs=0 W :noautocmd wall
 command! -nargs=0 OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 let mapleader = ' '
 inoremap <c-a> <c-o>I
 inoremap <c-e> <c-o>A
-nnoremap <bs> :nohlsearch<cr>
-nnoremap <c-h> :nohlsearch<cr>
+nnoremap <bs> :nohlsearch<cr>:match none<cr>
+nnoremap <c-h> :nohlsearch<cr>:match none<cr>
+nnoremap <leader><leader>q :q!<cr>
+nnoremap <leader><leader>s :noautocmd update<cr>
+nnoremap <leader>d :BufOnly<cr>
+nnoremap <leader>m :match IncSearch /\<<c-r><c-w>\>/<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :update<cr>
-nnoremap <leader>d :BufOnly<cr>
 nnoremap <leader>x :bd<cr>
-nnoremap cf :let @+=expand("%")<cr>:OSCYankRegister +<cr>
 nnoremap cp :let @+=expand("%:p")<cr>:OSCYankRegister +<cr>
+nnoremap cy :let @+=expand("%")<cr>:OSCYankRegister +<cr>
+noremap $ g_
+noremap g_ $
+noremap 0 ^
+noremap ^ 0
+if has("gui_running")
+  cnoremap <a-v> <c-r>+
+  inoremap <a-v> <c-r>+
+endif
 
 " search
 set hlsearch
@@ -93,6 +104,7 @@ set incsearch
 au BufRead,BufNewFile *.ets setfiletype typescript
 
 " tab
+set breakindent
 set expandtab
 set shiftround
 set shiftwidth=0
@@ -218,9 +230,12 @@ let g:EasyMotion_smartcase = 1
 " everforest
 let g:everforest_background = 'hard'
 let g:everforest_better_performance = 1
-" let g:everforest_diagnostic_line_highlight = 1
+let g:everforest_diagnostic_line_highlight = 1
 let g:everforest_disable_italic_comment = 1
-let g:everforest_transparent_background = 1
+let g:everforest_ui_contrast = 1
+if !has("gui_running")
+  let g:everforest_transparent_background = 1
+endif
 
 " fugitive
 nnoremap <leader>gb :G blame<cr>
@@ -288,4 +303,7 @@ let g:wordmotion_prefix = '<leader>'
 
 colorscheme everforest
 highlight Visual cterm=NONE ctermbg=241 gui=NONE guibg=#665c54
+highlight link BufTabLineCurrent Underlined
+highlight link BufTabLineFill Normal
+highlight link BufTabLineHidden Normal
 highlight link VM_Mono DiffAdd

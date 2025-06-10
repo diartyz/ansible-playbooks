@@ -8,17 +8,11 @@ return {
     { 'gr', function() require('substitute').operator() end },
     { 'grr', function() require('substitute').line() end },
     { 'gr', function() require('substitute').visual() end, mode = 'x' },
+    { 'gs', function() require('core.utils').feed_keys ':S///g<Left><Left><Left>' end, mode = 'x' },
     { 'gs', function() require('substitute.range').operator { subject = { motion = 'iw' } } end },
     {
       'gss',
       function() require('substitute.range').operator { subject = { motion = 'iw' }, range = { motion = '_' } } end,
-    },
-    {
-      'gs',
-      function()
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(':S///g<Left><Left><Left>', true, false, true), 'mi', true)
-      end,
-      mode = 'x',
     },
   },
   opts = {

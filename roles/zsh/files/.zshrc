@@ -10,6 +10,8 @@ fi
 export GOPROXY=https://goproxy.io
 export HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api"
 export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
 export KEYTIMEOUT=1
 export LANG=en_US.UTF-8
 export PYENV_ROOT="$HOME/.pyenv"

@@ -153,6 +153,7 @@ window_rules:
   - commands: ["move --workspace 2", "focus --workspace 2"]
     match:
       - window_process: { equals: "alacritty" }
+      - window_process: { equals: "WindowsTerminal" }
 
   - commands: ["move --workspace 3", "focus --workspace 3"]
     match:
@@ -160,20 +161,19 @@ window_rules:
 
   - commands: ["move --workspace 4", "focus --workspace 4"]
     match:
-      - window_process: { equals: "WindowsTerminal" }
+      - window_process: { equals: "WeLink" }
 
   - commands: ["move --workspace 5", "focus --workspace 5"]
     match:
-      - window_process: { equals: "WeLink" }
+      - window_process: { equals: "Spotify" }
 
   - commands: ["move --workspace 6", "focus --workspace 6"]
     match:
-      - window_process: { equals: "Spotify" }
+      - window_process: { equals: "cmd" }
 
   - commands: ["move --workspace 7", "focus --workspace 7"]
     match:
       - window_process: { equals: "SumatraPDF" }
-      - window_process: { equals: "cmd" }
 
   - commands: ["move --workspace 8", "focus --workspace 8"]
     match:
@@ -251,11 +251,11 @@ keybindings:
   # Change tiling direction. This determines where new tiling windows will
   # be inserted.
   - commands: ["toggle-tiling-direction"]
-    bindings: ["alt+y"]
+    bindings: ["alt+t"]
 
   # Change focus from tiling windows -> floating -> fullscreen.
   - commands: ["wm-cycle-focus"]
-    bindings: ["alt+`"]
+    bindings: ["alt+w"]
 
   # Change the focused window to be floating.
   - commands: ["toggle-floating --centered"]
@@ -292,7 +292,7 @@ keybindings:
   # Launch CMD terminal. Alternatively, use `shell-exec wt` or
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
   # Terminal and Git Bash respectively.
-  - commands: ["shell-exec alacritty"]
+  - commands: ["shell-exec explorer"]
     bindings: ["alt+enter"]
 
   # Focus the next/previous active workspace defined in `workspaces` config.

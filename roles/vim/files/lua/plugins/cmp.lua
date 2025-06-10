@@ -14,21 +14,25 @@ return {
       dependencies = { 'rafamadriz/friendly-snippets', 'saadparwaiz1/cmp_luasnip' },
       config = function()
         local luasnip = require 'luasnip'
-        vim.keymap.set({ 'i', 's' }, '<c-j>', function() luasnip.jump(1) end)
-        vim.keymap.set({ 'i', 's' }, '<c-k>', function() luasnip.jump(-1) end)
+        vim.keymap.set({ 'i', 's' }, '<c-j>', function() luasnip.jump(1) end, { desc = 'luasnip jump next' })
+        vim.keymap.set({ 'i', 's' }, '<c-k>', function() luasnip.jump(-1) end, { desc = 'luasnip jump prev' })
         require('luasnip.loaders.from_vscode').lazy_load()
       end,
     },
     {
+      'folke/lazydev.nvim',
+      ft = 'lua',
+      opts = { library = { { path = '${3rd}/luv/library', words = { 'vim%.uv' } } } },
+    },
+    {
       'tzachar/cmp-tabnine',
-      build = './install.sh',
+      build = vim.fn.has 'win64' and 'powershell ./install.ps1' or './install.sh',
       enabled = not vim.g.disable_ai,
     },
   },
   event = { 'CmdlineEnter', 'InsertEnter' },
   config = function()
     local cmp = require 'cmp'
-    local luasnip = require 'luasnip'
     local feedkeys = require 'cmp.utils.feedkeys'
     local keymap = require 'cmp.utils.keymap'
     local keymap_cinkeys = function(expr)
@@ -56,7 +60,7 @@ return {
       end
     end
     local mapping_cmdline = {
-      ['<tab>'] = { c = cmp.mapping.confirm({ select = false }) },
+      ['<tab>'] = { c = cmp.mapping.confirm { select = false } },
       ['<c-n>'] = { c = mapping_next },
       ['<c-p>'] = { c = mapping_prev },
       ['<c-]>'] = { c = mapping_toggle },
@@ -76,7 +80,7 @@ return {
             end
             return vim_item
           end
-          return require('lspkind').cmp_format { mode = 'symbol_text' } (entry, vim_item)
+          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
         end,
       },
       mapping = {
@@ -89,8 +93,8 @@ return {
               select = false,
             }
             feedkeys.call(keymap_cinkeys(vim.bo.cinkeys), 'n')
-          elseif luasnip.jumpable() then
-            luasnip.jump(1)
+          elseif require('luasnip').jumpable() then
+            require('luasnip').jump(1)
           else
             fallback()
           end
@@ -101,18 +105,24 @@ return {
       snippet = {
         expand = function(args) require('luasnip').lsp_expand(args.body) end,
       },
-      sources = cmp.config.sources(vim.g.disable_ai and {
-        { name = 'nvim_lua' },
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-      } or {
-        { name = 'nvim_lua' },
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'cmp_tabnine' },
-      }, {
-        { name = 'buffer' },
-      }),
+      sources = cmp.config.sources(
+        {
+          { name = 'lazydev' },
+          { name = 'nvim_lua' },
+        },
+        vim.g.disable_ai and {
+            { name = 'nvim_lsp' },
+            { name = 'luasnip' },
+          }
+          or {
+            { name = 'nvim_lsp' },
+            { name = 'luasnip' },
+            { name = 'cmp_tabnine' },
+          },
+        {
+          { name = 'buffer' },
+        }
+      ),
     }
 
     cmp.setup.cmdline({ '/', '?' }, {

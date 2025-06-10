@@ -8,23 +8,8 @@ return {
       pattern = 'targets#mappings#user',
       callback = function()
         vim.fn['targets#mappings#extend'] {
-          a = {
-            argument = {
-              {
-                o = '[({[]',
-                c = '[]})]',
-                s = ',',
-              },
-            },
-          },
-          b = {
-            pair = {
-              {
-                o = '(',
-                c = ')',
-              },
-            },
-          },
+          a = { argument = { { o = '[({[]', c = '[]})]', s = ',' } } },
+          b = { pair = { { o = '(', c = ')' } } },
         }
       end,
     })
