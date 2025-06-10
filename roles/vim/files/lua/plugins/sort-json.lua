@@ -1,6 +1,7 @@
 return {
   'diartyz/nvim-sort-json',
   build = { 'npm install --frozen-lockfile', ':UpdateRemotePlugins' },
+  cmd = 'SortJSON',
   config = function()
     vim.g.sort_json = {
       orderOverride = {

@@ -13,12 +13,8 @@ return {
     },
     on_attach = function(bufnr)
       local gitsigns = require 'gitsigns'
-      local isModuleAvailable = require('core/utils').isModuleAvailable
       local next_hunk_repeat, prev_hunk_repeat =
-        isModuleAvailable 'nvim-treesitter.textobjects.repeatable_move' and require(
-          'nvim-treesitter.textobjects.repeatable_move'
-        ).make_repeatable_move_pair(gitsigns.next_hunk, gitsigns.prev_hunk) or gitsigns.next_hunk,
-        gitsigns.prev_hunk
+        require('core/utils').make_repeatable_move_pair(gitsigns.next_hunk, gitsigns.prev_hunk)
       local function map(mode, l, r, opts)
         opts = opts or {}
         opts.buffer = bufnr
@@ -30,7 +26,7 @@ return {
       map('n', '<leader>hS', gitsigns.stage_buffer)
       map('n', '<leader>hb', function() gitsigns.blame_line { full = true } end)
       map('n', '<leader>hd', gitsigns.diffthis)
-      map('n', '<leader>hp', gitsigns.preview_hunk)
+      map('n', '<leader>hq', gitsigns.preview_hunk)
       map('n', '<leader>hr', gitsigns.reset_hunk)
       map('n', '<leader>hs', gitsigns.stage_hunk)
       map('n', '<leader>hu', gitsigns.undo_stage_hunk)

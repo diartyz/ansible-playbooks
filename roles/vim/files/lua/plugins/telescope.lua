@@ -9,7 +9,9 @@ return {
     },
   },
   cmd = 'Telescope',
-  keys = { { '<leader>a', '<cmd>Telescope buffers<cr>', mode = { 'n', 'x' } } },
+  keys = {
+    { '<leader>a', '<cmd>Telescope buffers<cr>', mode = { 'n', 'x' } },
+  },
   config = function()
     require('telescope').setup {
       defaults = require('telescope.themes').get_dropdown {
