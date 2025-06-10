@@ -6,6 +6,9 @@ return {
   },
   opts = {
     actions = {
+      change_dir = {
+        global = true,
+      },
       open_file = {
         quit_on_open = true,
       },
@@ -46,7 +49,7 @@ return {
 
       vim.keymap.set('n', 'q', api.tree.close, opts 'Close')
       vim.keymap.set('n', '<c-e>', api.tree.close, opts 'Close')
-      vim.keymap.set('n', 'g?', api.tree.toggle_help, opts 'Help')
+      vim.keymap.set('n', '?', api.tree.toggle_help, opts 'Help')
       vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts 'Toggle Git Ignore')
       vim.keymap.set('n', 'R', api.tree.reload, opts 'Refresh')
 
@@ -69,8 +72,8 @@ return {
       vim.keymap.set('n', 'yy', api.fs.copy.node, opts 'Copy')
       vim.keymap.set('n', 'p', api.fs.paste, opts 'Paste')
       vim.keymap.set('n', 'D', api.fs.remove, opts 'Delete')
-      vim.keymap.set('n', 'cf', api.fs.copy.relative_path, opts 'Copy Relative Path')
       vim.keymap.set('n', 'cp', api.fs.copy.absolute_path, opts 'Copy Absolute Path')
+      vim.keymap.set('n', 'cy', api.fs.copy.relative_path, opts 'Copy Relative Path')
 
       vim.keymap.set('n', 'C', api.marks.clear, opts 'Clear all marks')
       vim.keymap.set('n', 'm', api.marks.bulk.move, opts 'Move Bookmarked')

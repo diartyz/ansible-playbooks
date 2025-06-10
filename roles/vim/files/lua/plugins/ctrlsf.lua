@@ -4,16 +4,7 @@ return {
   keys = {
     { '<c-s>', '<cmd>CtrlSFToggle<cr>' },
     { '<leader>f', '<plug>CtrlSFVwordPath', mode = 'x' },
-    {
-      '<leader>f',
-      function()
-        vim.api.nvim_feedkeys(
-          vim.api.nvim_replace_termcodes(':CtrlSF ' .. (vim.g.ctrlsf_search_path or ''), true, false, true),
-          'mi',
-          true
-        )
-      end,
-    },
+    { '<leader>f', function() require('core.utils').feed_keys(':CtrlSF ' .. (vim.g.ctrlsf_search_path or '')) end },
   },
   config = function()
     vim.g.ctrlsf_context = '-C 1'
