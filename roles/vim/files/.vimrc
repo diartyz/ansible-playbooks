@@ -48,8 +48,8 @@ call plug#end()
 " general
 set clipboard=unnamed,unnamedplus
 " set fileencodings=utf-8,gb2312
-" set foldlevel=99
-" set foldmethod=indent
+set foldlevel=99
+set foldmethod=indent
 set hidden
 set mouse=a
 set noswapfile
