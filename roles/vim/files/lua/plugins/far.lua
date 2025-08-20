@@ -2,7 +2,7 @@ return {
   'MagicDuck/grug-far.nvim',
   keys = {
     {
-      '<leader>/',
+      '<c-s>',
       function() require('grug-far').toggle_instance { instanceName = 'far' } end,
       mode = { 'n', 'x' },
     },
@@ -10,6 +10,7 @@ return {
   config = function()
     require('grug-far').setup {
       openTargetWindow = { preferredLocation = 'prev' },
+      prefills = vim.g.far_prefills,
       staticTitle = 'far',
       keymaps = {
         abort = false,

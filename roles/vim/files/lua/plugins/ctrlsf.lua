@@ -2,7 +2,7 @@ return {
   'dyng/ctrlsf.vim',
   cmd = 'CtrlSF',
   keys = {
-    { '<c-s>', '<cmd>CtrlSFToggle<cr>' },
+    { '<leader>/', '<cmd>CtrlSFToggle<cr>' },
     { '<leader>f', '<plug>CtrlSFVwordPath', mode = 'x' },
     { '<leader>f', function() require('core.utils').feed_keys(':CtrlSF ' .. (vim.g.ctrlsf_search_path or '')) end },
   },

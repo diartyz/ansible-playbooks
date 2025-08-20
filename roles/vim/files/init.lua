@@ -128,7 +128,7 @@ load_plugins {
   require 'plugins/telescope',
   require 'plugins/todo',
   require 'plugins/tree',
-  -- require 'plugins/trouble',
+  require 'plugins/trouble',
   { 'andymass/vim-matchup', keys = { { '%', mode = { 'n', 'o', 'x' } } }, config = true },
 
   -- intelligence

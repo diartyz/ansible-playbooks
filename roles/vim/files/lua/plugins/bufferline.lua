@@ -6,7 +6,6 @@ return {
   config = function()
     require('bufferline').setup {
       options = {
-        always_show_bufferline = false,
         style_preset = require('bufferline').style_preset.no_italic,
         color_icons = false,
         indicator = { style = 'underline' },

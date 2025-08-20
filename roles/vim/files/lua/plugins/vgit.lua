@@ -11,6 +11,7 @@ return {
       keymaps = {
         ['n ]c'] = next_hunk_repeat,
         ['n [c'] = prev_hunk_repeat,
+        ['n <leader>gb'] = 'buffer_blame_preview',
         ['n <leader>gh'] = 'buffer_history_preview',
         ['n ga'] = 'buffer_conflict_accept_both',
         ['n gb'] = 'buffer_conflict_accept_incoming',
