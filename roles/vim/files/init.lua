@@ -164,6 +164,7 @@ load_plugins {
   require 'plugins/markdown-preview',
   require 'plugins/neoscroll',
   -- require 'plugins/osc52',
+  require 'plugins/profile',
   require 'plugins/sniprun',
   require 'plugins/toggleterm',
   require 'plugins/undotree',
