@@ -10,7 +10,7 @@ return {
   config = function()
     require('grug-far').setup {
       openTargetWindow = { preferredLocation = 'prev' },
-      prefills = vim.g.far_prefills,
+      prefills = vim.tbl_extend('force', { filesFilter = '!.git/', flags = '--hidden -i' }, vim.g.far_prefills or {}),
       staticTitle = 'far',
       keymaps = {
         abort = false,

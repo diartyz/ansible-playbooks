@@ -53,7 +53,6 @@ set foldmethod=indent
 set hidden
 set mouse=a
 set noswapfile
-" set pastetoggle=<F12>
 set ttimeoutlen=0
 set undodir=/tmp
 set undofile
@@ -122,6 +121,8 @@ endif
 if has("gui_running")
   set columns=999
   set guifont=FiraCode\ Nerd\ Font\ Mono:h11
+  set guioptions-=L
+  set guioptions-=R
   set guioptions-=T
   set guioptions-=b
   set guioptions-=l
