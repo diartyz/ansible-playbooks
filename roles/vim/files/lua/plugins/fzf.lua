@@ -4,6 +4,7 @@ return {
   cmd = 'FzfLua',
   keys = {
     { '<c-p>', function() require('fzf-lua').files() end },
+    { '<leader>:', function() require('fzf-lua').command_history() end },
     {
       '<leader>p',
       function()
