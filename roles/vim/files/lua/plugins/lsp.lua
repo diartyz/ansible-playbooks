@@ -65,7 +65,7 @@ return {
       settings = {
         Lua = {
           diagnostics = {
-            globals = { 'vim' },
+            globals = { 'Snacks', 'vim' },
           },
           format = {
             enable = false,
@@ -132,31 +132,31 @@ return {
       local pos2 = vim.api.nvim_win_get_cursor(0)
       if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1 } end
     end, { desc = 'Prev Diagnostic' })
-    vim.keymap.set('n', '<c-t>', function()
-      if is_module_available 'telescope.builtin' then
-        require('telescope.builtin').lsp_document_symbols { symbol_width = 39 }
-      else
-        vim.lsp.buf.document_symbol()
-      end
-    end, { desc = 'LSP Document Symbols' })
+    -- vim.keymap.set('n', '<c-t>', function()
+    --   if is_module_available 'telescope.builtin' then
+    --     require('telescope.builtin').lsp_document_symbols { symbol_width = 39 }
+    --   else
+    --     vim.lsp.buf.document_symbol()
+    --   end
+    -- end, { desc = 'LSP Document Symbols' })
     vim.keymap.set('n', '<f2>', vim.lsp.buf.rename, { desc = 'LSP Rename' })
     vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, { desc = 'LSP Code Action' })
     vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'LSP Rename' })
-    vim.keymap.set('n', 'gd', function()
-      if is_module_available 'telescope.builtin' then
-        require('telescope.builtin').lsp_definitions()
-      else
-        vim.lsp.buf.definition()
-      end
-    end, { desc = 'LSP Definition' })
+    -- vim.keymap.set('n', 'gd', function()
+    --   if is_module_available 'telescope.builtin' then
+    --     require('telescope.builtin').lsp_definitions()
+    --   else
+    --     vim.lsp.buf.definition()
+    --   end
+    -- end, { desc = 'LSP Definition' })
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { desc = 'LSP Hover' })
-    vim.keymap.set('n', 'gi', function()
-      if is_module_available 'fzf-lua' then
-        require('fzf-lua').lsp_references()
-      else
-        vim.lsp.buf.references()
-      end
-    end, { desc = 'LSP References' })
+    -- vim.keymap.set('n', 'gi', function()
+    --   if is_module_available 'fzf-lua' then
+    --     require('fzf-lua').lsp_references()
+    --   else
+    --     vim.lsp.buf.references()
+    --   end
+    -- end, { desc = 'LSP References' })
     vim.keymap.set({ 'n', 'x' }, 'gq', vim.lsp.buf.format, { desc = 'LSP Format' })
     vim.keymap.set(
       'n',

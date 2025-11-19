@@ -8,12 +8,12 @@ return {
         move = {
           enable = true,
           goto_next_start = {
-            [']]'] = '@function.outer',
+            [']f'] = '@function.outer',
             [']a'] = '@parameter.inner',
             [']z'] = { query = '@fold', query_group = 'folds' },
           },
           goto_previous_end = {
-            ['[['] = '@function.outer',
+            ['[f'] = '@function.outer',
             ['[a'] = '@parameter.inner',
             ['[z'] = { query = '@fold', query_group = 'folds' },
           },
