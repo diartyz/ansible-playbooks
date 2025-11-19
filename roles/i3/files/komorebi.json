@@ -1,0 +1,129 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.38/schema.json",
+  "app_specific_configuration_path": "$Env:USERPROFILE/applications.json",
+  "border": false,
+  "default_workspace_padding": 0,
+  "default_container_padding": -1,
+  "theme": {
+    "name": "EverforestDarkHard",
+    "palette": "Base16"
+  },
+  "floating_applications": [
+    {
+      "kind": "Exe",
+      "id": "gvim.exe",
+      "matching_strategy": "Equals"
+    }
+  ],
+  "ignore_rules": [],
+  "monitors": [
+    {
+      "workspaces": [
+        {
+          "name": "1",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "firefox.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "2",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "WindowsTerminal.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "3",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "explorer.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "4",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "WeLink.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "5",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "Spotify.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "6",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "cmd.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "7",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "SumatraPDF.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "8",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "Code.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "9",
+          "layout": "Grid",
+          "workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "devecostudio64.exe",
+              "matching_strategy": "Equals"
+            }
+          ]
+        },
+        {
+          "name": "0",
+          "layout": "Grid",
+          "workspace_rules": []
+        }
+      ]
+    }
+  ]
+}
