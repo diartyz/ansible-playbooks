@@ -2,35 +2,57 @@ return {
   'folke/snacks.nvim',
   priority = 1000,
   lazy = false,
-  opts = {
-    bigfile = { enabled = true },
-    explorer = { enabled = true },
-    indent = { enabled = true },
-    input = { enabled = true },
-    notifier = { enabled = true },
-    picker = {
-      sources = {
-        explorer = {
-          auto_close = true,
-          hidden = true,
-          layout = { hidden = { 'input' } },
+  keys = {
+    { '<c-e>', function() Snacks.picker.explorer() end, desc = 'open explorer' },
+    { '[[', function() Snacks.words.jump(-vim.v.count1) end, mode = { 'n', 't' }, desc = 'prev reference' },
+    { ']]', function() Snacks.words.jump(vim.v.count1) end, mode = { 'n', 't' }, desc = 'next reference' },
+  },
+  config = function()
+    require('snacks').setup {
+      bigfile = { enabled = true },
+      indent = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scroll = { enabled = true },
+      words = { enabled = true },
+      input = {
+        win = {
+          relative = 'cursor',
+          row = -3,
+          keys = {
+            i_esc = { '<esc>', { 'cmp_close', 'cancel' }, mode = 'i', expr = true },
+          },
         },
       },
-      win = { input = { keys = { ['<Esc>'] = { 'close', mode = { 'n', 'i' } } } } },
-    },
-    quickfile = { enabled = true },
-    scroll = { enabled = true },
-    words = { enabled = true },
-  },
-  keys = {
-    { '<c-e>', function() Snacks.picker.explorer() end, desc = 'lsp_symbols' },
-    { '<c-t>', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols' },
-    { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' } },
-    { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' } },
-    { 'gD', function() Snacks.picker.lsp_declarations() end, desc = 'Goto Declaration' },
-    { 'gI', function() Snacks.picker.lsp_implementations() end, desc = 'Goto Implementation' },
-    { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition' },
-    { 'gi', function() Snacks.picker.lsp_incoming_calls() end, desc = 'C[a]lls Incoming' },
-    { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto T[y]pe Definition' },
-  },
+      picker = {
+        sources = {
+          explorer = {
+            auto_close = true,
+            hidden = true,
+            layout = { hidden = { 'input' } },
+            win = {
+              list = {
+                keys = {
+                  ['/'] = false,
+                },
+              },
+            },
+          },
+        },
+        win = {
+          input = {
+            keys = {
+              ['<Esc>'] = { 'close', mode = { 'n', 'i' } },
+            },
+          },
+        },
+      },
+    }
+    vim.api.nvim_create_user_command('Blame', Snacks.git.blame_line, { nargs = 0, desc = 'git blame line' })
+    vim.api.nvim_create_user_command(
+      'Notifier',
+      Snacks.notifier.show_history,
+      { nargs = 0, desc = 'open notifier history' }
+    )
+  end,
 }

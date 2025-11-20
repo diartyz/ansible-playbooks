@@ -14,6 +14,6 @@ return {
       },
     }
 
-    vim.api.nvim_create_user_command('AI', 'CodeCompanionChat Toggle', { nargs = 0 })
+    vim.api.nvim_create_user_command('AI', 'CodeCompanionChat Toggle', { nargs = 0, desc = 'toggle ai' })
   end,
 }

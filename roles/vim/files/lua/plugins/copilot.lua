@@ -4,8 +4,13 @@ return {
   cmd = 'Copilot',
   event = 'InsertEnter',
   config = function()
-    vim.g.copilot_no_tab_map = true
-    vim.keymap.set('i', '<c-l>', '<Plug>(copilot-accept-line)')
-    vim.keymap.set('i', '<c-y>', 'copilot#Accept("<cr>")', { expr = true, replace_keycodes = false })
+    vim.keymap.set('i', '<c-down>', '<Plug>(copilot-accept-line)', { desc = 'copilot accept word' })
+    vim.keymap.set('i', '<c-right>', '<Plug>(copilot-accept-word)', { desc = 'copilot accept word' })
+    vim.keymap.set(
+      'i',
+      '<c-l>',
+      'copilot#Accept("<cr>")',
+      { desc = 'copilot accept', expr = true, replace_keycodes = false }
+    )
   end,
 }

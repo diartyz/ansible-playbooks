@@ -2,24 +2,13 @@ return {
   'ibhagwan/fzf-lua',
   dependencies = 'nvim-tree/nvim-web-devicons',
   cmd = 'FzfLua',
-  keys = {
-    { '<c-p>', function() require('fzf-lua').files() end },
-    { '<leader>:', function() require('fzf-lua').command_history() end },
-    {
-      '<leader>p',
-      function()
-        if vim.g.fzf_search_path then
-          require('fzf-lua').files {
-            cmd = 'rg --files --color=never --hidden ' .. vim.g.fzf_search_path .. ' -g "!.git"',
-          }
-        else
-          require('fzf-lua').files()
-        end
-      end,
-    },
-  },
   config = function()
     require('fzf-lua').setup {
+      buffers = {
+        actions = {
+          ['ctrl-d'] = { fn = require('fzf-lua').actions.buf_del, reload = true },
+        },
+      },
       files = {
         fd_opts = [[--type f --color=never --hidden --exclude .cache --exclude .git --exclude out]],
         find_opts = [[-type f -not -path '*/\.cache/*' -not -path '*/\.git/*' -not -path '*/out/*' -printf '%P\n']],

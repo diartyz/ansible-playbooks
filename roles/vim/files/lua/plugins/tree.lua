@@ -1,8 +1,16 @@
 return {
   'nvim-tree/nvim-tree.lua',
-  dependencies = 'nvim-tree/nvim-web-devicons',
+  dependencies = {
+    'nvim-tree/nvim-web-devicons',
+    {
+      'antosha417/nvim-lsp-file-operations',
+      dependencies = 'nvim-lua/plenary.nvim',
+      event = 'LspAttach',
+      config = true,
+    },
+  },
   keys = {
-    { '<c-e>', '<cmd>NvimTreeFocus<cr>' },
+    { '<c-e>', '<cmd>NvimTreeFocus<cr>', desc = 'focus file explorer' },
   },
   opts = {
     actions = {
@@ -53,7 +61,7 @@ return {
       vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts 'Toggle Git Ignore')
       vim.keymap.set('n', 'R', api.tree.reload, opts 'Refresh')
 
-      vim.keymap.set('n', '<c-h>', api.tree.collapse_all, opts 'Collapse')
+      vim.keymap.set('n', 'Z', api.tree.collapse_all, opts 'Collapse')
       vim.keymap.set('n', 'H', api.tree.change_root_to_parent, opts 'Up')
       vim.keymap.set('n', 'L', api.tree.change_root_to_node, opts 'CD')
       vim.keymap.set('n', 'h', api.node.navigate.parent_close, opts 'Close Directory')

@@ -43,7 +43,7 @@ return {
     }
 
     local dropbar_api = require 'dropbar.api'
-    vim.keymap.set('n', '<leader>;', dropbar_api.pick, { desc = 'dropbar_api.pick' })
-    vim.keymap.set('n', 'gz', dropbar_api.goto_context_start, { desc = 'dropbar_api.goto_context_start' })
+    vim.keymap.set('n', '<leader>;', dropbar_api.pick, { desc = 'dropbar.pick' })
+    vim.keymap.set('n', 'gz', dropbar_api.goto_context_start, { desc = 'dropbar.goto_context_start' })
   end,
 }

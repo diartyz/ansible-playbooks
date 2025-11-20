@@ -48,7 +48,7 @@ return {
       { 'n', 'x', 'o' },
       ',',
       ts_repeat_move.repeat_last_move_previous,
-      { desc = 'ts_repeat_move.repeat_last_move_next' }
+      { desc = 'ts_repeat_move.repeat_last_move_prev' }
     )
   end,
 }

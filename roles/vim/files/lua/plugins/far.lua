@@ -3,26 +3,42 @@ return {
   keys = {
     {
       '<c-s>',
+      function()
+        local far = require 'grug-far'
+        if far.has_instance 'far' then
+          far.get_instance('far'):open()
+        else
+          far.toggle_instance { instanceName = 'far' }
+        end
+      end,
+      mode = { 'n', 'x' },
+      desc = 'focus far',
+    },
+    {
+      '<leader>f',
       function() require('grug-far').toggle_instance { instanceName = 'far' } end,
       mode = { 'n', 'x' },
+      desc = 'toggle far',
     },
   },
   config = function()
     require('grug-far').setup {
+      folding = { enabled = true },
       openTargetWindow = { preferredLocation = 'prev' },
       prefills = vim.tbl_extend('force', { filesFilter = '!.git/', flags = '--hidden -i' }, vim.g.far_prefills or {}),
       staticTitle = 'far',
+      transient = true,
       keymaps = {
         abort = false,
         applyNext = false,
         applyPrev = false,
         close = { n = 'q' },
-        gotoLocation = false,
+        gotoLocation = { n = '<enter>' },
         help = { n = '?' },
         historyAdd = false,
         historyOpen = { n = '<leader>u' },
         nextInput = '<tab>',
-        openLocation = { n = 'p' },
+        openLocation = { n = '<c-s>' },
         openNextLocation = false,
         openPrevLocation = false,
         pickHistoryEntry = { n = '<enter>' },
@@ -50,15 +66,6 @@ return {
           vim.api.nvim_command 'stopinsert'
           require('grug-far').get_instance('far'):close()
         end, { buffer = true, desc = 'far close' })
-        vim.keymap.set('i', '<c-s>', function()
-          vim.api.nvim_command 'stopinsert'
-          require('grug-far').get_instance('far'):hide()
-        end, { buffer = true, desc = 'far hide' })
-        vim.keymap.set('n', '<enter>', function()
-          local instance = require('grug-far').get_instance 'far'
-          instance:goto_location()
-          instance:hide()
-        end, { buffer = true, desc = 'far go to location and hide' })
         vim.keymap.set({ 'i', 'n' }, '<c-j>', function()
           vim.api.nvim_command 'stopinsert'
           require('grug-far').get_instance('far'):goto_next_match()

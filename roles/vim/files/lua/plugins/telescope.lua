@@ -10,7 +10,9 @@ return {
   },
   cmd = 'Telescope',
   keys = {
-    { '<leader>a', '<cmd>Telescope buffers<cr>', mode = { 'n', 'x' } },
+    { '<c-p>', function() require('telescope.builtin').find_files() end, desc = 'search files' },
+    { '<leader>:', function() require('telescope.builtin').command_history() end, desc = 'search command history' },
+    { '<leader>a', function() require('telescope.builtin').buffers() end, desc = 'search buffers' },
   },
   config = function()
     require('telescope').setup {
@@ -44,6 +46,7 @@ return {
         },
         find_files = {
           hidden = true,
+          search_dirs = vim.g.telescope_search_dirs,
         },
       },
     }
