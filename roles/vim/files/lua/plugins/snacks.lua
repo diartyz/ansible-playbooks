@@ -6,7 +6,7 @@ return {
     bigfile = { enabled = true },
     explorer = { enabled = true },
     indent = { enabled = true },
-    input = { enabled = true },
+    input = { win = { keys = { i_esc = { '<esc>', { 'cmp_close', 'cancel' }, mode = 'i', expr = true } } } },
     notifier = { enabled = true },
     picker = {
       sources = {
