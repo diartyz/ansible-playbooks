@@ -13,10 +13,10 @@ return {
       build = 'make install_jsregexp',
       dependencies = { 'rafamadriz/friendly-snippets', 'saadparwaiz1/cmp_luasnip' },
       config = function()
-        local luasnip = require 'luasnip'
-        vim.keymap.set({ 'i', 's' }, '<c-j>', function() luasnip.jump(1) end, { desc = 'luasnip jump next' })
-        vim.keymap.set({ 'i', 's' }, '<c-k>', function() luasnip.jump(-1) end, { desc = 'luasnip jump prev' })
         require('luasnip.loaders.from_vscode').lazy_load()
+        local luasnip = require 'luasnip'
+        vim.keymap.set({ 'i', 's' }, '<c-j>', function() luasnip.jump(1) end, { desc = 'snip jump next' })
+        vim.keymap.set({ 'i', 's' }, '<c-k>', function() luasnip.jump(-1) end, { desc = 'snip jump prev' })
       end,
     },
     {

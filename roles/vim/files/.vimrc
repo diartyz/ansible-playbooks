@@ -253,7 +253,7 @@ let indent_guides_guide_size = 1
 
 " leaderf
 let g:Lf_CommandMap = {'<c-j>': ['<c-n>'], '<c-k>': ['<c-p>'], '<down>': ['<c-j>'], '<up>': ['<c-k>'], '<c-p>': ['<c-l>']}
-let g:Lf_ShortcutB = "<leader>t"
+let g:Lf_ShortcutB = "<leader>a"
 let g:Lf_ShortcutF = "<c-p>"
 let g:Lf_ShowHidden = 1
 let g:Lf_WindowPosition = 'popup'

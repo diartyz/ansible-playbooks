@@ -1,8 +1,16 @@
 return {
   'nvim-tree/nvim-tree.lua',
-  dependencies = 'nvim-tree/nvim-web-devicons',
+  dependencies = {
+    'nvim-tree/nvim-web-devicons',
+    {
+      'antosha417/nvim-lsp-file-operations',
+      dependencies = 'nvim-lua/plenary.nvim',
+      event = 'LspAttach',
+      config = true,
+    },
+  },
   keys = {
-    { '<c-e>', '<cmd>NvimTreeFocus<cr>' },
+    { '<c-e>', '<cmd>NvimTreeFocus<cr>', desc = 'focus file explorer' },
   },
   opts = {
     actions = {

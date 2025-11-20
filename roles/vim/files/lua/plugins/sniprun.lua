@@ -3,7 +3,7 @@ return {
   build = 'bash ./install.sh',
   dependencies = 'rcarriga/nvim-notify',
   keys = {
-    { '<leader>r', '<Plug>SnipRun', mode = 'x' },
+    { '<leader>r', '<Plug>SnipRun', mode = 'x', desc = 'sniprun' },
   },
   opts = {
     display = {

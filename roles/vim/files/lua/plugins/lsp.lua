@@ -6,7 +6,6 @@ return {
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
-        auto_update = true,
         ensure_installed = {
           'black',
           'clangd',
@@ -33,21 +32,7 @@ return {
       client.server_capabilities.documentRangeFormattingProvider = false
     end
     local is_module_available = require('core/utils').is_module_available
-    -- local function lsp_config(overrides)
-    --   local on_attach = overrides and overrides.on_attach
-    --   return vim.tbl_extend('force', overrides or {}, {
-    --     capabilities = isModuleAvailable 'cmp_nvim_lsp' and require('cmp_nvim_lsp').default_capabilities() or nil,
-    --     on_attach = function(client, bufnr)
-    --       if on_attach then on_attach(client, bufnr) end
-    --     end,
-    --   })
-    -- end
-    -- local function merge_config(name, config)
-    --   vim.lsp.config(name, config)
-    --   -- vim.lsp.config(name, lsp_config(vim.tbl_extend('force', vim.lsp.config[name], config)))
-    -- end
 
-    -- vim.lsp.config('*', lsp_config())
     vim.lsp.config('clangd', vim.g.clangd_config or {})
     vim.lsp.enable('clangd', not vim.g.disable_clangd)
     vim.lsp.config('lua_ls', {
@@ -115,6 +100,11 @@ return {
     })
 
     -- mapping
+    vim.keymap.set('n', '<f2>', vim.lsp.buf.rename, { desc = 'lsp rename' })
+    vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, { desc = 'lsp code action' })
+    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'lsp rename' })
+    vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { desc = 'lsp hover' })
+    vim.keymap.set({ 'n', 'x' }, 'gq', vim.lsp.buf.format, { desc = 'lsp format' })
     local pos_equal = function(p1, p2)
       local r1, c1 = (table.unpack or unpack)(p1)
       local r2, c2 = (table.unpack or unpack)(p2)
@@ -125,44 +115,60 @@ return {
       vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
       if pos_equal(pos, pos2) then vim.diagnostic.jump { count = 1 } end
-    end, { desc = 'Next Diagnostic' })
+    end, { desc = 'next diagnostic' })
     vim.keymap.set('n', '<c-k>', function()
       local pos = vim.api.nvim_win_get_cursor(0)
       vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
       if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1 } end
-    end, { desc = 'Prev Diagnostic' })
-    -- vim.keymap.set('n', '<c-t>', function()
-    --   if is_module_available 'telescope.builtin' then
-    --     require('telescope.builtin').lsp_document_symbols { symbol_width = 39 }
-    --   else
-    --     vim.lsp.buf.document_symbol()
-    --   end
-    -- end, { desc = 'LSP Document Symbols' })
-    vim.keymap.set('n', '<f2>', vim.lsp.buf.rename, { desc = 'LSP Rename' })
-    vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, { desc = 'LSP Code Action' })
-    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'LSP Rename' })
-    -- vim.keymap.set('n', 'gd', function()
-    --   if is_module_available 'telescope.builtin' then
-    --     require('telescope.builtin').lsp_definitions()
-    --   else
-    --     vim.lsp.buf.definition()
-    --   end
-    -- end, { desc = 'LSP Definition' })
-    vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { desc = 'LSP Hover' })
-    -- vim.keymap.set('n', 'gi', function()
-    --   if is_module_available 'fzf-lua' then
-    --     require('fzf-lua').lsp_references()
-    --   else
-    --     vim.lsp.buf.references()
-    --   end
-    -- end, { desc = 'LSP References' })
-    vim.keymap.set({ 'n', 'x' }, 'gq', vim.lsp.buf.format, { desc = 'LSP Format' })
+    end, { desc = 'prev diagnostic' })
+    vim.keymap.set('n', '<c-t>', function()
+      if is_module_available 'telescope.builtin' then
+        require('telescope.builtin').lsp_document_symbols { symbol_width = 39 }
+      else
+        vim.lsp.buf.document_symbol()
+      end
+    end, { desc = 'lsp document symbols' })
+    vim.keymap.set('n', 'gD', function()
+      if is_module_available 'fzf-lua' then
+        require('fzf-lua').lsp_declarations()
+      else
+        vim.lsp.buf.declaration()
+      end
+    end, { desc = 'lsp declaration' })
+    vim.keymap.set('n', 'gI', function()
+      if is_module_available 'telescope.builtin' then
+        require('telescope.builtin').lsp_implementations()
+      else
+        vim.lsp.buf.implementation()
+      end
+    end, { desc = 'lsp implementation' })
+    vim.keymap.set('n', 'gd', function()
+      if is_module_available 'telescope.builtin' then
+        require('telescope.builtin').lsp_definitions()
+      else
+        vim.lsp.buf.definition()
+      end
+    end, { desc = 'lsp definition' })
+    vim.keymap.set('n', 'gi', function()
+      if is_module_available 'telescope.builtin' then
+        require('telescope.builtin').lsp_incoming_calls()
+      else
+        vim.lsp.buf.incoming_calls()
+      end
+    end, { desc = 'lsp incoming calls' })
+    vim.keymap.set('n', 'gy', function()
+      if is_module_available 'telescope.builtin' then
+        require('telescope.builtin').lsp_type_definitions()
+      else
+        vim.lsp.buf.type_definition()
+      end
+    end, { desc = 'lsp type definition' })
     vim.keymap.set(
       'n',
       'yoh',
       function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
-      { desc = 'Toggle inlay hint' }
+      { desc = 'toggle inlay hint' }
     )
 
     -- autocmd
@@ -192,7 +198,9 @@ return {
     })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'cpp',
-      callback = function() vim.keymap.set('n', 'go', '<cmd>LspClangdSwitchSourceHeader<cr>') end,
+      callback = function()
+        vim.keymap.set('n', 'go', '<cmd>LspClangdSwitchSourceHeader<cr>', { desc = 'switch source header' })
+      end,
     })
     local typescript = require 'plugins/typescript'
     vim.api.nvim_create_autocmd('FileType', {
@@ -202,7 +210,7 @@ return {
           typescript.add_missing_imports()
           typescript.remove_unused_imports()
           typescript.sort_imports()
-        end)
+        end, { desc = 'organize imports' })
       end,
     })
 
