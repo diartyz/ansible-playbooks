@@ -3,8 +3,9 @@ return {
   dependencies = 'nvim-tree/nvim-web-devicons',
   cmd = 'FzfLua',
   keys = {
-    { '<c-p>', function() require('fzf-lua').files() end },
-    { '<leader>:', function() require('fzf-lua').command_history() end },
+    { '<c-p>', function() require('fzf-lua').files() end, desc = 'search files' },
+    { '<leader>:', function() require('fzf-lua').command_history() end, desc = 'search command history' },
+    { '<leader>a', function() require('fzf-lua').buffers() end, mode = { 'n', 'x' }, desc = 'search buffers' },
     {
       '<leader>p',
       function()
@@ -16,6 +17,7 @@ return {
           require('fzf-lua').files()
         end
       end,
+      'search files',
     },
   },
   config = function()

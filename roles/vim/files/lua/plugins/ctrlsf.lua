@@ -1,11 +1,6 @@
 return {
   'dyng/ctrlsf.vim',
   cmd = 'CtrlSF',
-  keys = {
-    { '<leader>/', '<cmd>CtrlSFToggle<cr>' },
-    { '<leader>f', '<plug>CtrlSFVwordPath', mode = 'x' },
-    { '<leader>f', function() require('core.utils').feed_keys(':CtrlSF ' .. (vim.g.ctrlsf_search_path or '')) end },
-  },
   config = function()
     vim.g.ctrlsf_context = '-C 1'
     vim.g.ctrlsf_populate_qflist = 1
