@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/bin/clash-meta -d /etc/clash
+ExecStart=/bin/clash-meta -d ~/.config/mihomo
 
 [Install]
 WantedBy=multi-user.target

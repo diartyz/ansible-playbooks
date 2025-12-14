@@ -11,7 +11,7 @@
 - name: create config folder
   become: true
   file:
-    path: /etc/clash
+    path: ~/.config/mihomo
     state: directory
   when: ansible_distribution == 'Archlinux'
 
@@ -21,7 +21,7 @@
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   with_items:
-    - { src: config.yml, dest: /etc/clash/config.yaml }
+    - { src: config.yml, dest: ~/.config/mihomo/config.yaml }
   register: clash_conf
   when: ansible_distribution == 'Archlinux'
 
