@@ -1,6 +1,8 @@
 [user]
 	name = diartyz
 	email = diartyz@gmail.com
+[alias]
+	cm = commit -s
 [core]
 	ignorecase = false
 	pager = diff-so-fancy | less -FRX
