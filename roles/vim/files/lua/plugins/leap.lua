@@ -1,5 +1,5 @@
 return {
-  'ggandor/leap.nvim',
+  url = 'https://codeberg.org/andyg/leap.nvim',
   keys = {
     { 'F', mode = { 'n', 'o', 'x' } },
     { 'T', mode = { 'n', 'o', 'x' } },

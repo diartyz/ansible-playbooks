@@ -112,15 +112,15 @@ return {
     end
     vim.keymap.set('n', '<c-j>', function()
       local pos = vim.api.nvim_win_get_cursor(0)
-      vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR }
+      vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
-      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = 1 } end
+      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = 1, float = true } end
     end, { desc = 'next diagnostic' })
     vim.keymap.set('n', '<c-k>', function()
       local pos = vim.api.nvim_win_get_cursor(0)
-      vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR }
+      vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
-      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1 } end
+      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1, float = true } end
     end, { desc = 'prev diagnostic' })
     vim.keymap.set('n', '<c-t>', function()
       if is_module_available 'telescope.builtin' then

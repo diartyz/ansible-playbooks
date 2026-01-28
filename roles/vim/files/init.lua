@@ -157,7 +157,7 @@ load_plugins {
   require 'plugins/treesitter',
   require 'plugins/ufo',
   { 'kevinhwang91/nvim-bqf', ft = 'qf' },
-  -- { 'ntpeters/vim-better-whitespace', event = 'VeryLazy' },
+  { 'ntpeters/vim-better-whitespace', event = 'VeryLazy' },
   -- { 'sheerun/vim-polyglot', config = function() vim.g.vim_markdown_no_default_key_mappings = 1 end },
 
   -- util
