@@ -1,0 +1,29 @@
+---
+- name: create ai config directories
+  file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - ~/.claude
+    - ~/.config/claude-code
+    - ~/.config/opencode
+
+- name: template claude settings
+  template:
+    src: claude-settings.json.j2
+    dest: ~/.claude/settings.json
+
+- name: template claude-code settings
+  template:
+    src: claude-code-settings.json.j2
+    dest: ~/.config/claude-code/settings.json
+
+- name: template opencode config
+  template:
+    src: opencode.json.j2
+    dest: ~/.config/opencode/opencode.json
+
+- name: copy opencode tui config
+  copy:
+    src: tui.json
+    dest: ~/.config/opencode/tui.json

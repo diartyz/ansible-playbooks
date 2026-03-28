@@ -13,8 +13,9 @@ return {
     },
     on_attach = function(bufnr)
       local gitsigns = require 'gitsigns'
-      local next_hunk_repeat, prev_hunk_repeat =
-        require('core/utils').make_repeatable_move_pair(gitsigns.next_hunk, gitsigns.prev_hunk)
+      local next_hunk = function() gitsigns.nav_hunk('next', { target = 'all' }) end
+      local prev_hunk = function() gitsigns.nav_hunk('prev', { target = 'all' }) end
+      local next_hunk_repeat, prev_hunk_repeat = require('core/utils').make_repeatable_move_pair(next_hunk, prev_hunk)
       local function map(mode, l, r, opts)
         opts = opts or {}
         opts.buffer = bufnr
@@ -30,6 +31,8 @@ return {
       map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'git reset hunk' })
       map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'git stage hunk' })
       map('n', '<leader>hu', gitsigns.undo_stage_hunk, { desc = 'git unstage hunk' })
+      map('n', '[C', function() gitsigns.nav_hunk('first', { target = 'all' }) end, { desc = 'git first hunk' })
+      map('n', ']C', function() gitsigns.nav_hunk('last', { target = 'all' }) end, { desc = 'git last hunk' })
       map('n', '[c', prev_hunk_repeat, { desc = 'git prev hunk' })
       map('n', ']c', next_hunk_repeat, { desc = 'git next hunk' })
       map({ 'o', 'x' }, 'ih', '<cmd>Gitsigns select_hunk<cr>', { desc = 'git select hunk' })
