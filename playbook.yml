@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   roles:
+    - { role: ai, tags: ['ai'] }
     - { role: app, tags: ['app'] }
     - { role: bin, tags: ['bin'] }
     - { role: debug, tags: ['debug'] }
