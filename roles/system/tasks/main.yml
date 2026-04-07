@@ -7,3 +7,18 @@
   with_items:
     - { src: 40-max-user-watches.conf, dest: /etc/sysctl.d/40-max-user-watches.conf }
   when: ansible_distribution == 'Archlinux'
+
+- name: create logind.conf.d directory
+  become: true
+  file:
+    path: /etc/systemd/logind.conf.d
+    state: directory
+  when: ansible_distribution == 'Archlinux'
+
+- name: copy logind.conf
+  become: true
+  copy:
+    src: logind.conf
+    dest: /etc/systemd/logind.conf.d/logind.conf
+  when: ansible_distribution == 'Archlinux'
+  notify: restart systemd-logind
