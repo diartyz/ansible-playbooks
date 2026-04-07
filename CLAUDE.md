@@ -8,12 +8,14 @@ Personal Ansible playbook repository for automating system configuration across 
 
 ## Running Playbooks
 
-Requires vault and become password files: `~/.ansible_vault_pass.txt` and `~/.ansible_become_pass.txt`.
+Requires become password file: `~/.ansible_become_pass.txt`. Vault password is configured in `ansible.cfg`.
 
 ```bash
 make playbook                                  # Run full playbook
 make playbook-tags tags=git,zsh                # Run specific roles by tag
 make playbook-limit limit=arch                 # Run for specific host group
+make check                                     # Dry-run with diff
+make list-tags                                 # List available tags
 ```
 
 Some proxy roles (clash, privoxy, proxychains) share the tag `proxy` — use `--tags "proxy"` to run all of them, or `--tags "clash"` for a single one.
@@ -55,5 +57,4 @@ Typical pattern:
 ### Notes
 
 - Some roles exist in `roles/` but are **not** included in `playbook.yml` (e.g. `sshd`, `v2ray-server`, `shadowsocks-server`, `display`). Add them to the playbook if needed.
-- `chaos/` — macOS-specific setup scripts (not Ansible-managed)
 - Inventory template: `hosts.example.yml` → copy to `hosts.yml`

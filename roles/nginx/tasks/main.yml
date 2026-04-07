@@ -1,46 +1,39 @@
-- name: install nginx
-  become: true
-  pacman:
-    name: nginx
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
-
-- name: install nginx
-  homebrew:
-    name: nginx
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+---
+- name: install packages
+  include_role:
+    name: install-packages
+  vars:
+    packages: [nginx]
 
 - name: create nginx conf folder
   become: true
   file:
-    path: '{{ item }}'
+    path: /etc/nginx/conf.d
     state: directory
-  with_items:
-    - /etc/nginx/conf.d
   when: ansible_distribution == 'Archlinux'
 
-- name: copy nginx conf
+- name: copy nginx conf (Archlinux)
+  become: true
   template:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: static.conf, dest: /opt/homebrew/etc/nginx/servers/static.conf }
+    src: static.conf
+    dest: /etc/nginx/conf.d/static.conf
+  register: nginx_conf
+  when: ansible_distribution == 'Archlinux'
+  notify: restart nginx
+
+- name: copy nginx conf (MacOSX)
+  template:
+    src: static.conf
+    dest: /opt/homebrew/etc/nginx/servers/static.conf
   register: nginx_conf
   when: ansible_distribution == 'MacOSX'
+  notify: restart nginx
 
-- name: enable nginx
-  command: 'brew services restart nginx'
-  when:
-    - ansible_distribution == 'MacOSX'
-    - nginx_conf.changed
-
-- name: enable nginx
+- name: enable nginx (Archlinux)
+  become: true
   systemd:
     name: nginx
-    enabled: yes
+    enabled: true
     state: started
   when:
     - ansible_distribution == 'Archlinux'

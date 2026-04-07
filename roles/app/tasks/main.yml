@@ -13,57 +13,24 @@
 - name: pacman -Sy
   become: true
   pacman:
-    update_cache: yes
+    update_cache: true
   when:
     - offline is not defined
     - ansible_distribution == 'Archlinux'
     - pacmanConf.changed
 
 - name: install packages
-  become: true
-  pacman:
-    name:
-      [
-        firefox,
-        pulsemixer,
-        cmus,
-        dfc,
-        ncdu,
-        htop,
-        tree,
-        unzip,
-        yay,
-      ]
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [firefox, pulsemixer, cmus, dfc, ncdu, htop, tree, unzip, yay]
+    packages_cask: [alfred, firefox, macs-fan-control, omnidisksweeper, prefs-editor, visual-studio-code]
+    packages_macos: [mas, dfc, ncdu, htop, tree]
 
-- name: install cask packages
-  homebrew_cask:
-    name:
-      [
-        alfred,
-        firefox,
-        macs-fan-control,
-        omnidisksweeper,
-        prefs-editor,
-        visual-studio-code,
-      ]
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-
-- name: install packages
-  homebrew:
-    name: [mas, dfc, ncdu, htop, tree]
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-
-- name: Install Apps
+- name: install Apps from Mac App Store
   community.general.mas:
     id:
-      - 993841014 # CopyLess 2
+      - 993841014  # CopyLess 2
     state: present
   when:
     - offline is not defined

@@ -22,19 +22,19 @@
       get_url:
         url: https://www.archlinux.org/mirrorlist/?country=CN
         dest: /tmp/mirrorlist
-        force: yes
-      changed_when: False
+        force: true
+      changed_when: false
       register: mirrorlist
     - name: uncomment mirrorlist
       replace:
         dest: /tmp/mirrorlist
         regexp: '^#Server'
         replace: 'Server'
-      changed_when: False
+      changed_when: false
     - name: rank mirrorlist
       command: 'rankmirrors -n 6 /tmp/mirrorlist'
       register: rankmirrors_result
-      changed_when: False
+      changed_when: false
     - name: copy mirrorlist
       copy:
         content: '{{ rankmirrors_result.stdout }}'

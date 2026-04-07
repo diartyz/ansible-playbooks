@@ -1,47 +1,21 @@
 ---
 - name: install packages
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [gvim, neovim, ripgrep]
+    packages_macos: [vim, neovim, ripgrep]
+    packages_ubuntu: [vim-gtk3, neovim, ripgrep]
+
+- name: install pynvim (Archlinux)
   become: true
   pacman:
-    name:
-      - gvim
-      - neovim
-      - ripgrep
+    name: python-pynvim
   when:
     - offline is not defined
     - ansible_distribution == 'Archlinux'
 
-- name: install packages
-  homebrew:
-    name:
-      - vim
-      - neovim
-      - ripgrep
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-
-- name: install packages
-  become: true
-  apt:
-    name:
-      - vim-gtk3
-      - neovim
-      - ripgrep
-  when:
-    - no_sudo is not defined
-    - offline is not defined
-    - ansible_distribution == 'Ubuntu'
-
-- name: install packages
-  become: true
-  pacman:
-    name:
-      - python-pynvim
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
-
-- name: install packages
+- name: install pynvim (non-Archlinux)
   pip:
     name: pynvim
     extra_args: --user
@@ -53,7 +27,7 @@
   file:
     path: '{{ item }}'
     state: directory
-  with_items:
+  loop:
     - ~/.vim/autoload
     - ~/.local/share/nvim/site/autoload
     - ~/.config/nvim
@@ -69,27 +43,20 @@
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-  with_items:
+  loop:
     - { src: .vimrc, dest: ~/.vimrc }
     - { src: init.lua, dest: ~/.config/nvim/init.lua }
     - { src: lua, dest: ~/.config/nvim }
 
-- name: check if win32yank is installed
-  command: which win32yank.exe
-  ignore_errors: yes
-  register: win32yank_check
-  changed_when: false
-  when:
-    - ansible_kernel.find('microsoft-standard-WSL2') != -1
-
-- name: execute script if win32yank is not installed
+- name: install win32yank (WSL2)
   shell: |
     curl -Lo /tmp/win32yank.zip https://github.com/equalsraf/win32yank/releases/download/v0.1.1/win32yank-x64.zip
     unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank.exe
     chmod +x /tmp/win32yank.exe
     sudo mv /tmp/win32yank.exe /usr/local/bin/
+  args:
+    creates: /usr/local/bin/win32yank.exe
   when:
     - no_sudo is not defined
     - offline is not defined
     - ansible_kernel.find('microsoft-standard-WSL2') != -1
-    - win32yank_check.failed == true

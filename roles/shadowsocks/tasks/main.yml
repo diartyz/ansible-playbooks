@@ -1,62 +1,35 @@
 ---
-- name: install shadowsocks
-  become: true
-  pacman:
-    name: shadowsocks
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
-
 - name: install packages
-  homebrew:
-    name: shadowsocks-libev
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [shadowsocks]
+    packages_macos: [shadowsocks-libev]
 
-- name: copy shadowsocks conf
+- name: copy shadowsocks conf (Archlinux)
   become: true
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: client.json, dest: /etc/shadowsocks/client.json }
+    src: client.json
+    dest: /etc/shadowsocks/client.json
   when: ansible_distribution == 'Archlinux'
-  register: shadowsocks_conf
+  notify: restart shadowsocks
 
-- name: copy shadowsocks conf
+- name: copy shadowsocks conf (MacOSX)
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: client.json, dest: /opt/homebrew/etc/shadowsocks-libev.json }
+    src: client.json
+    dest: /opt/homebrew/etc/shadowsocks-libev.json
   when: ansible_distribution == 'MacOSX'
-  register: shadowsocks_conf
+  notify: restart shadowsocks
 
 - name: enable shadowsocks
   become: true
   systemd:
-    name: '{{ item }}'
-    enabled: yes
+    name: shadowsocks@client
+    enabled: true
     state: started
-  with_items:
-    - shadowsocks@client
   when: ansible_distribution == 'Archlinux'
 
-- name: restart shadowsocks
-  become: true
-  systemd:
-    name: '{{ item }}'
-    enabled: yes
-    state: restarted
-  with_items:
-    - shadowsocks@client
-  when:
-    - ansible_distribution == 'Archlinux'
-    - shadowsocks_conf.changed
-
-- name: restart shadowsocks
-  command: 'brew services restart shadowsocks-libev'
-  when:
-    - ansible_distribution == 'MacOSX'
-    - shadowsocks_conf.changed
+- name: enable shadowsocks (MacOSX)
+  command: brew services start shadowsocks-libev
+  when: ansible_distribution == 'MacOSX'
+  changed_when: false

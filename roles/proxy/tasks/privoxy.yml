@@ -1,0 +1,59 @@
+---
+- name: install privoxy
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [privoxy]
+    packages_macos: [privoxy]
+
+- name: set sysconfdir
+  set_fact:
+    proxy_sysconfdir: "{{ '/opt/homebrew/etc' if ansible_distribution == 'MacOSX' else '/etc' }}"
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+
+- name: check that the privoxy conf exists
+  stat:
+    path: '{{ proxy_sysconfdir }}/privoxy/config'
+  register: privoxy_stat_result
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+
+- name: update privoxy conf
+  become: true
+  lineinfile:
+    dest: '{{ proxy_sysconfdir }}/privoxy/config'
+    line: '{{ item.line }}'
+    regexp: '{{ item.regexp }}'
+  loop:
+    - { line: 'actionsfile pac.action', regexp: '^(#\s)?actionsfile pac.action' }
+    - { line: 'listen-address  0.0.0.0:8118', regexp: '^listen-address' }
+    - { line: '# actionsfile default.action', regexp: '^(#\s)?actionsfile default.action' }
+    - { line: '# forward-socks5t / 127.0.0.1:1080 .', regexp: '^(#\s)?forward-socks5t / 127.0.0.1:1080 .' }
+  when:
+    - privoxy_stat_result.stat is defined
+    - privoxy_stat_result.stat.exists
+
+- name: copy privoxy pac
+  become: true
+  copy:
+    src: pac.action
+    dest: '{{ proxy_sysconfdir }}/privoxy/pac.action'
+  register: privoxy_conf
+  when:
+    - privoxy_stat_result.stat is defined
+    - privoxy_stat_result.stat.exists
+  notify: restart privoxy
+
+- name: enable privoxy (Archlinux)
+  become: true
+  systemd:
+    name: privoxy
+    enabled: true
+    state: started
+  when:
+    - ansible_distribution == 'Archlinux'
+    - privoxy_conf.changed
+
+- name: enable privoxy (MacOSX)
+  command: brew services start privoxy
+  when: ansible_distribution == 'MacOSX'
+  changed_when: false

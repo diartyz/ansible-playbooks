@@ -1,0 +1,21 @@
+---
+- name: include clash tasks
+  include_tasks:
+    file: clash.yml
+    apply:
+      tags: [proxy, clash]
+  tags: [proxy, clash]
+
+- name: include privoxy tasks
+  include_tasks:
+    file: privoxy.yml
+    apply:
+      tags: [proxy, privoxy]
+  tags: [proxy, privoxy]
+
+- name: include proxychains tasks
+  include_tasks:
+    file: proxychains.yml
+    apply:
+      tags: [proxy, proxychains]
+  tags: [proxy, proxychains]

@@ -1,25 +1,16 @@
 ---
 - name: install packages
-  become: true
-  apt:
-    name:
-      - cargo
-      - rustc
-  when:
-    - no_sudo is not defined
-    - offline is not defined
-    - ansible_distribution == 'Ubuntu'
+  include_role:
+    name: install-packages
+  vars:
+    packages_ubuntu: [cargo, rustc]
 
 - name: create cargo conf folder
   file:
-    path: '{{ item }}'
+    path: ~/.cargo
     state: directory
-  with_items:
-    - ~/.cargo
 
 - name: copy cargo conf
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: config, dest: ~/.cargo/config }
+    src: config
+    dest: ~/.cargo/config

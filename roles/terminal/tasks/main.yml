@@ -1,43 +1,23 @@
 ---
 - name: install packages
-  become: true
-  pacman:
-    name: alacritty
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [alacritty]
+    packages_cask: [alacritty]
 
-- name: install packages
-  homebrew_cask:
-    name:
-      - alacritty
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-
-- name: copy conf
+- name: copy .Xresources
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: .Xresources, dest: ~/.Xresources }
+    src: .Xresources
+    dest: ~/.Xresources
   when: ansible_distribution == 'Archlinux'
 
 - name: copy .alacritty.toml
   vars:
-    font_size: 13
+    font_size: "{{ 13 if ansible_distribution == 'MacOSX' else 11 }}"
   template:
     src: .alacritty.toml
     dest: ~/.alacritty.toml
-  when: ansible_distribution == 'MacOSX'
-
-- name: copy .alacritty.toml
-  vars:
-    font_size: 11
-  template:
-    src: .alacritty.toml
-    dest: ~/.alacritty.toml
-  when: ansible_distribution != 'MacOSX'
 
 - name: homebrew tap
   homebrew_tap:
@@ -46,7 +26,7 @@
     - offline is not defined
     - ansible_distribution == 'MacOSX'
 
-- name: install cask packages
+- name: install cask font packages
   homebrew_cask:
     name:
       - font-jetbrains-mono-nerd-font

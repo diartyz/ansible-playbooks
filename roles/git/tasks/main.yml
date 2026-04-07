@@ -1,35 +1,4 @@
 ---
-- name: install packages
-  become: true
-  pacman:
-    name:
-      - git
-      - diff-so-fancy
-      - lazygit
-      - tig
-      - meld
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
-
-- name: install packages
-  homebrew:
-    name:
-      - git
-      - diff-so-fancy
-      - lazygit
-      - tig
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-
-- name: install cask packages
-  homebrew_cask:
-    name: meld
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-
 - name: add repository from PPA
   become: true
   apt_repository:
@@ -40,109 +9,49 @@
     - ansible_distribution == 'Ubuntu'
 
 - name: install packages
-  become: true
-  apt:
-    name:
-      - git
-      - diff-so-fancy
-      - tig
-  when:
-    - no_sudo is not defined
-    - offline is not defined
-    - ansible_distribution == 'Ubuntu'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [git, diff-so-fancy, lazygit, tig, meld]
+    packages_macos: [git, diff-so-fancy, lazygit, tig]
+    packages_cask: [meld]
+    packages_ubuntu: [git, diff-so-fancy, tig]
 
-- name: check if lazygit is installed
-  command: which lazygit
-  ignore_errors: yes
-  register: lazygit_check
-  changed_when: false
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Ubuntu'
-
-- name: execute script if lazygit is not installed
+- name: install lazygit (Ubuntu)
   shell: |
     LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
     curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
     tar xf /tmp/lazygit.tar.gz -C /tmp
     sudo install /tmp/lazygit /usr/local/bin
+  args:
+    creates: /usr/local/bin/lazygit
   when:
     - no_sudo is not defined
     - offline is not defined
     - ansible_distribution == 'Ubuntu'
-    - lazygit_check.failed == true
 
-- name: create folder
+- name: create lazygit conf folder
   file:
-    name: '{{ item }}'
+    path: "{{ '~/Library/Application Support/lazygit' if ansible_distribution == 'MacOSX' else '~/.config/lazygit' }}"
     state: directory
-  with_items:
-    - ~/.config
-
-- name: create folder
-  file:
-    name: '{{ item }}'
-    state: directory
-  with_items:
-    - ~/Library/Application Support/lazygit
-  when: ansible_distribution == 'MacOSX'
-
-- name: create folder
-  file:
-    name: '{{ item }}'
-    state: directory
-  with_items:
-    - ~/.config/lazygit
-  when: ansible_distribution != 'MacOSX'
 
 - name: copy .gitconfig
   vars:
-    meld: '/Applications/Meld.app/Contents/MacOS/Meld'
+    meld: "{{ '/Applications/Meld.app/Contents/MacOS/Meld' if ansible_distribution == 'MacOSX' else ('meld.exe' if ansible_kernel.find('microsoft-standard-WSL2') != -1 else 'meld') }}"
   template:
     src: .gitconfig
     dest: ~/.gitconfig
-  when: ansible_distribution == 'MacOSX'
-
-- name: copy .gitconfig
-  vars:
-    meld: 'meld.exe'
-  template:
-    src: .gitconfig
-    dest: ~/.gitconfig
-  when: ansible_kernel.find('microsoft-standard-WSL2') != -1
-
-- name: copy .gitconfig
-  vars:
-    meld: 'meld'
-  template:
-    src: .gitconfig
-    dest: ~/.gitconfig
-  when: ansible_distribution != 'MacOSX' and ansible_kernel.find('microsoft-standard-WSL2') == -1
 
 - name: copy git config
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-  with_items:
+  loop:
     - { src: .gitconfig-me, dest: ~/.gitconfig-me }
     - { src: .gitconfig-work, dest: ~/.gitconfig-work }
     - { src: .gitconfig-zenvy, dest: ~/.gitconfig-zenvy }
 
 - name: copy lazygit config
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - {
-        src: lazygit.yml,
-        dest: ~/Library/Application Support/lazygit/config.yml,
-      }
-  when: ansible_distribution == 'MacOSX'
-
-- name: copy lazygit config
-  copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: lazygit.yml, dest: ~/.config/lazygit/config.yml }
-  when: ansible_distribution != 'MacOSX'
+    src: lazygit.yml
+    dest: "{{ '~/Library/Application Support/lazygit/config.yml' if ansible_distribution == 'MacOSX' else '~/.config/lazygit/config.yml' }}"

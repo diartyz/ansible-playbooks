@@ -1,43 +1,37 @@
 ---
 - name: install packages
-  become: true
-  pacman:
-    name: [i3-wm, i3lock, i3status, dmenu]
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [i3-wm, i3lock, i3status, dmenu, xss-lock]
 
 - name: create i3 conf folder
   file:
-    path: '{{ item }}'
+    path: ~/.config/i3
     state: directory
-  with_items:
-    - ~/.config/i3
   when: ansible_distribution == 'Archlinux'
 
 - name: copy i3 conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-  with_items:
+  loop:
     - { src: config, dest: ~/.config/i3/config }
     - { src: status.conf, dest: ~/.config/i3/status.conf }
   when: ansible_distribution == 'Archlinux'
 
 - name: create folder ~/.local/bin
   file:
-    name: '{{ item }}'
+    path: ~/.local/bin
     state: directory
-  with_items:
-    - ~/.local/bin
   when: ansible_distribution == 'Archlinux'
 
 - name: copy shell scripts
   copy:
     src: '{{ item }}'
     dest: '~/.local/bin/{{ item }}'
-    mode: 0755
-  with_items:
+    mode: '0755'
+  loop:
     - battery
   when: ansible_distribution == 'Archlinux'
 
@@ -62,30 +56,28 @@
     - ansible_distribution == 'MacOSX'
     - yabai_install.changed
 
-- name: copy yabai conf
+- name: copy yabai sudoers
   become: true
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-    mode: 0755
-  with_items:
-    - { src: yabai, dest: /private/etc/sudoers.d/yabai }
-  register: yabai_conf
+    src: yabai
+    dest: /private/etc/sudoers.d/yabai
+    mode: '0440'
+  register: yabai_sudoers_conf
   when: ansible_distribution == 'MacOSX'
 
 - name: copy yabai conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-    mode: 0755
-  with_items:
+    mode: '0755'
+  loop:
     - { src: .yabairc, dest: ~/.yabairc }
     - { src: .skhdrc, dest: ~/.skhdrc }
-  register: yabai_conf
+  register: yabai_service_conf
   when: ansible_distribution == 'MacOSX'
 
 - name: enable yabai & skhd
   command: 'yabai --start-service && skhd --start-service'
   when:
     - ansible_distribution == 'MacOSX'
-    - yabai_conf.changed
+    - yabai_sudoers_conf.changed or yabai_service_conf.changed

@@ -1,0 +1,57 @@
+---
+- block:
+  - name: reset launchpad
+    osx_defaults:
+      domain: com.apple.dock
+      key: ResetLaunchPad
+      type: bool
+      value: true
+    notify: restart dock
+
+  - name: clean dock
+    osx_defaults:
+      domain: com.apple.dock
+      key: persistent-apps
+      type: array
+      value: []
+    notify: restart dock
+
+  - name: show hidden files in finder
+    osx_defaults:
+      domain: com.apple.finder
+      key: AppleShowAllFiles
+      type: boolean
+      value: true
+    notify: restart finder
+
+  - name: disable press and hold (global)
+    osx_defaults:
+      domain: NSGlobalDomain
+      key: ApplePressAndHoldEnabled
+      type: bool
+      value: false
+
+  - name: disable press and hold (vscode)
+    osx_defaults:
+      domain: com.microsoft.VSCode
+      key: ApplePressAndHoldEnabled
+      type: bool
+      value: false
+
+  - name: set music app language
+    osx_defaults:
+      domain: com.apple.Music
+      key: AppleLanguages
+      type: array
+      value: ["zh_CN"]
+
+  - name: allow apps from anywhere
+    become: true
+    command: spctl --master-disable
+    changed_when: false
+
+  - name: clear pwpolicy
+    become: true
+    command: pwpolicy clearaccountpolicies
+    changed_when: false
+  when: ansible_distribution == 'MacOSX'

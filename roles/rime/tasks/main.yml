@@ -10,13 +10,8 @@
 
 - name: set confdir
   set_fact:
-    confdir: '~/Library/Rime'
-  when: ansible_distribution == 'MacOSX'
-
-- name: set confdir
-  set_fact:
-    confdir: '~/.config/ibus/rime'
-  when: ansible_distribution == 'Archlinux'
+    confdir: "{{ '~/Library/Rime' if ansible_distribution == 'MacOSX' else '~/.config/ibus/rime' }}"
+  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
 - name: create conf folder
   file:
@@ -30,26 +25,27 @@
     dest: '{{ item.dest }}'
     depth: 1
     update: no
-  with_items:
+  loop:
     - { repo: 'https://github.com/rime/plum', dest: '{{ confdir }}/plum' }
+  register: rime_clone
   when:
     - offline is not defined
-    - rime.changed
+    - ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
 
-- name: Execute script
+- name: execute rime-install script
   shell: bash rime-install iDvel/rime-ice:others/recipes/full
   args:
     executable: /bin/bash
     chdir: '{{ confdir }}/plum'
   when:
     - offline is not defined
-    - rime.changed
+    - rime_clone.changed
 
 - name: copy conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
-  with_items:
+  loop:
     - { src: default.custom.yaml, dest: '{{ confdir }}/default.custom.yaml' }
     - { src: luna_pinyin_simp.custom.yaml, dest: '{{ confdir }}/luna_pinyin_simp.custom.yaml' }
     - { src: rime_ice.custom.yaml, dest: '{{ confdir }}/rime_ice.custom.yaml' }

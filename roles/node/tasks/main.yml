@@ -5,30 +5,20 @@
     dest: '{{ item.dest }}'
     depth: 1
     update: no
-  with_items:
+  loop:
     - { repo: 'https://github.com/creationix/nvm.git', dest: ~/.nvm }
   when:
     - offline is not defined
 
-- name: Check if node is installed
-  command: which node
-  ignore_errors: yes
-  register: node_check
-  changed_when: false
-  when:
-    - offline is not defined
-
-- name: Execute script if foo.node is not installed
+- name: install node LTS
   shell: 'source ~/.nvm/nvm.sh && nvm install --lts'
   args:
     executable: /bin/bash
+    creates: ~/.nvm/alias/default
   when:
     - offline is not defined
-    - node_check.failed == true
 
 - name: copy node config
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: .prettierrc.yml, dest: ~/.prettierrc.yml }
+    src: .prettierrc.yml
+    dest: ~/.prettierrc.yml

@@ -1,17 +1,15 @@
 ---
 - name: create folder ~/.local/bin
   file:
-    name: '{{ item }}'
+    path: ~/.local/bin
     state: directory
-  with_items:
-    - ~/.local/bin
 
 - name: copy shell scripts
   copy:
     src: '{{ item }}'
     dest: '~/.local/bin/{{ item }}'
-    mode: 0755
-  with_items:
+    mode: '0755'
+  loop:
     - colordump
     - colorribbon
     - colorribbons

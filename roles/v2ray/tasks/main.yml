@@ -1,23 +1,15 @@
 ---
-- name: install v2ray
-  become: true
-  pacman:
-    name: v2ray
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
-
 - name: homebrew tap
   homebrew_tap:
     name: v2ray/v2ray
   when: ansible_distribution == 'MacOSX'
 
 - name: install packages
-  homebrew:
-    name: v2ray-core
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [v2ray]
+    packages_macos: [v2ray-core]
 
 - name: copy v2ray conf
   become: true
@@ -25,35 +17,24 @@
     src: config.json
     dest: /etc/v2ray/config.json
   when: ansible_distribution == 'Archlinux'
-  register: v2ray_conf
-
-- name: restart v2ray
-  become: true
-  systemd:
-    name: v2ray
-    enabled: yes
-    state: restarted
-  when:
-    - ansible_distribution == 'Archlinux'
-    - v2ray_conf.changed
+  notify: restart v2ray
 
 - name: copy v2ray conf
   copy:
     src: config.json
     dest: /opt/homebrew/etc/v2ray/config.json
   when: ansible_distribution == 'MacOSX'
-  register: v2ray_conf
+  notify: restart v2ray
 
 - name: enable v2ray
   become: true
   systemd:
     name: v2ray
-    enabled: yes
+    enabled: true
     state: started
   when: ansible_distribution == 'Archlinux'
 
-- name: restart v2ray
-  command: 'brew services restart v2ray-core'
-  when:
-    - ansible_distribution == 'MacOSX'
-    - v2ray_conf.changed
+- name: enable v2ray (MacOSX)
+  command: brew services start v2ray-core
+  when: ansible_distribution == 'MacOSX'
+  changed_when: false

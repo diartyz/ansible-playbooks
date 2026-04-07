@@ -1,8 +1,9 @@
 ---
-- name: install xprofile packages
-  become: true
-  pacman:
-    name:
+- name: install packages
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux:
       - arandr
       - blueberry
       - bluez
@@ -19,26 +20,21 @@
       - xf86-input-synaptics
       - xf86-video-intel
       - xorg
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
 
 - name: enable lightdm
   become: true
   systemd:
     name: '{{ item }}'
-    enabled: yes
-  with_items:
+    enabled: true
+  loop:
     - bluetooth
     - lightdm
   when: ansible_distribution == 'Archlinux'
 
 - name: copy xprofile conf
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: .xprofile, dest: ~/.xprofile }
+    src: .xprofile
+    dest: ~/.xprofile
   when: ansible_distribution == 'Archlinux'
 
 - name: enable autologin
@@ -47,21 +43,19 @@
     dest: /etc/lightdm/lightdm.conf
     line: '{{ item.line }}'
     regexp: '{{ item.regexp }}'
-  with_items:
-    - { regexp: '^#?autologin-user=', line: 'autologin-user=diartyz' }
+  loop:
+    - { regexp: '^#?autologin-user=', line: 'autologin-user={{ ansible_user_id }}' }
     - { regexp: '^#?autologin-user-timeout=', line: 'autologin-user-timeout=0' }
   when: ansible_distribution == 'Archlinux'
 
 - name: create fontconfig folder
   file:
-    path: '{{ item }}'
+    path: ~/.config/fontconfig
     state: directory
-  with_items:
-    - ~/.config/fontconfig
+  when: ansible_distribution == 'Archlinux'
 
 - name: copy fonts.conf
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: fonts.conf, dest: ~/.config/fontconfig/fonts.conf }
+    src: fonts.conf
+    dest: ~/.config/fontconfig/fonts.conf
+  when: ansible_distribution == 'Archlinux'

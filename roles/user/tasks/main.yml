@@ -11,7 +11,7 @@
   become: true
   group:
     name: '{{ item }}'
-  with_items:
+  loop:
     - autologin
     - docker
   when: ansible_distribution == 'Archlinux'

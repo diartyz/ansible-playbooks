@@ -3,7 +3,7 @@
   become: true
   apt:
     name: shadowsocks-libev
-    update_cache: yes
+    update_cache: true
   when:
     - offline is not defined
     - ansible_distribution == 'Debian'
@@ -11,10 +11,8 @@
 - name: copy shadowsocks conf
   become: true
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: server.json, dest: /etc/shadowsocks-libev/config.json }
+    src: server.json
+    dest: /etc/shadowsocks-libev/config.json
   register: shadowsocks_conf
   when: ansible_distribution == 'Debian'
 
@@ -22,7 +20,7 @@
   become: true
   systemd:
     name: shadowsocks-libev.service
-    enabled: yes
+    enabled: true
   when: ansible_distribution == 'Debian'
 
 - name: reload shadowsocks

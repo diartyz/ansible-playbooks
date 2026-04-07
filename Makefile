@@ -1,8 +1,14 @@
 playbook:
-	ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i hosts.yml playbook.yml --vault-password-file ~/.ansible_vault_pass.txt --become-password-file ~/.ansible_become_pass.txt
+	ansible-playbook playbook.yml
 
 playbook-tags:
-	ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i hosts.yml playbook.yml --vault-password-file ~/.ansible_vault_pass.txt --become-password-file ~/.ansible_become_pass.txt --tags ${tags}
+	ansible-playbook playbook.yml --tags $(tags)
 
 playbook-limit:
-	ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i hosts.yml playbook.yml --vault-password-file ~/.ansible_vault_pass.txt --become-password-file ~/.ansible_become_pass.txt --limit ${limit}
+	ansible-playbook playbook.yml --limit $(limit)
+
+check:
+	ansible-playbook playbook.yml --check --diff
+
+list-tags:
+	ansible-playbook playbook.yml --list-tags

@@ -1,5 +1,4 @@
 ---
-# arch
 - name: set no_xmodmap
   debug:
     msg: 'set no_xmodmap'
@@ -7,30 +6,24 @@
 
 - name: copy hhkb conf
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: hhkb.Xmodmap, dest: ~/.Xmodmap }
+    src: hhkb.Xmodmap
+    dest: ~/.Xmodmap
   when: no_xmodmap is not defined
   tags:
     - hhkb
 
 - name: copy cherry conf
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: cherry.Xmodmap, dest: ~/.Xmodmap }
+    src: cherry.Xmodmap
+    dest: ~/.Xmodmap
   when: no_xmodmap is not defined
   tags:
     - cherry
 
 - name: copy mac conf
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: mac.Xmodmap, dest: ~/.Xmodmap }
+    src: mac.Xmodmap
+    dest: ~/.Xmodmap
   when: no_xmodmap is not defined
   tags:
     - mackb
@@ -44,11 +37,9 @@
 - name: copy kbdlight config
   become: true
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-    mode: 0755
-  with_items:
-    - { src: kbdlight, dest: /usr/local/bin/kbdlight }
+    src: kbdlight
+    dest: /usr/local/bin/kbdlight
+    mode: '0755'
   when:
     - ansible_distribution == 'Archlinux'
     - no_kbdlight is not defined
@@ -56,33 +47,25 @@
     - kbdlight
 
 - name: install brightnessctl
-  become: true
-  pacman:
-    name: brightnessctl
-  when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [brightnessctl]
 
-# mac
 - name: install cask packages
-  homebrew_cask:
-    name: ['karabiner-elements']
-  when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+  include_role:
+    name: install-packages
+  vars:
+    packages_cask: [karabiner-elements]
 
 - name: create config folder
   file:
-    path: '{{ item }}'
+    path: ~/.config/karabiner
     state: directory
-  with_items:
-    - ~/.config/karabiner
   when: ansible_distribution == 'MacOSX'
 
 - name: copy config
   copy:
-    src: '{{ item.src }}'
-    dest: '{{ item.dest }}'
-  with_items:
-    - { src: karabiner.json, dest: ~/.config/karabiner/karabiner.json }
+    src: karabiner.json
+    dest: ~/.config/karabiner/karabiner.json
   when: ansible_distribution == 'MacOSX'

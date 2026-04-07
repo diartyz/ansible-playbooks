@@ -3,7 +3,7 @@
   file:
     path: '{{ item }}'
     state: directory
-  with_items:
+  loop:
     - ~/.claude
     - ~/.config/claude-code
     - ~/.config/opencode

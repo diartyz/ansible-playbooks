@@ -1,0 +1,11 @@
+---
+- name: restart v2ray (Archlinux)
+  become: true
+  systemd:
+    name: v2ray
+    state: restarted
+  when: ansible_distribution == 'Archlinux'
+
+- name: restart v2ray (MacOSX)
+  command: brew services restart v2ray-core
+  when: ansible_distribution == 'MacOSX'

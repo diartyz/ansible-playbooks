@@ -6,8 +6,11 @@ xset r rate 200 39
 # sh ~/.screenlayout/default.sh
 # xbacklight -set 20
 battery &
+# blueberry &
+clash-verge &
 parcellite &
-udiskie -t &
+# udiskie -t &
+xss-lock -- i3lock -c 000000 &
 
 synclient TapButton1=1
 synclient TapButton2=3

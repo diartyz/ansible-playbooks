@@ -13,7 +13,7 @@
     dest: '/etc/default/grub'
     line: '{{ item.line }}'
     regexp: '{{ item.regexp }}'
-  with_items:
+  loop:
     - { line: 'GRUB_CMDLINE_LINUX_DEFAULT="acpi_osi= acpi_backlight=video"', regexp: ^GRUB_CMDLINE_LINUX_DEFAULT }
     - { line: 'GRUB_TIMEOUT=1', regexp: ^GRUB_TIMEOUT }
   register: grub_conf

@@ -1,0 +1,11 @@
+---
+- name: restart trojan (Archlinux)
+  become: true
+  systemd:
+    name: trojan
+    state: restarted
+  when: ansible_distribution == 'Archlinux'
+
+- name: restart trojan (MacOSX)
+  command: brew services restart trojan
+  when: ansible_distribution == 'MacOSX'
