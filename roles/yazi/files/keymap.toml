@@ -1,0 +1,4 @@
+[[mgr.prepend_keymap]]
+on   = "?"
+run  = "help"
+desc = "Open help"

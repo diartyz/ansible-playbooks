@@ -26,7 +26,7 @@
     - { role: node, tags: ['node'] }
     - { role: python, tags: ['python'] }
     - { role: rust, tags: ['rust'] }
-    - { role: ranger, tags: ['ranger'] }
+    - { role: yazi, tags: ['yazi'] }
     - { role: docker, tags: ['docker'] }
     - { role: ai, tags: ['ai'] }
 

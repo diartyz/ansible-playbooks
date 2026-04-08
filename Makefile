@@ -1,10 +1,10 @@
 playbook:
 	ansible-playbook playbook.yml
 
-playbook-tags:
+tags:
 	ansible-playbook playbook.yml --tags $(tags)
 
-playbook-limit:
+limit:
 	ansible-playbook playbook.yml --limit $(limit)
 
 check:

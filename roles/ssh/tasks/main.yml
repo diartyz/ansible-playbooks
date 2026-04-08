@@ -4,6 +4,7 @@
     name: install-packages
   vars:
     packages_archlinux: [openssh]
+  when: ansible_distribution == 'CentOS'
 
 - name: create ssh folder
   file:
@@ -32,7 +33,6 @@
     src: id_rsa.pub
     dest: ~/.ssh/authorized_keys
     mode: '0400'
-  when: ansible_distribution == 'CentOS'
 
 - name: update sshd config
   become: true

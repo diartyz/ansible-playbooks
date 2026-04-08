@@ -1,0 +1,55 @@
+---
+- name: install packages
+  include_role:
+    name: install-packages
+  vars:
+    packages_archlinux: [yazi]
+    packages_macos: [yazi]
+
+- name: download yazi (Ubuntu)
+  shell: |
+    curl -Lo /tmp/yazi.zip "https://github.com/sxyazi/yazi/releases/latest/download/yazi-x86_64-unknown-linux-musl.zip"
+    unzip -o /tmp/yazi.zip -d /tmp/yazi
+  args:
+    creates: /tmp/yazi/yazi-x86_64-unknown-linux-musl/yazi
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: install yazi binary (Ubuntu)
+  become: true
+  copy:
+    src: /tmp/yazi/yazi-x86_64-unknown-linux-musl/yazi
+    dest: /usr/local/bin/yazi
+    mode: "0755"
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: install ya binary (Ubuntu)
+  become: true
+  copy:
+    src: /tmp/yazi/yazi-x86_64-unknown-linux-musl/ya
+    dest: /usr/local/bin/ya
+    mode: "0755"
+  when:
+    - no_sudo is not defined
+    - offline is not defined
+    - ansible_distribution == 'Ubuntu'
+
+- name: create conf folder
+  file:
+    path: ~/.config/yazi
+    state: directory
+
+- name: deploy theme config
+  copy:
+    src: theme.toml
+    dest: ~/.config/yazi/theme.toml
+
+- name: deploy keymap config
+  copy:
+    src: keymap.toml
+    dest: ~/.config/yazi/keymap.toml
