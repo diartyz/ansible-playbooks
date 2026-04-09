@@ -1,17 +1,22 @@
 ---
 - name: install clash
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [clash-meta]
-    packages_cask: [clash-verge-rev]
+    packages_archlinux:
+      - clash-meta
+    packages_cask:
+      - clash-verge-rev
 
 - name: create config folder (Archlinux)
   become: true
   file:
     path: ~/.config/mihomo
     state: directory
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: copy clash conf (Archlinux)
   become: true
@@ -19,7 +24,10 @@
     src: config.yml
     dest: ~/.config/mihomo/config.yaml
   register: clash_conf
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: copy clash service
   become: true
@@ -27,30 +35,40 @@
     src: clash.service
     dest: /etc/systemd/system/clash.service
   register: clash_service
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: enable clash
   become: true
   systemd:
     name: clash.service
     enabled: true
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: reload clash
   become: true
   systemd:
     name: clash.service
     state: restarted
-  when: ansible_distribution == 'Archlinux' and (clash_conf.changed or clash_service.changed)
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+    - (clash_conf.changed or clash_service.changed)
+  tags:
+    - sudo
 
 - name: create config folder (MacOSX)
   file:
     path: ~/.config/clash
     state: directory
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
 
 - name: copy clash conf (MacOSX)
   copy:
     src: config.yml
     dest: ~/.config/clash/config.yaml
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'

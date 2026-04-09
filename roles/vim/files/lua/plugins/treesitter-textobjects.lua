@@ -1,54 +1,29 @@
 return {
   'nvim-treesitter/nvim-treesitter-textobjects',
   dependencies = 'nvim-treesitter/nvim-treesitter',
-  event = 'VeryLazy',
+  keys = {
+    { '[', mode = { 'n', 'o', 'x' } },
+    { ']', mode = { 'n', 'o', 'x' } },
+    { 'af', mode = { 'o', 'x' } },
+    { 'if', mode = { 'o', 'x' } },
+  },
   config = function()
-    require('nvim-treesitter.configs').setup {
-      textobjects = {
-        move = {
-          enable = true,
-          goto_next_start = {
-            [']f'] = '@function.outer',
-            [']a'] = '@parameter.inner',
-            [']z'] = { query = '@fold', query_group = 'folds' },
-          },
-          goto_previous_end = {
-            ['[f'] = '@function.outer',
-            ['[a'] = '@parameter.inner',
-            ['[z'] = { query = '@fold', query_group = 'folds' },
-          },
-        },
-        select = {
-          enable = true,
-          keymaps = {
-            ['af'] = '@function.outer',
-            ['if'] = '@function.inner',
-          },
-        },
-        swap = {
-          enable = true,
-          swap_next = {
-            [']['] = '@parameter.inner',
-          },
-          swap_previous = {
-            ['[]'] = '@parameter.inner',
-          },
-        },
-      },
-    }
+    local move = require 'nvim-treesitter-textobjects.move'
+    local select = require 'nvim-treesitter-textobjects.select'
+    local swap = require 'nvim-treesitter-textobjects.swap'
 
-    local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
-    vim.keymap.set(
-      { 'n', 'x', 'o' },
-      ';',
-      ts_repeat_move.repeat_last_move_next,
-      { desc = 'ts_repeat_move.repeat_last_move_next' }
-    )
-    vim.keymap.set(
-      { 'n', 'x', 'o' },
-      ',',
-      ts_repeat_move.repeat_last_move_previous,
-      { desc = 'ts_repeat_move.repeat_last_move_prev' }
-    )
+    -- move
+    vim.keymap.set({ 'n', 'x', 'o' }, ']f', function() move.goto_next_start '@function.outer' end)
+    vim.keymap.set({ 'n', 'x', 'o' }, ']a', function() move.goto_next_start '@parameter.inner' end)
+    vim.keymap.set({ 'n', 'x', 'o' }, '[f', function() move.goto_previous_end '@function.outer' end)
+    vim.keymap.set({ 'n', 'x', 'o' }, '[a', function() move.goto_previous_end '@parameter.inner' end)
+
+    -- select
+    vim.keymap.set({ 'x', 'o' }, 'af', function() select.select_textobject '@function.outer' end)
+    vim.keymap.set({ 'x', 'o' }, 'if', function() select.select_textobject '@function.inner' end)
+
+    -- swap
+    vim.keymap.set('n', '][', function() swap.swap_next '@parameter.inner' end)
+    vim.keymap.set('n', '[]', function() swap.swap_previous '@parameter.inner' end)
   end,
 }

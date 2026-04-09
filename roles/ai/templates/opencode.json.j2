@@ -3,29 +3,22 @@
   "default_agent": "plan",
   "formatter": false,
   "permission": "allow",
+  "plugin": ["oh-my-openagent@latest"],
   "mcp": {
     "gitcode": {
       "type": "local",
       "command": ["gitcode-mcp"],
       "environment": {
-        "GITCODE_TOKEN": "{{ gitcode_token }}",
-        "GITCODE_API_URL": "https://api.gitcode.com/api/v5"
+        "GITCODE_TOKEN": "{{ gitcode_token }}"
       }
-    }
-  },
-  "provider": {
-    "myprovider": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "volcengine",
-      "options": {
-        "baseURL": "https://ark.cn-beijing.volces.com/api/v3",
-        "apiKey": "{{ volcengine_api_key }}"
-      },
-      "models": {
-        "ep-20260210181205-5qxjt": {
-          "name": "GLM-4.7-ep-20260210181205-5qxjt"
-        }
-      }
+    },
+    "tavily": {
+      "type": "remote",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={{ tavily_api_key }}"
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest"]
     }
   }
 }

@@ -1,2 +1,4 @@
 /*.retry
 /hosts.yml
+/.omc/
+__pycache__/

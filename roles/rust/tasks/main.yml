@@ -1,9 +1,28 @@
 ---
-- name: install packages
+- name: install packages and binaries
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_ubuntu: [cargo, rustc]
+    packages_archlinux:
+      - rustup
+    packages_macos:
+      - rustup
+    binaries:
+      - url: https://static.rust-lang.org/dist/rust-1.94.1-x86_64-unknown-linux-gnu.tar.gz
+        check: rustc
+        install: >-
+          tar -xzf ~/.cache/ansible/rust-1.94.1-x86_64-unknown-linux-gnu.tar.gz -C /tmp
+          && /tmp/rust-1.94.1-x86_64-unknown-linux-gnu/install.sh --prefix=~/.local --disable-ldconfig
+
+- name: add cargo/bin to PATH
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'export PATH=$HOME/.cargo/bin:$PATH'
+    insertafter: '^export PATH'
+    create: true
+  loop:
+    - zsh
+    - bash
 
 - name: create cargo conf folder
   file:

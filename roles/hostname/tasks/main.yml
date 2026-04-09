@@ -4,4 +4,7 @@
   copy:
     content: '{{ hostname }}'
     dest: /etc/hostname
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo

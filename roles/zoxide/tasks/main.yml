@@ -1,0 +1,32 @@
+---
+- name: install packages
+  include_role:
+    name: pkg
+  vars:
+    packages_archlinux:
+      - zoxide
+    packages_macos:
+      - zoxide
+
+- name: install zoxide (Ubuntu)
+  shell: curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+  args:
+    creates: ~/.local/bin/zoxide
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+  tags:
+    - online
+
+- name: add zoxide plugin to zshrc
+  lineinfile:
+    path: ~/.zshrc
+    line: plugins+=(zoxide)
+    create: true
+    insertbefore: '# BEGIN ANSIBLE MANAGED OH-MY-ZSH'
+
+- name: add zoxide init to bashrc
+  lineinfile:
+    path: ~/.bashrc
+    line: eval "$(zoxide init bash)"
+    insertafter: '^eval'
+    create: true

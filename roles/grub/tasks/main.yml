@@ -2,10 +2,15 @@
 - name: install grub packages
   become: true
   pacman:
-    name: [grub, efibootmgr, intel-ucode]
+    name:
+      - grub
+      - efibootmgr
+      - intel-ucode
   when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - online
+    - sudo
 
 - name: update grub conf
   become: true
@@ -14,14 +19,21 @@
     line: '{{ item.line }}'
     regexp: '{{ item.regexp }}'
   loop:
-    - { line: 'GRUB_CMDLINE_LINUX_DEFAULT="acpi_osi= acpi_backlight=video"', regexp: ^GRUB_CMDLINE_LINUX_DEFAULT }
-    - { line: 'GRUB_TIMEOUT=1', regexp: ^GRUB_TIMEOUT }
+    - line: 'GRUB_CMDLINE_LINUX_DEFAULT="acpi_osi= acpi_backlight=video"'
+      regexp: ^GRUB_CMDLINE_LINUX_DEFAULT
+    - line: 'GRUB_TIMEOUT=1'
+      regexp: ^GRUB_TIMEOUT
   register: grub_conf
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: create grub conf
   become: true
   command: grub-mkconfig -o /boot/grub/grub.cfg
   when:
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
     - grub_conf.changed
+  tags:
+    - sudo

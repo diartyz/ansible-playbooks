@@ -1,21 +1,40 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [docker, docker-machine]
-    packages_cask: [docker]
+    packages_archlinux:
+      - docker
+      - docker-machine
+    packages_cask:
+      - docker
+
+- name: add docker plugins to zshrc
+  lineinfile:
+    path: ~/.zshrc
+    line: "plugins+=({{ item }})"
+    insertbefore: '# BEGIN ANSIBLE MANAGED OH-MY-ZSH'
+    create: true
+  loop:
+    - docker-compose
+    - kubectl
 
 - name: create conf folder
   become: true
   file:
     path: /etc/docker
     state: directory
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: copy docker conf
   become: true
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo

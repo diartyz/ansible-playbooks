@@ -1,0 +1,213 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": {
+      "model": "{% if ansible_distribution == 'Ubuntu' %}alibaba-cn/glm-5{% else %}zhipuai-coding-plan/glm-5.1{% endif %}",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "zhipuai-coding-plan/glm-5.1" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "oracle": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "librarian": {
+      "model": "{% if ansible_distribution == 'Ubuntu' %}alibaba-cn/glm-5{% else %}zhipuai-coding-plan/glm-5{% endif %}",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "explore": {
+      "model": "zhipuai-coding-plan/glm-4.7",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" }
+{% else %}
+        { "model": "zhipuai-coding-plan/glm-4.6" }
+{% endif %}
+      ],
+      "reasoningEffort": "low",
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "multimodal-looker": {
+      "model": "zhipuai-coding-plan/glm-4.6v",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" }
+{% else %}
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+{% endif %}
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "prometheus": {
+      "model": "{% if ansible_distribution == 'Ubuntu' %}alibaba-cn/glm-5{% else %}zhipuai-coding-plan/glm-5.1{% endif %}",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "zhipuai-coding-plan/glm-5.1" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "metis": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "momus": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "atlas": {
+      "model": "zhipuai-coding-plan/glm-4.7",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" }
+{% else %}
+        { "model": "zhipuai-coding-plan/glm-4.6" }
+{% endif %}
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    },
+    "sisyphus-junior": {
+      "model": "zhipuai-coding-plan/glm-4.7",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" }
+{% else %}
+        { "model": "zhipuai-coding-plan/glm-4.6" }
+{% endif %}
+      ],
+      "compaction": {
+        "model": "zhipuai-coding-plan/glm-4.7"
+      }
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ]
+    },
+    "ultrabrain": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ]
+    },
+    "deep": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ]
+    },
+    "quick": {
+      "model": "zhipuai-coding-plan/glm-4.7"
+{% if ansible_distribution == 'Ubuntu' %},
+      "fallback_models": [
+        { "model": "alibaba-cn/glm-5" }
+      ]
+{% endif %}
+    },
+    "unspecified-low": {
+      "model": "zhipuai-coding-plan/glm-4.7"
+{% if ansible_distribution == 'Ubuntu' %},
+      "fallback_models": [
+        { "model": "alibaba-cn/glm-5" }
+      ]
+{% endif %}
+    },
+    "unspecified-high": {
+      "model": "zhipuai-coding-plan/glm-5.1",
+      "fallback_models": [
+{% if ansible_distribution == 'Ubuntu' %}
+        { "model": "alibaba-cn/glm-5" },
+{% endif %}
+        { "model": "zhipuai-coding-plan/glm-5" },
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ]
+    },
+    "artistry": {
+      "model": "{% if ansible_distribution == 'Ubuntu' %}alibaba-cn/glm-5{% else %}zhipuai-coding-plan/glm-5{% endif %}",
+      "fallback_models": [
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ]
+    },
+    "writing": {
+      "model": "{% if ansible_distribution == 'Ubuntu' %}alibaba-cn/glm-5{% else %}zhipuai-coding-plan/glm-5{% endif %}",
+      "fallback_models": [
+        { "model": "zhipuai-coding-plan/glm-4.7" }
+      ]
+    }
+  },
+  "claude_code": {
+    "mcp": false,
+    "commands": false,
+    "skills": false,
+    "agents": false,
+    "hooks": false,
+    "plugins": false
+  }
+}

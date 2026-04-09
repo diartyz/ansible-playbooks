@@ -4,13 +4,12 @@ Plug 'Shougo/defx.nvim' | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'ap/vim-buftabline'
-" Plug 'arthurxavierx/vim-caser'
+Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
 Plug 'cohama/lexima.vim'
-" Plug 'diartyz/vim-utils'
+Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion', { 'on': '<Plug>(easymotion-overwin-f2)' }
-Plug 'francoiscabrol/ranger.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'junegunn/vim-easy-align'
@@ -25,9 +24,9 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ojroques/vim-oscyank', { 'branch': 'main' }
-" Plug 'osyo-manga/vim-over'
+Plug 'osyo-manga/vim-over'
 Plug 'sainnhe/everforest'
-" Plug 'sgur/vim-editorconfig'
+Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'svermeulen/vim-subversive' | Plug 'tpope/vim-abolish'
 Plug 'tommcdo/vim-exchange'
@@ -146,8 +145,8 @@ nmap <leader>8 <Plug>BufTabLine.Go(8)
 nmap <leader>9 <Plug>BufTabLine.Go(9)
 nmap <leader>0 <Plug>BufTabLine.Go(10)
 
-" " caser
-" let g:caser_prefix = '<leader>c'
+" caser
+let g:caser_prefix = '<leader>c'
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
@@ -279,10 +278,6 @@ if (getenv('SSH_TTY') != v:null && !has('clipboard_working'))
     autocmd TextYankPost * call s:VimOSCYankPostCallback(v:event)
   augroup END
 endif
-
-" ranger
-let g:ranger_map_keys = 0
-nnoremap + :Ranger<cr>
 
 " subversive
 nmap gs <plug>(SubversiveSubvertWordRange)

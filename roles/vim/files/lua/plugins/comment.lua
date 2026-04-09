@@ -1,17 +1,13 @@
 return {
   'numToStr/Comment.nvim',
-  dependencies = {
-    'JoosepAlviste/nvim-ts-context-commentstring',
-    dependencies = 'nvim-treesitter/nvim-treesitter',
-  },
   keys = {
+    'gbc',
     'gcc',
+    { 'gb', mode = 'x' },
     { 'gc', mode = 'x' },
   },
   config = function()
-    require('Comment').setup {
-      pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
-    }
+    require('Comment').setup()
 
     local ft = require 'Comment.ft'
     ft.gn = '#%s'

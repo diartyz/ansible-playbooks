@@ -4,16 +4,17 @@
   pacman:
     name: pacman-contrib
   when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
   tags:
     - rankmirrors
+    - online
+    - sudo
 
 - name: set no_rankmirrors
   debug:
     msg: 'set no_rankmirrors'
   register: no_rankmirrors
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: download & rank mirrors
   become: true
@@ -40,7 +41,9 @@
         content: '{{ rankmirrors_result.stdout }}'
         dest: /etc/pacman.d/mirrorlist
   when:
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
     - no_rankmirrors is not defined
   tags:
     - rankmirrors
+    - online
+    - sudo

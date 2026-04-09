@@ -7,7 +7,6 @@ return {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
         ensure_installed = {
-          'black',
           'clangd',
           'emmet-language-server',
           'eslint-lsp',
@@ -15,7 +14,6 @@ return {
           'json-lsp',
           'lua-language-server',
           'prettierd',
-          'python-lsp-server',
           'rust-analyzer',
           'shfmt',
           'stylua',
@@ -27,12 +25,6 @@ return {
   },
   config = function()
     -- lsp config
-    local function disable_format(client)
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end
-    local is_module_available = require('core/utils').is_module_available
-
     vim.lsp.config('clangd', vim.g.clangd_config or {})
     vim.lsp.enable('clangd', not vim.g.disable_clangd)
     vim.lsp.config('lua_ls', {
@@ -50,10 +42,7 @@ return {
       settings = {
         Lua = {
           diagnostics = {
-            globals = { 'Snacks', 'vim' },
-          },
-          format = {
-            enable = false,
+            globals = { 'vim' },
           },
         },
       },
@@ -86,9 +75,6 @@ return {
         },
       },
     })
-    vim.lsp.config('pylsp', {
-      on_attach = disable_format,
-    })
     vim.lsp.config('ts_ls', {
       init_options = {
         preferences = {
@@ -96,7 +82,6 @@ return {
           jsxAttributeCompletionStyle = 'none',
         },
       },
-      on_attach = disable_format,
     })
 
     -- mapping
@@ -104,7 +89,6 @@ return {
     vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, { desc = 'lsp code action' })
     vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'lsp rename' })
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { desc = 'lsp hover' })
-    vim.keymap.set({ 'n', 'x' }, 'gq', vim.lsp.buf.format, { desc = 'lsp format' })
     local pos_equal = function(p1, p2)
       local r1, c1 = (table.unpack or unpack)(p1)
       local r2, c2 = (table.unpack or unpack)(p2)
@@ -122,6 +106,7 @@ return {
       local pos2 = vim.api.nvim_win_get_cursor(0)
       if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1, float = true } end
     end, { desc = 'prev diagnostic' })
+    local is_module_available = require('core.utils').is_module_available
     vim.keymap.set('n', '<c-t>', function()
       if is_module_available 'telescope.builtin' then
         require('telescope.builtin').lsp_document_symbols { symbol_width = 39 }
@@ -172,30 +157,6 @@ return {
     )
 
     -- autocmd
-    vim.api.nvim_create_autocmd('BufWritePre', {
-      group = vim.api.nvim_create_augroup('LspFormatting', { clear = true }),
-      callback = function()
-        if not is_module_available 'gitsigns' then
-          vim.lsp.buf.format()
-          return
-        end
-        local hunks = require('gitsigns').get_hunks()
-        if hunks == nil then
-          vim.lsp.buf.format()
-          return
-        end
-        for i = #hunks, 1, -1 do
-          local hunk = hunks[i]
-          if hunk ~= nil and hunk.type ~= 'delete' then
-            local start = hunk.added.start
-            local last = start + hunk.added.count
-            local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
-            local range = { start = { start, 0 }, ['end'] = { last - 1, last_hunk_line:len() } }
-            vim.lsp.buf.format { range = range }
-          end
-        end
-      end,
-    })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'cpp',
       callback = function()

@@ -1,16 +1,20 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages: [nginx]
+    packages:
+      - nginx
 
 - name: create nginx conf folder
   become: true
   file:
     path: /etc/nginx/conf.d
     state: directory
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: copy nginx conf (Archlinux)
   become: true
@@ -18,7 +22,10 @@
     src: static.conf
     dest: /etc/nginx/conf.d/static.conf
   register: nginx_conf
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
   notify: restart nginx
 
 - name: copy nginx conf (MacOSX)
@@ -26,7 +33,7 @@
     src: static.conf
     dest: /opt/homebrew/etc/nginx/servers/static.conf
   register: nginx_conf
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
   notify: restart nginx
 
 - name: enable nginx (Archlinux)
@@ -36,5 +43,7 @@
     enabled: true
     state: started
   when:
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
     - nginx_conf.changed
+  tags:
+    - sudo

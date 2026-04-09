@@ -1,6 +1,14 @@
 return {
   'karb94/neoscroll.nvim',
-  event = 'VeryLazy',
+  keys = {
+    '<c-u>',
+    '<c-d>',
+    '<c-b>',
+    '<c-f>',
+    'zt',
+    'zz',
+    'zb',
+  },
   config = function()
     local neoscroll = require 'neoscroll'
     local keymap = {

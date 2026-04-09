@@ -1,4 +1,34 @@
 ---
+- name: check if claude is installed
+  command: which claude
+  register: claude_check
+  failed_when: false
+  changed_when: false
+
+- name: install claude-code via npm
+  npm:
+    name: '@anthropic-ai/claude-code'
+    global: true
+  when:
+    - claude_check.rc != 0
+  tags:
+    - online
+
+- name: check if opencode is installed
+  command: which opencode
+  register: opencode_check
+  failed_when: false
+  changed_when: false
+
+- name: install opencode via npm
+  npm:
+    name: opencode-ai
+    global: true
+  when:
+    - opencode_check.rc != 0
+  tags:
+    - online
+
 - name: create ai config directories
   file:
     path: '{{ item }}'
@@ -7,23 +37,35 @@
     - ~/.claude
     - ~/.config/claude-code
     - ~/.config/opencode
+    - ~/.config/opencode/themes
+    - ~/.local/share/opencode
 
-- name: template claude settings
-  template:
-    src: claude-settings.json.j2
-    dest: ~/.claude/settings.json
-
-- name: template claude-code settings
-  template:
-    src: claude-code-settings.json.j2
-    dest: ~/.config/claude-code/settings.json
-
-- name: template opencode config
-  template:
-    src: opencode.json.j2
-    dest: ~/.config/opencode/opencode.json
-
-- name: copy opencode tui config
+- name: copy config files
   copy:
-    src: tui.json
-    dest: ~/.config/opencode/tui.json
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  loop:
+    - src: tui.json
+      dest: ~/.config/opencode/tui.json
+    - src: AGENTS.md
+      dest: ~/.config/opencode/AGENTS.md
+    - src: themes/tomorrow.json
+      dest: ~/.config/opencode/themes/tomorrow.json
+    - src: themes/everforest-hard.json
+      dest: ~/.config/opencode/themes/everforest-hard.json
+
+- name: template config files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  loop:
+    - src: .mcp.json.j2
+      dest: ~/.mcp.json
+    - src: oh-my-openagent.json.j2
+      dest: ~/.config/opencode/oh-my-openagent.json
+    - src: claude-settings.json.j2
+      dest: ~/.claude/settings.json
+    - src: opencode.json.j2
+      dest: ~/.config/opencode/opencode.json
+    - src: auth.json.j2
+      dest: ~/.local/share/opencode/auth.json

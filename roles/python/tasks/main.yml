@@ -1,11 +1,31 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [python-pip]
-    packages_macos: [python]
-    packages_ubuntu: [python3, python-is-python3]
+    packages_archlinux:
+      - python-pip
+      - uv
+    packages_macos:
+      - python
+      - uv
+    packages_ubuntu:
+      - python3
+      - python-is-python3
+    binaries:
+      - url: https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz
+        check: uv
+        install: tar -xzf ~/.cache/ansible/uv-x86_64-unknown-linux-gnu.tar.gz -C ~/.local/bin --strip-components=1
+
+- name: add python env to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'export PYTHONUSERBASE="$HOME/.local"'
+    insertafter: '^export (?!PATH)'
+    create: true
+  loop:
+    - zsh
+    - bash
 
 - name: create pip conf folder
   file:
@@ -16,3 +36,13 @@
   copy:
     src: pip.conf
     dest: ~/.config/pip/pip.conf
+
+- name: create uv conf folder
+  file:
+    path: ~/.config/uv
+    state: directory
+
+- name: copy uv conf
+  copy:
+    src: uv.toml
+    dest: ~/.config/uv/uv.toml

@@ -1,0 +1,39 @@
+---
+- name: clone oh-my-bash
+  git:
+    repo: '{{ item.repo }}'
+    dest: '{{ item.dest }}'
+    depth: 1
+    update: false
+  loop:
+    - repo: https://github.com/ohmybash/oh-my-bash.git
+      dest: ~/.oh-my-bash
+  tags:
+    - online
+
+- name: add OSH env to bashrc
+  lineinfile:
+    path: ~/.bashrc
+    line: 'export OSH=~/.oh-my-bash'
+    insertafter: '^export (?!PATH)'
+    create: true
+
+- name: add oh-my-bash plugins to bashrc
+  lineinfile:
+    path: ~/.bashrc
+    line: "plugins+=({{ item }})"
+    insertbefore: '# BEGIN ANSIBLE MANAGED OH-MY-BASH'
+  loop:
+    - git
+    - tmux
+    - zoxide
+
+- name: add oh-my-bash config to bashrc
+  blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED OH-MY-BASH"
+    block: |
+      OSH_THEME="demula"
+      source ~/.oh-my-bash/oh-my-bash.sh
+    create: true
+    insertafter: '^plugins\+\='
