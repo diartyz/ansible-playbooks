@@ -1,7 +1,7 @@
 return {
   'mg979/vim-visual-multi',
   keys = {
-    { '<c-l>', mode = 'x', desc = 'multi cursors' },
+    { '<c-e>', mode = 'x', desc = 'multi cursors' },
     { '<c-n>', mode = { 'n', 'x' }, desc = 'multi cursors' },
   },
   init = function()

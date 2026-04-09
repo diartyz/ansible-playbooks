@@ -1,0 +1,83 @@
+---
+- name: install packages (Archlinux)
+  become: true
+  pacman:
+    name: '{{ (packages_archlinux | default([])) + (packages | default([])) }}'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - online
+    - sudo
+
+- name: install packages (MacOSX)
+  homebrew:
+    name: '{{ (packages_macos | default([])) + (packages | default([])) }}'
+  when:
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online
+
+- name: install cask packages (MacOSX)
+  homebrew_cask:
+    name: '{{ packages_cask | default([]) }}'
+  when:
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online
+
+- name: install packages (Ubuntu)
+  become: true
+  apt:
+    name: '{{ (packages_ubuntu | default([])) + (packages | default([])) }}'
+  when:
+    - ansible_facts.distribution == 'Ubuntu'
+  tags:
+    - online
+    - sudo
+
+- name: check binary existence
+  command: which '{{ item.check }}'
+  register: binary_check
+  failed_when: false
+  changed_when: false
+  loop: '{{ binaries | default([]) }}'
+  loop_control:
+    extended: yes
+  when: binaries is defined
+
+- name: check cache files
+  stat:
+    path: '~/.cache/ansible/{{ item.url | basename }}'
+  register: binary_cache
+  loop: '{{ binaries | default([]) }}'
+  loop_control:
+    extended: yes
+  when:
+    - binaries is defined
+  tags:
+    - prepare
+
+- name: download binaries to cache
+  get_url:
+    url: '{{ item.0.url }}'
+    dest: ~/.cache/ansible/
+  loop: '{{ binaries | zip(binary_cache.results) | list }}'
+  loop_control:
+    extended: yes
+  when:
+    - binaries is defined
+    - "'prepare' in ansible_run_tags"
+    - not item.1.stat.exists | default(false)
+  tags:
+    - online
+    - prepare
+
+- name: install binary from cache
+  shell: '{{ item.0.install }}'
+  loop: '{{ binaries | zip(binary_check.results, binary_cache.results) | list }}'
+  loop_control:
+    extended: yes
+  when:
+    - binaries is defined
+    - item.1.rc != 0
+    - item.2.stat.exists | default(false)

@@ -37,14 +37,24 @@ local function load_local_config(file)
   if vim.fn.filereadable(localConfig) == 1 then vim.cmd('source ' .. localConfig) end
 end
 
-local function make_repeatable_move_pair(next, prev)
-  if not is_module_available 'nvim-treesitter.textobjects.repeatable_move' then return next, prev end
-  return require('nvim-treesitter.textobjects.repeatable_move').make_repeatable_move_pair(next, prev)
+local last_move = nil
+
+local function set_last(fn, opposite, forward)
+  last_move = { fn = fn, opposite = opposite, forward = forward }
+  fn()
 end
 
-local function set_last_move(fn)
-  if not is_module_available 'nvim-treesitter.textobjects.repeatable_move' then return end
-  require('nvim-treesitter.textobjects.repeatable_move').set_last_move(fn, { forward = true })
+local function make_repeatable_pair(next_fn, prev_fn)
+  return function() set_last(next_fn, prev_fn, true) end,
+      function() set_last(prev_fn, next_fn, false) end
+end
+
+local function repeat_last()
+  if last_move then last_move.fn() end
+end
+
+local function repeat_opposite()
+  if last_move and last_move.opposite then last_move.opposite() end
 end
 
 local function set_repeat(input) vim.fn['repeat#set'](vim.api.nvim_replace_termcodes(input, true, false, true)) end
@@ -54,7 +64,8 @@ return {
   feed_keys = feed_keys,
   is_module_available = is_module_available,
   load_local_config = load_local_config,
-  make_repeatable_move_pair = make_repeatable_move_pair,
-  set_last_move = set_last_move,
+  make_repeatable_pair = make_repeatable_pair,
+  repeat_last = repeat_last,
+  repeat_opposite = repeat_opposite,
   set_repeat = set_repeat,
 }

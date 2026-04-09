@@ -1,11 +1,21 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [tmux, bc]
-    packages_macos: [tmux, reattach-to-user-namespace]
-    packages_ubuntu: [tmux]
+    packages:
+      - tmux
+    packages_archlinux:
+      - bc
+    packages_macos:
+      - reattach-to-user-namespace
+
+- name: add tmux plugin to zshrc
+  lineinfile:
+    path: ~/.zshrc
+    line: plugins+=(tmux)
+    create: true
+    insertbefore: '# BEGIN ANSIBLE MANAGED OH-MY-ZSH'
 
 - name: clone tpm
   git:
@@ -14,9 +24,10 @@
     depth: 1
     update: no
   loop:
-    - { repo: 'https://github.com/tmux-plugins/tpm', dest: ~/.tmux/plugins/tpm }
-  when:
-    - offline is not defined
+    - repo: https://github.com/tmux-plugins/tpm
+      dest: ~/.tmux/plugins/tpm
+  tags:
+    - online
 
 - name: copy tmux conf
   copy:

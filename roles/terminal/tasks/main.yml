@@ -1,20 +1,22 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [alacritty]
-    packages_cask: [alacritty]
+    packages_archlinux:
+      - alacritty
+    packages_cask:
+      - alacritty
 
 - name: copy .Xresources
   copy:
     src: .Xresources
     dest: ~/.Xresources
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: copy .alacritty.toml
   vars:
-    font_size: "{{ 13 if ansible_distribution == 'MacOSX' else 11 }}"
+    font_size: "{{ 13 if ansible_facts.distribution == 'MacOSX' else 11 }}"
   template:
     src: .alacritty.toml
     dest: ~/.alacritty.toml
@@ -23,8 +25,9 @@
   homebrew_tap:
     name: homebrew/cask-fonts
   when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online
 
 - name: install cask font packages
   homebrew_cask:
@@ -32,5 +35,6 @@
       - font-jetbrains-mono-nerd-font
       - font-fira-code-nerd-font
   when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online

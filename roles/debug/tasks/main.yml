@@ -3,15 +3,15 @@
 #   debug:
 #     var: ansible_facts
 
-- name: show ansible_distribution
+- name: show ansible_facts.distribution
   debug:
-    msg: '{{ ansible_distribution }}'
+    msg: '{{ ansible_facts.distribution }}'
 
-- name: show major version
+- name: show ansible_facts.distribution_major_version
   debug:
-    msg: '{{ ansible_distribution_major_version }}'
+    msg: '{{ ansible_facts.distribution_major_version }}'
 
-- name: show username
+- name: show ansible_user_id
   debug:
     msg: '{{ ansible_user_id }}'
 
@@ -19,6 +19,6 @@
   debug:
     msg: '{{ ansible_user_dir }}'
 
-- name: show ansible_kernel
+- name: show ansible_facts.kernel
   debug:
-    msg: '{{ ansible_kernel }}'
+    msg: '{{ ansible_facts.kernel }}'

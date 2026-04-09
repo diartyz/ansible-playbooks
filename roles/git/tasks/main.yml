@@ -1,57 +1,101 @@
 ---
-- name: add repository from PPA
-  become: true
-  apt_repository:
-    repo: ppa:aos1/diff-so-fancy
-  when:
-    - no_sudo is not defined
-    - offline is not defined
-    - ansible_distribution == 'Ubuntu'
-
-- name: install packages
+- name: install packages and binaries
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [git, diff-so-fancy, lazygit, tig, meld]
-    packages_macos: [git, diff-so-fancy, lazygit, tig]
-    packages_cask: [meld]
-    packages_ubuntu: [git, diff-so-fancy, tig]
+    packages:
+      - git
+      - tig
+    packages_archlinux:
+      - git-delta
+      - github-cli
+      - lazygit
+      - meld
+    packages_macos:
+      - gh
+      - git-delta
+      - lazygit
+    packages_cask:
+      - meld
+    binaries:
+      - url: https://github.com/cli/cli/releases/download/v2.90.0/gh_2.90.0_linux_amd64.tar.gz
+        check: gh
+        install: >-
+          tar -xzf ~/.cache/ansible/gh_2.90.0_linux_amd64.tar.gz -C /tmp
+          && install /tmp/gh_2.90.0_linux_amd64/bin/gh ~/.local/bin/gh
+      - url: https://github.com/jesseduffield/lazygit/releases/download/v0.61.1/lazygit_0.61.1_linux_x86_64.tar.gz
+        check: lazygit
+        install: >-
+          tar -xzf ~/.cache/ansible/lazygit_0.61.1_linux_x86_64.tar.gz -C /tmp
+          && install /tmp/lazygit ~/.local/bin/lazygit
+      - url: https://github.com/dandavison/delta/releases/download/0.19.2/delta-0.19.2-x86_64-unknown-linux-musl.tar.gz
+        check: delta
+        install: >-
+          tar -xzf ~/.cache/ansible/delta-0.19.2-x86_64-unknown-linux-musl.tar.gz -C /tmp
+          && install /tmp/delta-0.19.2-x86_64-unknown-linux-musl/delta ~/.local/bin/delta
 
-- name: install lazygit (Ubuntu)
-  shell: |
-    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-    curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-    tar xf /tmp/lazygit.tar.gz -C /tmp
-    sudo install /tmp/lazygit /usr/local/bin
-  args:
-    creates: /usr/local/bin/lazygit
-  when:
-    - no_sudo is not defined
-    - offline is not defined
-    - ansible_distribution == 'Ubuntu'
+- name: check gh auth status
+  command: gh auth status
+  register: gh_auth_check
+  failed_when: false
+  changed_when: false
 
-- name: create lazygit conf folder
-  file:
-    path: "{{ '~/Library/Application Support/lazygit' if ansible_distribution == 'MacOSX' else '~/.config/lazygit' }}"
-    state: directory
+- name: authenticate gh
+  shell: echo '{{ gh_token }}' | gh auth login --with-token
+  when: gh_auth_check.rc != 0
 
-- name: copy .gitconfig
+- name: add git alias to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'alias lg="lazygit"'
+    insertafter: '^alias'
+    create: true
+  loop:
+    - zsh
+    - bash
+
+- name: add git plugins to zshrc
+  lineinfile:
+    path: ~/.zshrc
+    line: "plugins+=({{ item }})"
+    insertbefore: '# BEGIN ANSIBLE MANAGED OH-MY-ZSH'
+    create: true
+  loop:
+    - git
+    - git-flow-avh
+
+- name: get git version for conflict style
+  register: git_version
+  failed_when: false
+  command: git --version
+  changed_when: false
+
+- name: template .gitconfig
   vars:
-    meld: "{{ '/Applications/Meld.app/Contents/MacOS/Meld' if ansible_distribution == 'MacOSX' else ('meld.exe' if ansible_kernel.find('microsoft-standard-WSL2') != -1 else 'meld') }}"
+    conflictstyle: "{{ 'zdiff3' if (git_version.stdout | regex_search('[0-9.]+', '\\0') | default('0.0')) is version('2.35', '>=') else 'diff3' }}"
+    meld: "{{ '/Applications/Meld.app/Contents/MacOS/Meld' if ansible_facts.distribution == 'MacOSX' else ('meld.exe' if ansible_facts.kernel.find('microsoft-standard-WSL2') != -1 else 'meld') }}"
   template:
     src: .gitconfig
     dest: ~/.gitconfig
+
+- name: create lazygit conf folder
+  file:
+    path: "{{ '~/Library/Application Support/lazygit' if ansible_facts.distribution == 'MacOSX' else '~/.config/lazygit' }}"
+    state: directory
 
 - name: copy git config
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   loop:
-    - { src: .gitconfig-me, dest: ~/.gitconfig-me }
-    - { src: .gitconfig-work, dest: ~/.gitconfig-work }
-    - { src: .gitconfig-zenvy, dest: ~/.gitconfig-zenvy }
+    - src: .gitconfig-me
+      dest: ~/.gitconfig-me
+    - src: .gitconfig-work
+      dest: ~/.gitconfig-work
+    - src: .gitconfig-zenvy
+      dest: ~/.gitconfig-zenvy
 
 - name: copy lazygit config
   copy:
     src: lazygit.yml
-    dest: "{{ '~/Library/Application Support/lazygit/config.yml' if ansible_distribution == 'MacOSX' else '~/.config/lazygit/config.yml' }}"
+    dest: "{{ '~/Library/Application Support/lazygit/config.yml' if ansible_facts.distribution == 'MacOSX' else '~/.config/lazygit/config.yml' }}"

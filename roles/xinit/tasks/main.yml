@@ -1,7 +1,7 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
     packages_archlinux:
       - arandr
@@ -29,13 +29,16 @@
   loop:
     - bluetooth
     - lightdm
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: copy xprofile conf
   copy:
     src: .xprofile
     dest: ~/.xprofile
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: enable autologin
   become: true
@@ -44,18 +47,23 @@
     line: '{{ item.line }}'
     regexp: '{{ item.regexp }}'
   loop:
-    - { regexp: '^#?autologin-user=', line: 'autologin-user={{ ansible_user_id }}' }
-    - { regexp: '^#?autologin-user-timeout=', line: 'autologin-user-timeout=0' }
-  when: ansible_distribution == 'Archlinux'
+    - regexp: '^#?autologin-user='
+      line: 'autologin-user={{ ansible_user_id }}'
+    - regexp: '^#?autologin-user-timeout='
+      line: 'autologin-user-timeout=0'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: create fontconfig folder
   file:
     path: ~/.config/fontconfig
     state: directory
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: copy fonts.conf
   copy:
     src: fonts.conf
     dest: ~/.config/fontconfig/fonts.conf
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'

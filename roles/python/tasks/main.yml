@@ -1,11 +1,25 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [python-pip]
-    packages_macos: [python]
-    packages_ubuntu: [python3, python-is-python3]
+    packages_archlinux:
+      - python-pip
+    packages_macos:
+      - python
+    packages_ubuntu:
+      - python3
+      - python-is-python3
+
+- name: add python env to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'export PYTHONUSERBASE="$HOME/.local"'
+    insertafter: '^export (?!PATH)'
+    create: true
+  loop:
+    - zsh
+    - bash
 
 - name: create pip conf folder
   file:

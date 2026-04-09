@@ -32,7 +32,7 @@
   debug:
     msg: 'set no_kbdlight'
   register: no_kbdlight
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: copy kbdlight config
   become: true
@@ -41,31 +41,34 @@
     dest: /usr/local/bin/kbdlight
     mode: '0755'
   when:
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
     - no_kbdlight is not defined
   tags:
     - kbdlight
+    - sudo
 
 - name: install brightnessctl
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [brightnessctl]
+    packages_archlinux:
+      - brightnessctl
 
 - name: install cask packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_cask: [karabiner-elements]
+    packages_cask:
+      - karabiner-elements
 
 - name: create config folder
   file:
     path: ~/.config/karabiner
     state: directory
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
 
 - name: copy config
   copy:
     src: karabiner.json
     dest: ~/.config/karabiner/karabiner.json
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'

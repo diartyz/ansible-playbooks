@@ -15,7 +15,7 @@ return {
       local gitsigns = require 'gitsigns'
       local next_hunk = function() gitsigns.nav_hunk('next', { target = 'all' }) end
       local prev_hunk = function() gitsigns.nav_hunk('prev', { target = 'all' }) end
-      local next_hunk_repeat, prev_hunk_repeat = require('core/utils').make_repeatable_move_pair(next_hunk, prev_hunk)
+      local next_hunk_repeat, prev_hunk_repeat = require('core.utils').make_repeatable_pair(next_hunk, prev_hunk)
       local function map(mode, l, r, opts)
         opts = opts or {}
         opts.buffer = bufnr

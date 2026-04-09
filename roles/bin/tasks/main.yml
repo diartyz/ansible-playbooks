@@ -1,8 +1,13 @@
 ---
-- name: create folder ~/.local/bin
+- name: create cache and bin directories
   file:
-    path: ~/.local/bin
+    path: '{{ item }}'
     state: directory
+  loop:
+    - ~/.cache/ansible
+    - ~/.local/bin
+  tags:
+    - prepare
 
 - name: copy shell scripts
   copy:
@@ -13,3 +18,13 @@
     - colordump
     - colorribbon
     - colorribbons
+
+- name: add ~/.local/bin to PATH
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'export PATH=$HOME/.local/bin:$PATH'
+    insertafter: '^export PATH'
+    create: true
+  loop:
+    - zsh
+    - bash

@@ -43,15 +43,21 @@
       domain: com.apple.Music
       key: AppleLanguages
       type: array
-      value: ["zh_CN"]
+      value:
+        - "zh_CN"
 
   - name: allow apps from anywhere
     become: true
     command: spctl --master-disable
     changed_when: false
+    tags:
+    - sudo
 
   - name: clear pwpolicy
     become: true
     command: pwpolicy clearaccountpolicies
+    when:
+      - ansible_facts.distribution == 'MacOSX'
     changed_when: false
-  when: ansible_distribution == 'MacOSX'
+    tags:
+    - sudo

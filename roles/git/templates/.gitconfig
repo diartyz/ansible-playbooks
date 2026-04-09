@@ -1,16 +1,25 @@
 [user]
 	name = diartyz
 	email = diartyz@gmail.com
-[alias]
-	cm = commit -s
 [core]
 	ignorecase = false
-	pager = diff-so-fancy | less -FRX
+	pager = delta
 	quotepath = false
-[diff-so-fancy]
-	markEmptyLines = false
+[alias]
+	cm = commit -s
 [color]
 	ui = auto
+[interactive]
+	diffFilter = delta --color-only
+[merge]
+	tool = meld
+	conflictStyle = {{ git_conflictstyle | default('diff3') }}
+[mergetool]
+	keepBackup = false
+[mergetool "meld"]
+	cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
+[mergetool "vscode"]
+	cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
 [credential]
 	helper = store
 [filter "lfs"]
@@ -18,14 +27,6 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[merge]
-	tool = meld
-[mergetool]
-	keepBackup = false
-[mergetool "meld"]
-	cmd = {{ meld }} $LOCAL $BASE $REMOTE --output $MERGED --auto-merge
-[mergetool "vscode"]
-	cmd = code --wait --merge $LOCAL $REMOTE $BASE $MERGED
 [pull]
 	ff = only
 [push]
@@ -38,3 +39,35 @@
 	path = .gitconfig-work
 [includeIf "gitdir:~/Zenvy/"]
 	path = .gitconfig-zenvy
+[delta]
+	navigate = true
+	side-by-side = true
+	syntax-theme = Coldark-Dark
+	; # -- diff
+	line-numbers-minus-style = red
+	line-numbers-plus-style = green
+	line-numbers-left-style = gray
+	line-numbers-left-format = "{nm:>1}│"
+	line-numbers-right-style = gray
+	line-numbers-right-format = "{np:>1}│"
+	line-numbers-zero-style = gray
+	minus-emph-style = ghostwhite crimson underline
+	minus-empty-line-marker-style = syntax maroon
+	minus-style = syntax darkred
+	plus-emph-style = ghostwhite olivedrab underline
+	plus-empty-line-marker-style = syntax seagreen
+	plus-style = syntax darkgreen
+	whitespace-error-style = black ghostwhite
+	zero-style = syntax
+	# -- decorations
+	file-decoration-style = gray overline
+	file-added-label = [+]
+	file-copied-label = [*]
+	file-modified-label = [~]
+	file-removed-label = [-]
+	file-renamed-label = [>]
+	file-style = gray bold
+	hunk-header-decoration-style = none
+	hunk-header-file-style = gray
+	hunk-header-line-number-style = gray
+	hunk-header-style = file line-number syntax

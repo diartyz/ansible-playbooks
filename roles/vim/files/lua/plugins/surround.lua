@@ -1,0 +1,22 @@
+return {
+  'tpope/vim-surround',
+  dependencies = 'tpope/vim-repeat',
+  keys = {
+    { 'a(', mode = { 'o', 'x' } },
+    { 'a)', mode = { 'o', 'x' } },
+    { 'a<', mode = { 'o', 'x' } },
+    { 'a>', mode = { 'o', 'x' } },
+    { 'a[', mode = { 'o', 'x' } },
+    { 'a]', mode = { 'o', 'x' } },
+    { 'a{', mode = { 'o', 'x' } },
+    { 'a}', mode = { 'o', 'x' } },
+    { 'i(', mode = { 'o', 'x' } },
+    { 'i)', mode = { 'o', 'x' } },
+    { 'i<', mode = { 'o', 'x' } },
+    { 'i>', mode = { 'o', 'x' } },
+    { 'i[', mode = { 'o', 'x' } },
+    { 'i]', mode = { 'o', 'x' } },
+    { 'i{', mode = { 'o', 'x' } },
+    { 'i}', mode = { 'o', 'x' } },
+  },
+}
