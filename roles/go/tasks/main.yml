@@ -1,0 +1,27 @@
+---
+- name: install packages and binaries
+  include_role:
+    name: pkg
+  vars:
+    packages_archlinux:
+      - go
+    packages_macos:
+      - go
+    binaries:
+      - url: https://go.dev/dl/go1.26.2.linux-amd64.tar.gz
+        check: go
+        install: >-
+          rm -rf ~/.local/go
+          && tar -C ~/.local -xzf ~/.cache/ansible/go1.26.2.linux-amd64.tar.gz
+
+- name: configure go environment
+  lineinfile:
+    path: "~/.{{ item[0] }}rc"
+    line: "{{ item[1].line }}"
+    insertafter: "{{ item[1].after }}"
+    create: true
+  loop: >-
+    {{ ['zsh', 'bash'] | product([
+      { 'line': 'export PATH=$HOME/.local/go/bin:$HOME/go/bin:$PATH', 'after': '^export PATH' },
+      { 'line': 'export GOPROXY=https://goproxy.cn', 'after': '^export (?!PATH)' }
+    ]) | list }}

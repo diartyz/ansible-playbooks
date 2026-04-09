@@ -4,8 +4,11 @@
   systemd:
     name: shadowsocks@client
     state: restarted
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: restart shadowsocks (MacOSX)
   command: brew services restart shadowsocks-libev
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'

@@ -2,28 +2,35 @@
 - name: homebrew tap
   homebrew_tap:
     name: v2ray/v2ray
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online
 
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [v2ray]
-    packages_macos: [v2ray-core]
+    packages_archlinux:
+      - v2ray
+    packages_macos:
+      - v2ray-core
 
 - name: copy v2ray conf
   become: true
   copy:
     src: config.json
     dest: /etc/v2ray/config.json
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
   notify: restart v2ray
 
 - name: copy v2ray conf
   copy:
     src: config.json
     dest: /opt/homebrew/etc/v2ray/config.json
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
   notify: restart v2ray
 
 - name: enable v2ray
@@ -32,9 +39,12 @@
     name: v2ray
     enabled: true
     state: started
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: enable v2ray (MacOSX)
   command: brew services start v2ray-core
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
   changed_when: false

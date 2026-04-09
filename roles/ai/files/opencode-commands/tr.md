@@ -1,0 +1,4 @@
+---
+description: Translate
+---
+translate "$ARGUMENTS"

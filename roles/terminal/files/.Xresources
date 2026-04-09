@@ -13,38 +13,38 @@ urxvt.url-launcher: /usr/bin/xdg-open
 urxvt.matcher.button: 1
 
 ! special
-*.background:     #1c1c1c
-*.foreground:     #c5c8c6
-*.highlightColor: #373b41
+*.background:     #fdf6e3
+*.foreground:     #586e75
+*.highlightColor: #eee8d5
 
 ! black
-*.color0:         #1d1f21
-*.color8:         #969896
+*.color0:         #073642
+*.color8:         #002b36
 
 ! red
-*.color1:         #cc6666
-*.color9:         #cc6666
+*.color1:         #dc322f
+*.color9:         #cb4b16
 
 ! green
-*.color2:         #b5bd68
-*.color10:        #b5bd68
+*.color2:         #859900
+*.color10:        #586e75
 
 ! yellow
-*.color3:         #de935f
-*.color11:        #de935f
+*.color3:         #b58900
+*.color11:        #657b83
 
 ! blue
-*.color4:         #81a2be
-*.color12:        #81a2be
+*.color4:         #268bd2
+*.color12:        #839496
 
 ! magenta
-*.color5:         #b294bb
-*.color13:        #b294bb
+*.color5:         #d33682
+*.color13:        #6c71c4
 
 ! cyan
-*.color6:         #8abeb7
-*.color14:        #8abeb7
+*.color6:         #2aa198
+*.color14:        #93a1a1
 
 ! white
-*.color7:         #c5c8c6
-*.color15:        #ffffff
+*.color7:         #eee8d5
+*.color15:        #fdf6e3

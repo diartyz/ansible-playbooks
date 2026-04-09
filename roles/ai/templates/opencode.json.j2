@@ -3,29 +3,72 @@
   "default_agent": "plan",
   "formatter": false,
   "permission": "allow",
-  "mcp": {
-    "gitcode": {
-      "type": "local",
-      "command": ["gitcode-mcp"],
-      "environment": {
-        "GITCODE_TOKEN": "{{ gitcode_token }}",
-        "GITCODE_API_URL": "https://api.gitcode.com/api/v5"
+  "plugin": [],
+  "provider": {
+    "ali": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Alibaba",
+      "options": {
+        "baseURL": "https://dashscope.aliyuncs.com/apps/anthropic/v1",
+        "apiKey": "{{ alibaba_api_key }}"
+      },
+      "models": {
+        "glm-5.2": {
+          "name": "GLM-5.2",
+          "limit": { "context": 1000000, "output": 131072 },
+          "options": {
+            "thinking": { "type": "enabled", "budgetTokens": 32000 }
+          }
+        }
       }
     }
   },
-  "provider": {
-    "myprovider": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "volcengine",
-      "options": {
-        "baseURL": "https://ark.cn-beijing.volces.com/api/v3",
-        "apiKey": "{{ volcengine_api_key }}"
-      },
-      "models": {
-        "ep-20260210181205-5qxjt": {
-          "name": "GLM-4.7-ep-20260210181205-5qxjt"
-        }
+  "mcp": {
+    "context7": {
+      "enabled": false,
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@upstash/context7-mcp@latest",
+        "--api-key",
+        "{{ context7_api_key }}"
+      ]
+    },
+    "exa": {
+      "enabled": false,
+      "type": "local",
+      "command": ["npx", "-y", "exa-mcp-server@latest"],
+      "environment": {
+        "EXA_API_KEY": "{{ exa_api_key }}"
       }
+    },
+    "gitcode": {
+      "enabled": false,
+      "type": "local",
+      "command": ["gitcode-mcp"],
+      "environment": {
+        "GITCODE_TOKEN": "{{ gitcode_token }}"
+      }
+    },
+    "minimax": {
+      "enabled": false,
+      "type": "local",
+      "command": ["uvx", "minimax-coding-plan-mcp", "-y"],
+      "environment": {
+        "MINIMAX_API_KEY": "{{ minimax_api_key }}",
+        "MINIMAX_API_HOST": "https://api.minimaxi.com"
+      }
+    },
+    "playwright": {
+      "enabled": false,
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest"]
+    },
+    "tavily": {
+      "enabled": false,
+      "type": "remote",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={{ tavily_api_key }}"
     }
   }
 }

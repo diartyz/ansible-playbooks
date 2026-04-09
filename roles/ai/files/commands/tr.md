@@ -1,0 +1,3 @@
+Translate
+
+translate "$ARGUMENTS"
