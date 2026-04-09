@@ -1,0 +1,39 @@
+---
+- name: add pacman config
+  become: true
+  blockinfile:
+    dest: /etc/pacman.conf
+    block: |
+      [archlinuxcn]
+      SigLevel = Optional TrustAll
+      Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+  register: pacmanConf
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
+
+- name: pacman -Sy
+  become: true
+  pacman:
+    update_cache: true
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+    - pacmanConf.changed
+  tags:
+    - online
+    - sudo
+
+- name: add homebrew mirror config to shell rc
+  lineinfile:
+    path: "~/.{{ item.0 }}rc"
+    line: "{{ item.1 }}"
+    insertafter: '^export (?!PATH)'
+    create: true
+  loop: "{{ ['zsh', 'bash'] | product([
+    'export HOMEBREW_API_DOMAIN=\"https://mirrors.ustc.edu.cn/homebrew-bottles/api\"',
+    'export HOMEBREW_BOTTLE_DOMAIN=\"https://mirrors.ustc.edu.cn/homebrew-bottles\"',
+    'export HOMEBREW_BREW_GIT_REMOTE=\"https://mirrors.ustc.edu.cn/brew.git\"',
+    'export HOMEBREW_CORE_GIT_REMOTE=\"https://mirrors.ustc.edu.cn/homebrew-core.git\"',
+  ]) | list }}"
+  when: ansible_facts.distribution == 'MacOSX'

@@ -1,21 +1,33 @@
 ---
 - name: install proxychains-ng
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [proxychains-ng]
-    packages_macos: [proxychains-ng]
+    packages_archlinux:
+      - proxychains-ng
+    packages_macos:
+      - proxychains-ng
+
+- name: add proxychains4 alias to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'alias p4="proxychains4"'
+    insertafter: '^alias'
+    create: true
+  loop:
+    - zsh
+    - bash
 
 - name: set sysconfdir
   set_fact:
-    proxychains_sysconfdir: "{{ '/opt/homebrew/etc' if ansible_distribution == 'MacOSX' else '/etc' }}"
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+    proxychains_sysconfdir: "{{ '/opt/homebrew/etc' if ansible_facts.distribution == 'MacOSX' else '/etc' }}"
+  when: ansible_facts.distribution == 'Archlinux' or ansible_facts.distribution == 'MacOSX'
 
 - name: check that the proxychains conf exists
   stat:
     path: '{{ proxychains_sysconfdir }}/proxychains.conf'
   register: proxychains_stat_result
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'Archlinux' or ansible_facts.distribution == 'MacOSX'
 
 - name: update proxychains conf
   become: true
@@ -26,3 +38,5 @@
   when:
     - proxychains_stat_result.stat is defined
     - proxychains_stat_result.stat.exists
+  tags:
+    - sudo

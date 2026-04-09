@@ -4,4 +4,7 @@
   copy:
     content: '10'
     dest: /sys/class/backlight/acpi_video0/brightness
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo

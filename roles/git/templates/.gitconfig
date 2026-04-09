@@ -1,24 +1,60 @@
 [user]
-	name = diartyz
 	email = diartyz@gmail.com
+	name = diartyz
 [alias]
 	cm = commit -s
-[core]
-	ignorecase = false
-	pager = diff-so-fancy | less -FRX
-	quotepath = false
-[diff-so-fancy]
-	markEmptyLines = false
 [color]
 	ui = auto
+[core]
+	ignorecase = false
+	pager = delta
+	quotepath = false
 [credential]
 	helper = store
+[delta]
+	file-added-label = [+]
+	file-copied-label = [*]
+	file-decoration-style = gray overline
+	file-modified-label = [~]
+	file-removed-label = [-]
+	file-renamed-label = [>]
+	file-style = gray bold
+	hunk-header-decoration-style = none
+	hunk-header-file-style = gray
+	hunk-header-line-number-style = gray
+	hunk-header-style = file line-number syntax
+	line-numbers-left-format = "{nm:>1}│"
+	line-numbers-left-style = gray
+	line-numbers-minus-style = red
+	line-numbers-plus-style = green
+	line-numbers-right-format = "{np:>1}│"
+	line-numbers-right-style = gray
+	line-numbers-zero-style = gray
+	minus-empty-line-marker-style = syntax maroon
+	navigate = true
+	paging = always
+	plus-empty-line-marker-style = syntax seagreen
+	side-by-side = true
+	syntax-theme = Solarized (light)
+	true-color = always
+	zero-style = syntax
 [filter "lfs"]
 	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+	smudge = git-lfs smudge -- %f
+[include]
+	path = .gitconfig.local
+[includeIf "gitdir:~/Coding/"]
+	path = .gitconfig-me
+[includeIf "gitdir:~/Work/"]
+	path = .gitconfig-work
+[includeIf "gitdir:~/Zenvy/"]
+	path = .gitconfig-zenvy
+[interactive]
+	diffFilter = delta --color-only
 [merge]
+	conflictStyle = {{ conflict_style }}
 	tool = meld
 [mergetool]
 	keepBackup = false
@@ -32,9 +68,3 @@
 	recurseSubmodules = on-demand
 [submodule]
 	recurse = true
-[includeIf "gitdir:~/Coding/"]
-	path = .gitconfig-me
-[includeIf "gitdir:~/Work/"]
-	path = .gitconfig-work
-[includeIf "gitdir:~/Zenvy/"]
-	path = .gitconfig-zenvy

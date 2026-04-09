@@ -1,4 +1,4 @@
 ---
 - name: restart nginx
   command: brew services restart nginx
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'

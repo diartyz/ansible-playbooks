@@ -8,37 +8,37 @@ return {
         if far.has_instance 'far' then
           far.get_instance('far'):open()
         else
-          far.toggle_instance { instanceName = 'far' }
+          far.open()
         end
       end,
-      mode = { 'n', 'x' },
-      desc = 'focus far',
+      mode = 'n',
+      desc = 'open far',
     },
     {
-      '<leader>f',
-      function() require('grug-far').toggle_instance { instanceName = 'far' } end,
-      mode = { 'n', 'x' },
-      desc = 'toggle far',
+      '<c-s>',
+      function() require('grug-far').with_visual_selection() end,
+      mode = 'x',
+      desc = 'open far with visual selection',
     },
   },
   config = function()
     require('grug-far').setup {
       folding = { enabled = false },
+      instanceName = 'far',
       openTargetWindow = { preferredLocation = 'prev' },
       prefills = vim.tbl_extend('force', { filesFilter = '!.git/', flags = '--hidden -i' }, vim.g.far_prefills or {}),
       staticTitle = 'far',
-      transient = true,
       keymaps = {
         abort = false,
         applyNext = false,
         applyPrev = false,
         close = { n = 'q' },
-        gotoLocation = { n = '<enter>' },
+        gotoLocation = { n = '<c-s>' },
         help = { n = '?' },
         historyAdd = false,
         historyOpen = { n = '<leader>u' },
         nextInput = '<tab>',
-        openLocation = { n = '<c-s>' },
+        openLocation = false,
         openNextLocation = false,
         openPrevLocation = false,
         pickHistoryEntry = { n = '<enter>' },
@@ -74,6 +74,10 @@ return {
           vim.api.nvim_command 'stopinsert'
           require('grug-far').get_instance('far'):goto_prev_match()
         end, { buffer = true, desc = 'far go to prev match' })
+        vim.keymap.set('n', '<enter>', function()
+          require('grug-far').get_instance('far'):open_location()
+          require('grug-far').get_instance('far'):hide()
+        end, { buffer = true, desc = 'far open' })
       end,
     })
   end,

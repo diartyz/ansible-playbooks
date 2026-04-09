@@ -1,24 +1,29 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [shadowsocks]
-    packages_macos: [shadowsocks-libev]
+    packages_archlinux:
+      - shadowsocks
+    packages_macos:
+      - shadowsocks-libev
 
 - name: copy shadowsocks conf (Archlinux)
   become: true
   copy:
     src: client.json
     dest: /etc/shadowsocks/client.json
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
   notify: restart shadowsocks
 
 - name: copy shadowsocks conf (MacOSX)
   copy:
     src: client.json
     dest: /opt/homebrew/etc/shadowsocks-libev.json
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
   notify: restart shadowsocks
 
 - name: enable shadowsocks
@@ -27,9 +32,12 @@
     name: shadowsocks@client
     enabled: true
     state: started
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: enable shadowsocks (MacOSX)
   command: brew services start shadowsocks-libev
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
   changed_when: false

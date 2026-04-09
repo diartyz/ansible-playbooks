@@ -1,29 +1,170 @@
 ---
+- name: check if claude is installed
+  command: which claude
+  register: claude_check
+  failed_when: false
+  changed_when: false
+
+- name: install claude-code via npm
+  npm:
+    name: '@anthropic-ai/claude-code@stable'
+    global: true
+  when:
+    - claude_check.rc != 0
+  tags:
+    - online
+
+- name: check if opencode is installed
+  command: which opencode
+  register: opencode_check
+  failed_when: false
+  changed_when: false
+
+- name: install opencode via npm
+  npm:
+    name: opencode-ai
+    global: true
+  when:
+    - opencode_check.rc != 0
+  tags:
+    - online
+
 - name: create ai config directories
   file:
     path: '{{ item }}'
     state: directory
   loop:
+    - ~/.agents/skills
     - ~/.claude
+    - ~/.claude/commands
     - ~/.config/claude-code
     - ~/.config/opencode
+    - ~/.config/opencode/commands
+    - ~/.config/opencode/themes
+    - ~/.local/share/opencode
 
-- name: template claude settings
-  template:
-    src: claude-settings.json.j2
-    dest: ~/.claude/settings.json
-
-- name: template claude-code settings
-  template:
-    src: claude-code-settings.json.j2
-    dest: ~/.config/claude-code/settings.json
-
-- name: template opencode config
-  template:
-    src: opencode.json.j2
-    dest: ~/.config/opencode/opencode.json
-
-- name: copy opencode tui config
+- name: copy config files
   copy:
-    src: tui.json
-    dest: ~/.config/opencode/tui.json
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  loop:
+    - src: AGENTS.md
+      dest: ~/.config/opencode/AGENTS.md
+    - src: commands/tr.md
+      dest: ~/.claude/commands/tr.md
+    - src: opencode-commands/tr.md
+      dest: ~/.config/opencode/commands/tr.md
+    - src: statusline-command.sh
+      dest: ~/.claude/statusline-command.sh
+    - src: themes/everforest-hard.json
+      dest: ~/.config/opencode/themes/everforest-hard.json
+    - src: themes/solarized-light.json
+      dest: ~/.config/opencode/themes/solarized-light.json
+    - src: themes/tomorrow.json
+      dest: ~/.config/opencode/themes/tomorrow.json
+    - src: tui.json
+      dest: ~/.config/opencode/tui.json
+
+- name: template config files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  loop:
+    - src: .mcp.json.j2
+      dest: ~/.mcp.json
+    - src: auth.json.j2
+      dest: ~/.local/share/opencode/auth.json
+    - src: claude-settings.json
+      dest: ~/.claude/settings.json
+    - src: opencode.json.j2
+      dest: ~/.config/opencode/opencode.json
+
+- name: add llm provider functions to shell rc
+  blockinfile:
+    path: '{{ item }}'
+    marker: "# {mark} ANSIBLE MANAGED LLM PROVIDERS"
+    block: |
+      ali() {
+        export ANTHROPIC_AUTH_TOKEN="{{ alibaba_api_key }}"
+        export ANTHROPIC_BASE_URL="https://dashscope.aliyuncs.com/apps/anthropic"
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="glm-5.2[1m]"
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="glm-5.2[1m]"
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="glm-5.2[1m]"
+        export ANTHROPIC_MODEL="glm-5.2[1m]"
+        export CLAUDE_CODE_SUBAGENT_MODEL="glm-5.2[1m]"
+        claude "$@"
+      }
+
+      deepseek() {
+        export ANTHROPIC_AUTH_TOKEN="{{ deepseek_api_key }}"
+        export ANTHROPIC_BASE_URL="https://api.deepseek.com/anthropic"
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="deepseek-v4-flash"
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="deepseek-v4-pro[1m]"
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="deepseek-v4-pro[1m]"
+        export ANTHROPIC_MODEL="deepseek-v4-pro[1m]"
+        export CLAUDE_CODE_SUBAGENT_MODEL="deepseek-v4-flash"
+        claude "$@"
+      }
+
+      glm() {
+        export ANTHROPIC_AUTH_TOKEN="{{ zhipuai_api_key }}"
+        export ANTHROPIC_BASE_URL="https://open.bigmodel.cn/api/anthropic"
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="glm-5.2[1m]"
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="glm-5.2[1m]"
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="glm-5.2[1m]"
+        export ANTHROPIC_MODEL="glm-5.2[1m]"
+        export CLAUDE_CODE_SUBAGENT_MODEL="glm-5.2[1m]"
+        claude "$@"
+      }
+
+      kimi() {
+        export ANTHROPIC_AUTH_TOKEN="{{ kimi_api_key }}"
+        export ANTHROPIC_BASE_URL="https://api.kimi.com/coding/"
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="kimi-for-coding"
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="kimi-for-coding"
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="kimi-for-coding"
+        export ANTHROPIC_MODEL="kimi-for-coding"
+        export CLAUDE_CODE_SUBAGENT_MODEL="kimi-for-coding"
+        claude "$@"
+      }
+
+      minimax() {
+        export ANTHROPIC_AUTH_TOKEN="{{ minimax_api_key }}"
+        export ANTHROPIC_BASE_URL="https://api.minimaxi.com/anthropic"
+        export ANTHROPIC_DEFAULT_HAIKU_MODEL="MiniMax-M3[1m]"
+        export ANTHROPIC_DEFAULT_OPUS_MODEL="MiniMax-M3[1m]"
+        export ANTHROPIC_DEFAULT_SONNET_MODEL="MiniMax-M3[1m]"
+        export ANTHROPIC_MODEL="MiniMax-M3[1m]"
+        export CLAUDE_CODE_SUBAGENT_MODEL="MiniMax-M3[1m]"
+        claude "$@"
+      }
+    create: true
+  loop:
+    - ~/.zshrc
+    - ~/.bashrc
+
+- name: install skills
+  command: npx skills@latest add {{ item.repo }} -s {{ item.skill }} -g -y
+  args:
+    creates: '~/.agents/skills/{{ item.skill }}/SKILL.md'
+  loop:
+    - repo: mattpocock/skills
+      skill: codebase-design
+    - repo: mattpocock/skills
+      skill: diagnosing-bugs
+    - repo: mattpocock/skills
+      skill: domain-modeling
+    - repo: mattpocock/skills
+      skill: grill-me
+    - repo: mattpocock/skills
+      skill: grill-with-docs
+    - repo: mattpocock/skills
+      skill: grilling
+    - repo: mattpocock/skills
+      skill: improve-codebase-architecture
+    - repo: vercel-labs/agent-skills
+      skill: vercel-react-best-practices
+    - repo: vercel-labs/skills
+      skill: find-skills
+  tags:
+    - online

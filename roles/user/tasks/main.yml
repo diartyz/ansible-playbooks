@@ -5,7 +5,10 @@
     dest: /etc/sudoers
     line: '%wheel ALL=(ALL) ALL'
     regexp: '^%wheel'
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: add groups
   become: true
@@ -14,7 +17,10 @@
   loop:
     - autologin
     - docker
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: add user
   become: true
@@ -23,4 +29,7 @@
     password: '{{ password | password_hash("sha512") }}'
     groups: wheel,autologin,docker
     update_password: on_create
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo

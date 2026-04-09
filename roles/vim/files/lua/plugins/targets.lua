@@ -1,6 +1,11 @@
 return {
   'wellle/targets.vim',
-  event = 'VeryLazy',
+  keys = {
+    { 'aa', mode = { 'o', 'x' } },
+    { 'ab', mode = { 'o', 'x' } },
+    { 'ia', mode = { 'o', 'x' } },
+    { 'ib', mode = { 'o', 'x' } },
+  },
   config = function()
     vim.g.targets_seekRanges = 'cc cr cb cB lc ac Ac lr lb ar ab lB Ar aB Ab AB'
     vim.api.nvim_create_autocmd('User', {
