@@ -4,19 +4,41 @@
   copy:
     src: 40-max-user-watches.conf
     dest: /etc/sysctl.d/40-max-user-watches.conf
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: create logind.conf.d directory
   become: true
   file:
     path: /etc/systemd/logind.conf.d
     state: directory
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: copy logind.conf
   become: true
   copy:
     src: logind.conf
     dest: /etc/systemd/logind.conf.d/logind.conf
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
   notify: restart systemd-logind
+
+- name: get dark theme
+  command: gsettings get org.gnome.desktop.interface color-scheme
+  register: color_scheme
+  changed_when: false
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+
+- name: set dark theme
+  command: gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+    - color_scheme.stdout != "'prefer-dark'"

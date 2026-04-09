@@ -1,0 +1,39 @@
+---
+- name: install packages
+  include_role:
+    name: pkg
+  vars:
+    packages:
+      - dfc
+      - htop
+      - jq
+      - ncdu
+      - tree
+    packages_archlinux:
+      - firefox
+      - pulsemixer
+      - yay
+    packages_cask:
+      - firefox
+      - macs-fan-control
+      - omnidisksweeper
+      - prefs-editor
+      - visual-studio-code
+    packages_macos:
+      - mas
+    binaries:
+      - url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+        check: jq
+        install: >-
+          chmod +x ~/.cache/ansible/jq-linux-amd64
+          && install ~/.cache/ansible/jq-linux-amd64 ~/.local/bin/jq
+
+- name: install Apps from Mac App Store
+  community.general.mas:
+    id:
+      - 993841014 # CopyLess 2
+    state: present
+  when:
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online

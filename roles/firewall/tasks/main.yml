@@ -5,7 +5,10 @@
     src: public.xml
     dest: /etc/firewalld/zones/public.xml
   register: firewall_conf
-  when: ansible_distribution == 'CentOS'
+  when:
+    - ansible_facts.distribution == 'CentOS'
+  tags:
+    - sudo
 
 - name: reload firewalld
   become: true
@@ -14,5 +17,7 @@
     enabled: true
     state: reloaded
   when:
-    - ansible_distribution == 'CentOS'
+    - ansible_facts.distribution == 'CentOS'
     - firewall_conf.changed
+  tags:
+    - sudo

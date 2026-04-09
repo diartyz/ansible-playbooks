@@ -5,8 +5,10 @@
     name: shadowsocks-libev
     update_cache: true
   when:
-    - offline is not defined
-    - ansible_distribution == 'Debian'
+    - ansible_facts.distribution == 'Debian'
+  tags:
+    - online
+    - sudo
 
 - name: copy shadowsocks conf
   become: true
@@ -14,18 +16,28 @@
     src: server.json
     dest: /etc/shadowsocks-libev/config.json
   register: shadowsocks_conf
-  when: ansible_distribution == 'Debian'
+  when:
+    - ansible_facts.distribution == 'Debian'
+  tags:
+    - sudo
 
 - name: enable shadowsocks
   become: true
   systemd:
     name: shadowsocks-libev.service
     enabled: true
-  when: ansible_distribution == 'Debian'
+  when:
+    - ansible_facts.distribution == 'Debian'
+  tags:
+    - sudo
 
 - name: reload shadowsocks
   become: true
   systemd:
     name: shadowsocks-libev.service
     state: restarted
-  when: ansible_distribution == 'Debian' and shadowsocks_conf.changed
+  when:
+    - ansible_facts.distribution == 'Debian'
+    - shadowsocks_conf.changed
+  tags:
+    - sudo

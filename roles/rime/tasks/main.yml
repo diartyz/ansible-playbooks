@@ -5,32 +5,36 @@
     name: ibus-rime
   register: rime
   when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux'
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - online
+    - sudo
 
 - name: set confdir
   set_fact:
-    confdir: "{{ '~/Library/Rime' if ansible_distribution == 'MacOSX' else '~/.config/ibus/rime' }}"
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+    confdir: "{{ '~/Library/Rime' if ansible_facts.distribution == 'MacOSX' else '~/.config/ibus/rime' }}"
+  when: ansible_facts.distribution == 'Archlinux' or ansible_facts.distribution == 'MacOSX'
 
 - name: create conf folder
   file:
     path: '{{ confdir }}'
     state: directory
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'Archlinux' or ansible_facts.distribution == 'MacOSX'
 
 - name: clone rime-ice repo
   git:
     repo: '{{ item.repo }}'
     dest: '{{ item.dest }}'
     depth: 1
-    update: no
+    update: false
   loop:
-    - { repo: 'https://github.com/rime/plum', dest: '{{ confdir }}/plum' }
+    - repo: https://github.com/rime/plum
+      dest: '{{ confdir }}/plum'
   register: rime_clone
   when:
-    - offline is not defined
-    - ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+    - ansible_facts.distribution == 'Archlinux' or ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online
 
 - name: execute rime-install script
   shell: bash rime-install iDvel/rime-ice:others/recipes/full
@@ -38,15 +42,19 @@
     executable: /bin/bash
     chdir: '{{ confdir }}/plum'
   when:
-    - offline is not defined
     - rime_clone.changed
+  tags:
+    - online
 
 - name: copy conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   loop:
-    - { src: default.custom.yaml, dest: '{{ confdir }}/default.custom.yaml' }
-    - { src: luna_pinyin_simp.custom.yaml, dest: '{{ confdir }}/luna_pinyin_simp.custom.yaml' }
-    - { src: rime_ice.custom.yaml, dest: '{{ confdir }}/rime_ice.custom.yaml' }
-  when: ansible_distribution == 'Archlinux' or ansible_distribution == 'MacOSX'
+    - src: default.custom.yaml
+      dest: '{{ confdir }}/default.custom.yaml'
+    - src: luna_pinyin_simp.custom.yaml
+      dest: '{{ confdir }}/luna_pinyin_simp.custom.yaml'
+    - src: rime_ice.custom.yaml
+      dest: '{{ confdir }}/rime_ice.custom.yaml'
+  when: ansible_facts.distribution == 'Archlinux' or ansible_facts.distribution == 'MacOSX'

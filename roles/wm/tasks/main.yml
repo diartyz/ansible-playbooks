@@ -1,30 +1,31 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_archlinux: [i3-wm, i3lock, i3status, dmenu, xss-lock]
+    packages_archlinux:
+      - i3-wm
+      - i3lock
+      - i3status
+      - dmenu
+      - xss-lock
 
 - name: create i3 conf folder
   file:
     path: ~/.config/i3
     state: directory
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: copy i3 conf
   copy:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
   loop:
-    - { src: config, dest: ~/.config/i3/config }
-    - { src: status.conf, dest: ~/.config/i3/status.conf }
-  when: ansible_distribution == 'Archlinux'
-
-- name: create folder ~/.local/bin
-  file:
-    path: ~/.local/bin
-    state: directory
-  when: ansible_distribution == 'Archlinux'
+    - src: config
+      dest: ~/.config/i3/config
+    - src: status.conf
+      dest: ~/.config/i3/status.conf
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: copy shell scripts
   copy:
@@ -33,28 +34,33 @@
     mode: '0755'
   loop:
     - battery
-  when: ansible_distribution == 'Archlinux'
+  when: ansible_facts.distribution == 'Archlinux'
 
 - name: homebrew tap
   homebrew_tap:
     name: koekeishiya/formulae
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
 
 - name: install packages
   homebrew:
-    name: ['skhd', 'yabai']
+    name:
+      - 'skhd'
+      - 'yabai'
   register: yabai_install
   when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online
 
 - name: install yabai scripts
   become: true
   command: 'yabai --install-sa'
   when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
+    - ansible_facts.distribution == 'MacOSX'
     - yabai_install.changed
+  tags:
+    - online
+    - sudo
 
 - name: copy yabai sudoers
   become: true
@@ -63,7 +69,10 @@
     dest: /private/etc/sudoers.d/yabai
     mode: '0440'
   register: yabai_sudoers_conf
-  when: ansible_distribution == 'MacOSX'
+  when:
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - sudo
 
 - name: copy yabai conf
   copy:
@@ -71,13 +80,15 @@
     dest: '{{ item.dest }}'
     mode: '0755'
   loop:
-    - { src: .yabairc, dest: ~/.yabairc }
-    - { src: .skhdrc, dest: ~/.skhdrc }
+    - src: .yabairc
+      dest: ~/.yabairc
+    - src: .skhdrc
+      dest: ~/.skhdrc
   register: yabai_service_conf
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
 
 - name: enable yabai & skhd
   command: 'yabai --start-service && skhd --start-service'
   when:
-    - ansible_distribution == 'MacOSX'
+    - ansible_facts.distribution == 'MacOSX'
     - yabai_sudoers_conf.changed or yabai_service_conf.changed

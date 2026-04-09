@@ -1,0 +1,71 @@
+---
+- name: clone fzf
+  git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: ~/.fzf
+    depth: 1
+    update: false
+  tags:
+    - online
+
+- name: install fzf
+  shell: ~/.fzf/install --all
+  args:
+    creates: ~/.fzf/bin/fzf
+  tags:
+    - online
+
+- name: add fzf sourcing to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: "[ -f ~/.fzf.{{ item }} ] && source ~/.fzf.{{ item }}"
+  loop:
+    - bash
+    - zsh
+
+- name: add fzf functions to shell rc
+  blockinfile:
+    path: "~/.{{ item }}rc"
+    marker: "# {mark} ANSIBLE MANAGED FZF"
+    block: |
+      fkill() {
+        local pid
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+        if [ "x$pid" != "x" ]; then
+          echo $pid | xargs kill -${1:-9}
+        fi
+      }
+
+      v() {
+        local file
+        if which rg >/dev/null; then
+          file="$(rg --hidden --files "$@" | fzf)"
+        elif which fd >/dev/null; then
+          file="$(fd --hidden "" "$@" | fzf)"
+        elif which fdfind >/dev/null; then
+          file="$(fdfind --hidden "" "$@" | fzf)"
+        else
+          echo Please install fd or rg
+        fi
+        if [[ -n $file ]]; then
+          vim $file
+        fi
+      }
+
+      vg() {
+        local file
+        local line
+        if which rg >/dev/null; then
+          read -r file line <<<"$(rg --hidden --line-number --no-heading "$@" | fzf -0 -1 | awk -F: '{print $1, $2}')"
+        elif which ag >/dev/null; then
+          read -r file line <<<"$(ag --hidden --nobreak --noheading "$@" | fzf -0 -1 | awk -F: '{print $1, $2}')"
+        else
+          echo Please install ag or rg
+        fi
+        if [[ -n $file ]]; then
+          vim $file +$line
+        fi
+      }
+  loop:
+    - zsh
+    - bash

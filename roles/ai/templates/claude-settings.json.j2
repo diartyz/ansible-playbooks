@@ -1,20 +1,58 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "{{ claude_auth_token }}",
+    "ANTHROPIC_AUTH_TOKEN": "{{ zhipuai_api_key }}",
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5-turbo",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.1",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5",
     "API_TIMEOUT_MS": "3000000",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "130000",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.1",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.7"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
+  "disabledMcpjsonServers": [
+    "context7",
+    "ddg-search",
+    "exa",
+    "filesystem",
+    "gitcode",
+    "memory",
+    "playwright",
+    "sequential-thinking",
+    "tavily"
+  ],
+  "statusLine": {
+    "type": "command",
+    "command": "bash -c 'cols=$(stty size </dev/tty 2>/dev/null | awk '\\''{print $2}'\\''); export COLUMNS=$(( ${cols:-120} > 4 ? ${cols:-120} - 4 : 1 )); plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/*/claude-hud/*/ 2>/dev/null | sort -V | tail -1); exec node \"${plugin_dir}dist/index.js\"'"
+  },
   "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "clangd-lsp@claude-plugins-official": true,
+    "oh-my-claudecode@omc": false,
+    "claude-hud@claude-hud": true
+  },
+  "extraKnownMarketplaces": {
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    },
+    "omc": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+      }
+    },
+    "claude-hud": {
+      "source": {
+        "source": "github",
+        "repo": "jarrodwatts/claude-hud"
+      }
+    }
   },
   "language": "chinese",
   "skipDangerousModePermissionPrompt": true,

@@ -1,50 +1,101 @@
 ---
 - hosts: localhost
+  environment:
+    PATH: "{{ lookup('env', 'HOME') }}/.local/bin:{{ lookup('env', 'HOME') }}/.local/share/fnm/aliases/lts-latest/bin:{{ lookup('env', 'PATH') }}"
   roles:
-    # system
-    - { role: hostname, tags: ['hostname'] }
-    - { role: timedate, tags: ['timedate'] }
-    - { role: locale, tags: ['locale'] }
-    - { role: mirrorlist, tags: ['mirrorlist'] }
-    - { role: grub, tags: ['grub'] }
-    - { role: system, tags: ['system'] }
-    - { role: user, tags: ['user'] }
-    - { role: keyboard, tags: ['keyboard'] }
-
-    # desktop
-    - { role: i3, tags: ['i3'] }
-    - { role: xinit, tags: ['xinit'] }
-    - { role: terminal, tags: ['terminal'] }
-    - { role: osx, tags: ['osx'] }
-    - { role: rime, tags: ['rime'] }
-
-    # dev
-    - { role: git, tags: ['git'] }
-    - { role: vim, tags: ['vim'] }
-    - { role: zsh, tags: ['zsh'] }
-    - { role: tmux, tags: ['tmux'] }
-    - { role: node, tags: ['node'] }
-    - { role: python, tags: ['python'] }
-    - { role: rust, tags: ['rust'] }
-    - { role: yazi, tags: ['yazi'] }
-    - { role: docker, tags: ['docker'] }
-    - { role: ai, tags: ['ai'] }
+    - role: user
+      tags: ['user']
 
     # network
-    - { role: ssh, tags: ['ssh'] }
-    - { role: proxy, tags: ['proxy', 'clash', 'privoxy', 'proxychains'] }
-    - { role: nginx, tags: ['nginx'] }
-    - { role: mail, tags: ['mail'] }
-    # - { role: shadowsocks, tags: ['shadowsocks'] }
-    # - { role: trojan, tags: ['trojan'] }
-    # - { role: v2ray, tags: ['v2ray'] }
+    - role: ssh
+      tags: ['ssh']
+    - role: proxy
+      tags: ['proxy', 'clash', 'privoxy', 'proxychains']
+    # - role: shadowsocks
+    #   tags: ['shadowsocks']
+    # - role: trojan
+    #   tags: ['trojan']
+    # - role: v2ray
+    #   tags: ['v2ray']
 
-    # apps
-    - { role: app, tags: ['app'] }
-    - { role: bin, tags: ['bin'] }
-    - { role: debug, tags: ['debug'] }
-    - { role: firewall, tags: ['firewall'] }
+    # mirror
+    - role: mirror
+      tags: ['mirror']
+    - role: mirrorlist
+      tags: ['mirrorlist']
+
+    # system
+    - role: hostname
+      tags: ['hostname']
+    - role: timedate
+      tags: ['timedate']
+    - role: locale
+      tags: ['locale']
+    - role: grub
+      tags: ['grub']
+    - role: system
+      tags: ['system']
+    - role: keyboard
+      tags: ['keyboard']
+    - role: firewall
+      tags: ['firewall']
+
+    # desktop
+    - role: wm
+      tags: ['wm']
+    - role: xinit
+      tags: ['xinit']
+    - role: terminal
+      tags: ['terminal']
+    - role: osx
+      tags: ['osx']
+      when: ansible_facts.distribution == 'MacOSX'
+    - role: rime
+      tags: ['rime']
+
+    # dev
+    - role: zsh
+      tags: ['zsh']
+    - role: bash
+      tags: ['never', 'bash']
+    - role: git
+      tags: ['git']
+    - role: vim
+      tags: ['vim']
+    - role: fzf
+      tags: ['fzf']
+    - role: tmux
+      tags: ['tmux']
+    - role: node
+      tags: ['node']
+    - role: python
+      tags: ['python']
+    - role: rust
+      tags: ['rust']
+    - role: go
+      tags: ['go']
+    - role: docker
+      tags: ['docker']
+    - role: ai
+      tags: ['ai']
+    - role: yazi
+      tags: ['yazi']
+    - role: zoxide
+      tags: ['zoxide']
+
+    # misc
+    - role: apps
+      tags: ['apps']
+    - role: bin
+      tags: ['bin']
+    - role: debug
+      tags: ['debug']
+    - role: nginx
+      tags: ['nginx']
+    - role: mail
+      tags: ['mail']
 
 - hosts: ubuntu
   roles:
-    - { role: ssh, tags: ['ssh'] }
+    - role: ssh
+      tags: ['ssh']

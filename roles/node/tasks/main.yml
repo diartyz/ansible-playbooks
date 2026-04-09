@@ -1,24 +1,77 @@
 ---
-- name: clone nvm repo
-  git:
-    repo: '{{ item.repo }}'
-    dest: '{{ item.dest }}'
-    depth: 1
-    update: no
-  loop:
-    - { repo: 'https://github.com/creationix/nvm.git', dest: ~/.nvm }
-  when:
-    - offline is not defined
+- name: install packages and binaries
+  include_role:
+    name: pkg
+  vars:
+    packages_archlinux:
+      - fnm
+    packages_macos:
+      - fnm
+    binaries:
+      - url: https://github.com/Schniz/fnm/releases/latest/download/fnm-linux.zip
+        check: fnm
+        install: >-
+          unzip -o ~/.cache/ansible/fnm-linux.zip -d ~/.local/bin fnm
+          && chmod +x ~/.local/bin/fnm
 
-- name: install node LTS
-  shell: 'source ~/.nvm/nvm.sh && nvm install --lts'
+- name: check if fnm is installed
+  command: which fnm
+  register: fnm_check
+  failed_when: false
+  changed_when: false
+
+- name: install node LTS via fnm
+  shell: fnm install --lts
   args:
-    executable: /bin/bash
-    creates: ~/.nvm/alias/default
-  when:
-    - offline is not defined
+    creates: ~/.local/share/fnm/node-versions
+  when: fnm_check.rc == 0
+  tags:
+    - online
+
+- name: create npm global directory
+  file:
+    path: ~/.npm-global
+    state: directory
+  tags:
+    - online
+
+- name: add npm-global/bin to PATH
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'export PATH=$HOME/.npm-global/bin:$PATH'
+    insertafter: '^export PATH'
+    create: true
+  loop:
+    - zsh
+    - bash
+
+- name: add fnm env to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: 'command -v fnm >/dev/null 2>&1 && eval "$(fnm env --use-on-cd --shell {{ item }})"'
+    insertafter: '^eval'
+    create: true
+  loop:
+    - zsh
+    - bash
+
+- name: configure npm prefix
+  lineinfile:
+    path: ~/.npmrc
+    line: prefix=~/.npm-global
+    regex: ^prefix=
+    create: true
+  tags:
+    - online
 
 - name: copy node config
   copy:
     src: .prettierrc.yml
     dest: ~/.prettierrc.yml
+
+- name: add fnm plugin to zshrc
+  lineinfile:
+    path: ~/.zshrc
+    line: plugins+=(fnm)
+    create: true
+    insertbefore: '# BEGIN ANSIBLE MANAGED OH-MY-ZSH'

@@ -1,4 +1,4 @@
 ---
 - name: restart privoxy
   command: brew services restart privoxy
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'
