@@ -1,25 +1,33 @@
 ---
 - name: install packages
   include_role:
-    name: install-packages
+    name: pkg
   vars:
-    packages_ubuntu: [mutt, msmtp]
+    packages_ubuntu:
+      - mutt
+      - msmtp
 
 - name: install packages (macOS homebrew)
   homebrew:
-    name: [mutt, msmtp]
+    name:
+      - mutt
+      - msmtp
   when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-    - ansible_distribution_major_version | int > 11
+    - ansible_facts.distribution == 'MacOSX'
+    - ansible_facts.distribution_major_version | int > 11
+  tags:
+    - online
 
 - name: install packages (macOS legacy macports)
   macports:
-    name: [mutt, msmtp]
+    name:
+      - mutt
+      - msmtp
   when:
-    - offline is not defined
-    - ansible_distribution == 'MacOSX'
-    - ansible_distribution_major_version | int <= 11
+    - ansible_facts.distribution == 'MacOSX'
+    - ansible_facts.distribution_major_version | int <= 11
+  tags:
+    - online
 
 - name: copy mail config
   copy:

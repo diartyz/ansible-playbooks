@@ -2,3 +2,13 @@
 on   = "?"
 run  = "help"
 desc = "Open help"
+
+[[mgr.prepend_keymap]]
+on   = "d"
+run  = "remove --permanently"
+desc = "Permanently delete"
+
+[[mgr.prepend_keymap]]
+on   = "D"
+run  = "remove"
+desc = "Trash selected files"

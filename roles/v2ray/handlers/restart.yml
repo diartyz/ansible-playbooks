@@ -4,8 +4,11 @@
   systemd:
     name: v2ray
     state: restarted
-  when: ansible_distribution == 'Archlinux'
+  when:
+    - ansible_facts.distribution == 'Archlinux'
+  tags:
+    - sudo
 
 - name: restart v2ray (MacOSX)
   command: brew services restart v2ray-core
-  when: ansible_distribution == 'MacOSX'
+  when: ansible_facts.distribution == 'MacOSX'

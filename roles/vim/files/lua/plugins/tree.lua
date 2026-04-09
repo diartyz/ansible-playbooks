@@ -24,6 +24,9 @@ return {
     diagnostics = {
       enable = true,
     },
+    hijack_directories = {
+      enable = false,
+    },
     filesystem_watchers = {
       enable = false,
     },

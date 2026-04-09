@@ -4,13 +4,12 @@ Plug 'Shougo/defx.nvim' | Plug 'kristijanhusak/defx-git' | Plug 'kristijanhusak/
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'airblade/vim-gitgutter'
 Plug 'ap/vim-buftabline'
-" Plug 'arthurxavierx/vim-caser'
+Plug 'arthurxavierx/vim-caser'
 Plug 'chaoren/vim-wordmotion'
 Plug 'cohama/lexima.vim'
-" Plug 'diartyz/vim-utils'
+Plug 'diartyz/vim-utils'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion', { 'on': '<Plug>(easymotion-overwin-f2)' }
-Plug 'francoiscabrol/ranger.vim'
 Plug 'inkarkat/vim-AdvancedSorters' | Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-ReplaceWithRegister'
 Plug 'junegunn/vim-easy-align'
@@ -25,9 +24,9 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'ojroques/vim-oscyank', { 'branch': 'main' }
-" Plug 'osyo-manga/vim-over'
+Plug 'osyo-manga/vim-over'
 Plug 'sainnhe/everforest'
-" Plug 'sgur/vim-editorconfig'
+Plug 'sgur/vim-editorconfig'
 Plug 'sheerun/vim-polyglot'
 Plug 'svermeulen/vim-subversive' | Plug 'tpope/vim-abolish'
 Plug 'tommcdo/vim-exchange'
@@ -58,7 +57,7 @@ set undodir=/tmp
 set undofile
 " set updatetime=300
 " set wildignore=*/dist/*,*/node_modules/*
-if executable('clip.exe')
+if exists('$WSL_DISTRO_NAME') && executable('clip.exe')
   augroup WSLYank
     autocmd!
     autocmd TextYankPost * if v:event.operator ==# 'y' | call system('clip.exe', @0) | endif
@@ -70,7 +69,7 @@ command! -nargs=0 E :edit $MYVIMRC
 command! -nargs=0 R :update|source $MYVIMRC
 command! -nargs=0 Q :qa!
 command! -nargs=0 W :noautocmd wall
-command! -nargs=0 OpenInVSCode exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
+command! -nargs=0 Code exe "silent !code '" . getcwd() . "' --goto '" . expand("%") . ":" . line(".") . ":" . col(".") . "'" | redraw!
 let mapleader = ' '
 inoremap <c-a> <c-o>I
 inoremap <c-e> <c-o>A
@@ -84,7 +83,7 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>s :update<cr>
 nnoremap <leader>x :bd<cr>
 nnoremap cp :let @+=expand("%:p")<cr>:OSCYankRegister +<cr>
-nnoremap cy :let @+=expand("%")<cr>:OSCYankRegister +<cr>
+nnoremap cy :let @+=expand("%").":".line(".")<cr>:OSCYankRegister +<cr>
 noremap $ g_
 noremap g_ $
 noremap 0 ^
@@ -110,7 +109,7 @@ set shiftwidth=0
 set tabstop=2
 
 " ui
-set background=dark
+set background=light
 set colorcolumn=80,120
 set cursorline
 set number
@@ -146,8 +145,8 @@ nmap <leader>8 <Plug>BufTabLine.Go(8)
 nmap <leader>9 <Plug>BufTabLine.Go(9)
 nmap <leader>0 <Plug>BufTabLine.Go(10)
 
-" " caser
-" let g:caser_prefix = '<leader>c'
+" caser
+let g:caser_prefix = '<leader>c'
 
 " ctrlsf
 let g:ctrlsf_auto_focus = {
@@ -235,7 +234,7 @@ let g:everforest_diagnostic_line_highlight = 1
 let g:everforest_disable_italic_comment = 1
 let g:everforest_ui_contrast = 1
 if !has("gui_running")
-  let g:everforest_transparent_background = 1
+  let g:everforest_transparent_background = 0
 endif
 
 " fugitive
@@ -279,10 +278,6 @@ if (getenv('SSH_TTY') != v:null && !has('clipboard_working'))
     autocmd TextYankPost * call s:VimOSCYankPostCallback(v:event)
   augroup END
 endif
-
-" ranger
-let g:ranger_map_keys = 0
-nnoremap + :Ranger<cr>
 
 " subversive
 nmap gs <plug>(SubversiveSubvertWordRange)

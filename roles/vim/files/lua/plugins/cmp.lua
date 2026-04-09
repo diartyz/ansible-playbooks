@@ -26,7 +26,7 @@ return {
     },
     {
       'tzachar/cmp-tabnine',
-      build = vim.fn.has 'win64' and 'powershell ./install.ps1' or './install.sh',
+      build = './install.sh',
       enabled = not vim.g.disable_ai,
     },
   },

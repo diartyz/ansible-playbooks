@@ -1,0 +1,49 @@
+---
+- name: install packages
+  include_role:
+    name: pkg
+  vars:
+    packages:
+      - dfc
+      - htop
+      - jq
+      - ncdu
+      - tree
+    packages_archlinux:
+      - firefox
+      - pulsemixer
+      - yay
+    packages_cask:
+      - firefox
+      - macs-fan-control
+      - omnidisksweeper
+      - prefs-editor
+      - visual-studio-code
+    packages_macos:
+      - mas
+    binaries:
+      - url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+        check: jq
+        install: >-
+          chmod +x ~/.cache/ansible/jq-linux-amd64
+          && install ~/.cache/ansible/jq-linux-amd64 ~/.local/bin/jq
+      - url: https://github.com/tickstep/aliyunpan/releases/download/v0.4.0/aliyunpan-v0.4.0-linux-amd64.zip
+        check: aliyunpan
+        install: >-
+          unzip -o ~/.cache/ansible/aliyunpan-v0.4.0-linux-amd64.zip -d /tmp/aliyunpan
+          && install /tmp/aliyunpan/aliyunpan-v0.4.0-linux-amd64/aliyunpan ~/.local/bin/aliyunpan
+      - url: https://github.com/benbjohnson/litestream/releases/download/v0.5.12/litestream-0.5.12-linux-x86_64.tar.gz
+        check: litestream
+        install: >-
+          tar -xzf ~/.cache/ansible/litestream-0.5.12-linux-x86_64.tar.gz -C /tmp
+          && install /tmp/litestream ~/.local/bin/litestream
+
+- name: install Apps from Mac App Store
+  community.general.mas:
+    id:
+      - 993841014 # CopyLess 2
+    state: present
+  when:
+    - ansible_facts.distribution == 'MacOSX'
+  tags:
+    - online

@@ -5,7 +5,7 @@ return {
   config = function()
     local vgit = require 'vgit'
     local next_hunk_repeat, prev_hunk_repeat =
-      require('core/utils').make_repeatable_move_pair(vgit.hunk_down, vgit.hunk_up)
+      require('core.utils').make_repeatable_pair(vgit.hunk_down, vgit.hunk_up)
 
     vgit.setup {
       keymaps = {

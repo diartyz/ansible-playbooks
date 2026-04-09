@@ -1,0 +1,73 @@
+{
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest", "--api-key", "{{ context7_api_key }}"],
+      "env": {}
+    },
+    "exa": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "exa-mcp-server@latest"],
+      "env": {
+        "EXA_API_KEY": "{{ exa_api_key }}"
+      }
+    },
+    "gitcode": {
+      "command": "gitcode-mcp",
+      "env": {
+        "GITCODE_TOKEN": "{{ gitcode_token }}"
+      }
+    },
+    "minimax": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["minimax-coding-plan-mcp", "-y"],
+      "env": {
+        "MINIMAX_API_KEY": "{{ minimax_api_key }}",
+        "MINIMAX_API_HOST": "https://api.minimaxi.com"
+      }
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "env": {}
+    },
+    "tavily": {
+      "type": "http",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={{ tavily_api_key }}"
+    },
+    "web-reader": {
+      "type": "http",
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ zhipuai_api_key }}"
+      }
+    },
+    "web-search-prime": {
+      "type": "http",
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ zhipuai_api_key }}"
+      }
+    },
+    "zai-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@z_ai/mcp-server"],
+      "env": {
+        "Z_AI_API_KEY": "{{ zhipuai_api_key }}",
+        "Z_AI_MODE": "ZHIPU"
+      }
+    },
+    "zread": {
+      "type": "http",
+      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ zhipuai_api_key }}"
+      }
+    }
+  }
+}

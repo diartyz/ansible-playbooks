@@ -1,0 +1,87 @@
+---
+- name: clone fzf
+  git:
+    repo: https://github.com/junegunn/fzf.git
+    dest: ~/.fzf
+    depth: 1
+    update: false
+  tags:
+    - online
+
+- name: install fzf
+  shell: ~/.fzf/install --all
+  args:
+    creates: ~/.fzf/bin/fzf
+  tags:
+    - online
+
+- name: add fzf sourcing to shell rc
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    line: "[ -f ~/.fzf.{{ item }} ] && source ~/.fzf.{{ item }}"
+  loop:
+    - bash
+    - zsh
+
+- name: set fzf color scheme to light
+  lineinfile:
+    path: "~/.{{ item }}rc"
+    regexp: '^export FZF_DEFAULT_OPTS='
+    line: "export FZF_DEFAULT_OPTS='--color=light'"
+    insertafter: '^export (?!PATH)'
+  loop:
+    - zsh
+    - bash
+
+- name: add fzf functions to shell rc
+  blockinfile:
+    path: "~/.{{ item }}rc"
+    marker: "# {mark} ANSIBLE MANAGED FZF"
+    block: |
+      fkill() {
+        local pid portmap
+        portmap=$(ss -tulpnH 2>/dev/null | sed -n 's/.*:\([0-9][0-9]*\).*pid=\([0-9][0-9]*\).*/\2 \1/p' | awk '{p[$1]=p[$1]?p[$1]","$2:$2} END{for(k in p)print k,p[k]}')
+        while true; do
+          pid=$(awk '
+            FNR==NR { mp[$1]=$2; next }
+            { cmd=$8; for(i=9;i<=NF;i++) cmd=cmd" "$i
+              printf "%-10s %7s %7s %2s %-8s %-6s %8s  %-16s  %s\n", $1,$2,$3,$4,$5,$6,$7, ($2 in mp?mp[$2]:"-"), cmd }
+          ' <(printf '%s\n' "$portmap") <(ps -ef | sed 1d) | fzf -m | awk '{print $2}')
+          [ "x$pid" = "x" ] && break
+          echo $pid | xargs kill -${1:-9}
+        done
+      }
+
+      v() {
+        local file
+        if which rg >/dev/null; then
+          file="$(rg --hidden --files "$@" | fzf)"
+        elif which fd >/dev/null; then
+          file="$(fd --hidden "" "$@" | fzf)"
+        elif which fdfind >/dev/null; then
+          file="$(fdfind --hidden "" "$@" | fzf)"
+        else
+          echo Please install fd or rg
+        fi
+        if [[ -n $file ]]; then
+          vim $file
+        fi
+      }
+
+      vg() {
+        local file
+        local line
+        if which rg >/dev/null; then
+          read -r file line <<<"$(rg --hidden --line-number --no-heading "$@" | fzf -0 -1 | awk -F: '{print $1, $2}')"
+        elif which ag >/dev/null; then
+          read -r file line <<<"$(ag --hidden --nobreak --noheading "$@" | fzf -0 -1 | awk -F: '{print $1, $2}')"
+        else
+          echo Please install ag or rg
+        fi
+        if [[ -n $file ]]; then
+          vim $file +$line
+        fi
+      }
+  loop:
+    - zsh
+    - bash

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_EFFORT_LEVEL": "max",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_NO_FLICKER": "1"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
+  "disabledMcpjsonServers": [
+    "context7",
+    "exa",
+    "gitcode",
+    "minimax",
+    "playwright",
+    "tavily"
+  ],
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "clangd-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    }
+  },
+  "language": "chinese",
+  "skipWebFetchPreflight": true,
+  "awaySummaryEnabled": false,
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "auto"
+}

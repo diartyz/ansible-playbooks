@@ -3,19 +3,43 @@
   include_tasks:
     file: clash.yml
     apply:
-      tags: [proxy, clash]
-  tags: [proxy, clash]
+      tags:
+        - proxy
+        - clash
+  tags:
+    - proxy
+    - clash
 
 - name: include privoxy tasks
   include_tasks:
     file: privoxy.yml
     apply:
-      tags: [proxy, privoxy]
-  tags: [proxy, privoxy]
+      tags:
+        - proxy
+        - privoxy
+  tags:
+    - proxy
+    - privoxy
 
 - name: include proxychains tasks
   include_tasks:
     file: proxychains.yml
     apply:
-      tags: [proxy, proxychains]
-  tags: [proxy, proxychains]
+      tags:
+        - proxy
+        - proxychains
+  tags:
+    - proxy
+    - proxychains
+
+- name: add proxy env to shell rc
+  lineinfile:
+    path: "~/.{{ item.0 }}rc"
+    line: "{{ item.1 }}"
+    insertafter: '^export (?!PATH)'
+    create: true
+  loop: "{{ ['zsh', 'bash'] | product([
+    '# export all_proxy=http://127.0.0.1:1080',
+    '# export http_proxy=http://127.0.0.1:1080',
+    '# export https_proxy=http://127.0.0.1:1080',
+  ]) | list }}"
