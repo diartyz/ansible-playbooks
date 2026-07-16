@@ -34,6 +34,7 @@
     mode: '0755'
   loop:
     - battery
+    - powermenu
   when: ansible_facts.distribution == 'Archlinux'
 
 - name: homebrew tap

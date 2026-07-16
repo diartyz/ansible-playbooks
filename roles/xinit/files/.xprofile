@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# prepend ~/.local/bin so X-session children (i3 exec, etc.) find user scripts;
+# login shells get this via .zshrc/.bashrc, but the lightdm session does not
+export PATH="$HOME/.local/bin:$PATH"
+
 ibus-daemon -d -x
 xset r rate 200 39
 feh --bg-fill /usr/share/pixmaps/wallpaper.jpg

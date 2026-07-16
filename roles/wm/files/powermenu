@@ -1,0 +1,12 @@
+#!/bin/sh
+# Power menu triggered by the power button (XF86PowerOff).
+# dmenu asks for confirmation; ESC / Cancel = do nothing.
+choice=$(printf 'Shutdown\nReboot\nSuspend\nLock\nCancel' | dmenu -i -p 'Power:')
+
+case "$choice" in
+    Shutdown) systemctl poweroff ;;
+    Reboot)   systemctl reboot   ;;
+    Suspend)  systemctl suspend  ;;
+    Lock)     i3lock -c 000000   ;;
+    *)        ;;  # Cancel / ESC: do nothing
+esac
