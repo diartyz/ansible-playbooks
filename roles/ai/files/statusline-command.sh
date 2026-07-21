@@ -65,8 +65,27 @@ flags=""
 [ "$thinking" = "true" ] && flags="${flags:+$flags }thinking"
 [ -n "$flags" ] && parts+=("$flags")
 
-[ -n "$version" ] && parts+=("v$version")
-
 out=""
 for p in "${parts[@]}"; do out="${out:+$out | }$p"; done
-echo "$out"
+
+# Pin version to the right edge of the status line's content area. Claude
+# Code exports COLUMNS (v2.1.153+). The -3 absorbs the UI's built-in left
+# indent plus glyph-width slack (¥ etc. render wider than ${#out}'s char
+# count); the UI also reserves 1 col on the right that the script can't
+# occupy, so 3 is the flush floor — lowering it truncates the version.
+# Fall back to a plain segment on narrow/unknown widths.
+if [ -n "$version" ]; then
+  ver="v$version"
+  if [ -n "${COLUMNS:-}" ] && [ "$COLUMNS" -gt 0 ] 2>/dev/null; then
+    gap=$(( COLUMNS - ${#out} - ${#ver} - 3 ))
+    if [ "$gap" -ge 1 ]; then
+      printf '%s%*s%s\n' "$out" "$gap" "" "$ver"
+    else
+      printf '%s | %s\n' "$out" "$ver"
+    fi
+  else
+    printf '%s | %s\n' "$out" "$ver"
+  fi
+else
+  echo "$out"
+fi

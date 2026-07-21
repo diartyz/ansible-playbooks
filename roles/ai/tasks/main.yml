@@ -29,6 +29,28 @@
   tags:
     - online
 
+- name: check if pi is installed
+  command: which pi
+  register: pi_check
+  failed_when: false
+  changed_when: false
+
+- name: install pi via npm
+  npm:
+    name: '@earendil-works/pi-coding-agent'
+    global: true
+  when:
+    - pi_check.rc != 0
+  tags:
+    - online
+
+- name: install pi-mcp-extension
+  command: pi install npm:pi-mcp-extension
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.pi/agent/npm/node_modules/pi-mcp-extension"
+  tags:
+    - online
+
 - name: create ai config directories
   file:
     path: '{{ item }}'
@@ -42,6 +64,9 @@
     - ~/.config/opencode/commands
     - ~/.config/opencode/themes
     - ~/.local/share/opencode
+    - ~/.pi/agent
+    - ~/.pi/agent/prompts
+    - ~/.pi/agent/extensions
 
 - name: copy config files
   copy:
@@ -50,10 +75,20 @@
   loop:
     - src: AGENTS.md
       dest: ~/.config/opencode/AGENTS.md
-    - src: commands/tr.md
-      dest: ~/.claude/commands/tr.md
-    - src: opencode-commands/tr.md
-      dest: ~/.config/opencode/commands/tr.md
+    - src: pi-AGENTS.md
+      dest: ~/.pi/agent/AGENTS.md
+    - src: pi-models.json
+      dest: ~/.pi/agent/models.json
+    - src: prompts/t.md
+      dest: ~/.pi/agent/prompts/t.md
+    - src: extensions/claude-footer.ts
+      dest: ~/.pi/agent/extensions/claude-footer.ts
+    - src: extensions/rewind.ts
+      dest: ~/.pi/agent/extensions/rewind.ts
+    - src: commands/t.md
+      dest: ~/.claude/commands/t.md
+    - src: opencode-commands/t.md
+      dest: ~/.config/opencode/commands/t.md
     - src: statusline-command.sh
       dest: ~/.claude/statusline-command.sh
     - src: themes/everforest-hard.json
@@ -78,6 +113,12 @@
       dest: ~/.claude/settings.json
     - src: opencode.json.j2
       dest: ~/.config/opencode/opencode.json
+    - src: pi-auth.json.j2
+      dest: ~/.pi/agent/auth.json
+    - src: pi-settings.json.j2
+      dest: ~/.pi/agent/settings.json
+    - src: pi-mcp.json.j2
+      dest: ~/.pi/agent/mcp.json
 
 - name: add llm provider functions to shell rc
   blockinfile:
@@ -148,8 +189,6 @@
   args:
     creates: '~/.agents/skills/{{ item.skill }}/SKILL.md'
   loop:
-    - repo: vercel-labs/agent-skills
-      skill: vercel-react-best-practices
     - repo: vercel-labs/skills
       skill: find-skills
   tags:
