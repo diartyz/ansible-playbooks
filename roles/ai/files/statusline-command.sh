@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+esc=$'\x1b'
 IFS='|' read -r model ctx_used ctx_total in_total out_total in_req cache_read cache_create fast effort thinking version < <(
   jq -r '[
     .model.display_name // "",
@@ -28,7 +29,13 @@ parts=()
 ctx=""
 [ -n "$ctx_used" ] && ctx="${ctx_used}%"
 [ -n "$ctx_total" ] && ctx="${ctx:+$ctx of }$(( (ctx_total + 500) / 1000 ))k"
-[ -n "$ctx" ] && parts+=("$ctx")
+if [ -n "$ctx" ]; then
+  ctx_int=${ctx_used%%.*}
+  if [ -n "$ctx_int" ] && [ "$ctx_int" -gt 90 ] 2>/dev/null; then
+    ctx=$'\033[38;2;204;102;102m'"${ctx}"$'\033[0m'
+  fi
+  parts+=("$ctx")
+fi
 
 tok=""
 if [ -n "$in_total" ]; then
@@ -45,17 +52,14 @@ if [ -n "$cache_read" ] || [ -n "$cache_create" ] || [ -n "$in_req" ]; then
 fi
 [ -n "$tok" ] && parts+=("$tok")
 
-if [ -n "$in_total" ] && [ -n "$out_total" ]; then
-  cost_milli=$(( (in_total * 3 + out_total * 6) * 1000 / 1000000 ))
-  if [ "$cost_milli" -gt 0 ]; then
-    yuan=$((cost_milli / 1000))
-    frac=$((cost_milli % 1000))
-    if [ "$yuan" -gt 0 ]; then
-      price="¥${yuan}.$((frac / 10))$((frac % 10))"
-    else
-      price="¥0.${frac}"
-    fi
-  fi
+# ¥/Mtok 单价 → nano¥/token = rate×1000 (1¥ = 1e9 nano¥)。
+# DeepSeek 统一按 deepseek-v4-pro 高峰价计；累计输入全部按未命中(input)价，保守上界。
+in_rate=9000 out_rate=27000   # pro 高峰: input 9 / output 27 (元/Mtok)
+cost_nano=$(( ${in_total:-0} * in_rate + ${out_total:-0} * out_rate ))
+if [ "$cost_nano" -gt 0 ]; then
+  price=$(printf '¥%d.%02d' \
+    $(( cost_nano / 1000000000 )) \
+    $(( (cost_nano % 1000000000) / 10000000 )))
 fi
 [ -n "$price" ] && parts+=("$price")
 
@@ -65,8 +69,28 @@ flags=""
 [ "$thinking" = "true" ] && flags="${flags:+$flags }thinking"
 [ -n "$flags" ] && parts+=("$flags")
 
-[ -n "$version" ] && parts+=("v$version")
-
 out=""
 for p in "${parts[@]}"; do out="${out:+$out | }$p"; done
-echo "$out"
+
+# Pin version to the right edge of the status line's content area. Claude
+# Code exports COLUMNS (v2.1.153+). The -3 absorbs the UI's built-in left
+# indent plus glyph-width slack (¥ etc. render wider than ${#out}'s char
+# count); the UI also reserves 1 col on the right that the script can't
+# occupy, so 3 is the flush floor — lowering it truncates the version.
+# Fall back to a plain segment on narrow/unknown widths.
+if [ -n "$version" ]; then
+  ver="v$version"
+  if [ -n "${COLUMNS:-}" ] && [ "$COLUMNS" -gt 0 ] 2>/dev/null; then
+    out_vis=$(printf '%s' "$out" | sed "s/$esc\[[0-9;]*m//g")
+    gap=$(( COLUMNS - ${#out_vis} - ${#ver} - 3 ))
+    if [ "$gap" -ge 1 ]; then
+      printf '%s%*s%s\n' "$out" "$gap" "" "$ver"
+    else
+      printf '%s | %s\n' "$out" "$ver"
+    fi
+  else
+    printf '%s | %s\n' "$out" "$ver"
+  fi
+else
+  echo "$out"
+fi

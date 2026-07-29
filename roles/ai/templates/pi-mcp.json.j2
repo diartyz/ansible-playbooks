@@ -1,0 +1,84 @@
+{
+  "mcpServers": {
+    "context7": {
+      "args": ["-y", "@upstash/context7-mcp@latest", "--api-key", "{{ context7_api_key }}"],
+      "command": "npx",
+      "env": {},
+      "lifecycle": "lazy",
+      "transport": "stdio"
+    },
+    "exa": {
+      "args": ["-y", "exa-mcp-server@latest"],
+      "command": "npx",
+      "env": {
+        "EXA_API_KEY": "{{ exa_api_key }}"
+      },
+      "lifecycle": "lazy",
+      "transport": "stdio"
+    },
+    "gitcode": {
+      "command": "gitcode-mcp",
+      "env": {
+        "GITCODE_TOKEN": "{{ gitcode_token }}"
+      },
+      "lifecycle": "lazy",
+      "transport": "stdio"
+    },
+    "minimax": {
+      "args": ["minimax-coding-plan-mcp", "-y"],
+      "command": "uvx",
+      "env": {
+        "MINIMAX_API_HOST": "https://api.minimaxi.com",
+        "MINIMAX_API_KEY": "{{ minimax_api_key }}"
+      },
+      "lifecycle": "lazy",
+      "transport": "stdio"
+    },
+    "playwright": {
+      "args": ["@playwright/mcp@latest"],
+      "command": "npx",
+      "env": {},
+      "lifecycle": "lazy",
+      "transport": "stdio"
+    },
+    "tavily": {
+      "lifecycle": "lazy",
+      "transport": "streamable-http",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={{ tavily_api_key }}"
+    },
+    "web-reader": {
+      "headers": {
+        "Authorization": "Bearer {{ zhipuai_api_key }}"
+      },
+      "lifecycle": "eager",
+      "transport": "streamable-http",
+      "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp"
+    },
+    "web-search-prime": {
+      "headers": {
+        "Authorization": "Bearer {{ zhipuai_api_key }}"
+      },
+      "lifecycle": "eager",
+      "transport": "streamable-http",
+      "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp"
+    },
+    "zai-mcp-server": {
+      "args": ["-y", "@z_ai/mcp-server"],
+      "command": "npx",
+      "env": {
+        "Z_AI_API_KEY": "{{ zhipuai_api_key }}",
+        "Z_AI_MODE": "ZHIPU"
+      },
+      "lifecycle": "eager",
+      "transport": "stdio"
+    },
+    "zread": {
+      "headers": {
+        "Authorization": "Bearer {{ zhipuai_api_key }}"
+      },
+      "lifecycle": "eager",
+      "transport": "streamable-http",
+      "url": "https://open.bigmodel.cn/api/mcp/zread/mcp"
+    }
+  }
+}
