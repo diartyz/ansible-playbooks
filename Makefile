@@ -6,3 +6,6 @@ check:
 
 list-tags:
 	ansible-playbook playbook.yml --list-tags
+
+windows:
+	ansible-playbook playbook.yml -l windows

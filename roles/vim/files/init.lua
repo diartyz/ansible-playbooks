@@ -1,5 +1,5 @@
 -- general
-vim.opt.clipboard = { 'unnamedplus' }
+vim.opt.clipboard = { 'unnamed', 'unnamedplus' }
 -- vim.opt.exrc = true
 -- vim.opt.fileencodings = { 'utf-8', 'gb2312' }
 vim.opt.swapfile = false
@@ -7,6 +7,9 @@ vim.opt.undodir = '/tmp/nvim'
 vim.opt.undofile = true
 -- vim.opt.updatetime = 300
 -- vim.opt.wildignore = { '*/.cache/*', '*/dist/*', '*/node_modules/*' }
+if vim.fn.has('wsl') == 1 then
+  vim.g.clipboard = 'win32yank'
+end
 -- if vim.fn.executable 'clip.exe' then
 --   vim.g.clipboard = {
 --     name = 'WslClipboard',

@@ -99,3 +99,8 @@
   roles:
     - role: ssh
       tags: ['ssh']
+
+- hosts: windows
+  roles:
+    - role: debug
+      tags: ['debug']

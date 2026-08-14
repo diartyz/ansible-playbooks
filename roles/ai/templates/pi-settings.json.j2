@@ -6,7 +6,7 @@
   "defaultProvider": "ali",
   "defaultThinkingLevel": "max",
   "followUpMode": "all",
-  "lastChangelogVersion": "0.84.1",
+  "lastChangelogVersion": "{{ (lookup('file', lookup('env', 'HOME') ~ '/.pi/agent/settings.json', errors='ignore') | default('{}', true) | from_json).lastChangelogVersion | default('0.0.0') }}",
   "packages": [
     "npm:pi-mcp-extension"
   ],
