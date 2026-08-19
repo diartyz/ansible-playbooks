@@ -32,10 +32,10 @@
         install: >-
           unzip -o ~/.cache/ansible/aliyunpan-v0.4.0-linux-amd64.zip -d /tmp/aliyunpan
           && install /tmp/aliyunpan/aliyunpan-v0.4.0-linux-amd64/aliyunpan ~/.local/bin/aliyunpan
-      - url: https://github.com/benbjohnson/litestream/releases/download/v0.5.12/litestream-0.5.12-linux-x86_64.tar.gz
+      - url: https://github.com/benbjohnson/litestream/releases/download/v0.5.16/litestream-0.5.16-linux-x86_64.tar.gz
         check: litestream
         install: >-
-          tar -xzf ~/.cache/ansible/litestream-0.5.12-linux-x86_64.tar.gz -C /tmp
+          tar -xzf ~/.cache/ansible/litestream-0.5.16-linux-x86_64.tar.gz -C /tmp
           && install /tmp/litestream ~/.local/bin/litestream
 
 - name: install Apps from Mac App Store
