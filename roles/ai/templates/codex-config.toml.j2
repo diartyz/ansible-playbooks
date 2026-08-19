@@ -1,0 +1,23 @@
+model = "glm-5.3"
+model_provider = "zai"
+model_reasoning_effort = "max"
+model_catalog_json = "~/.codex/zai-models.json"
+sandbox_mode = "danger-full-access"
+approval_policy = "never"
+model_instructions_file = "~/.codex/AGENTS.md"
+
+[model_providers.zai]
+name = "zai"
+base_url = "https://open.bigmodel.cn/api/v1"
+experimental_bearer_token = "{{ zhipuai_api_key }}"
+wire_api = "responses"
+
+[model_providers.ds]
+name = "ds"
+base_url = "https://api.deepseek.com/v1"
+experimental_bearer_token = "{{ deepseek_api_key }}"
+wire_api = "responses"
+
+[tui]
+theme = "solarized-light"
+status_line = ["model-with-reasoning", "context-used", "codex-version"]

@@ -61,6 +61,21 @@
   tags:
     - online
 
+- name: check if codex is installed
+  command: which codex
+  register: codex_check
+  failed_when: false
+  changed_when: false
+
+- name: install codex via npm
+  npm:
+    name: '@openai/codex'
+    global: true
+  when:
+    - codex_check.rc != 0
+  tags:
+    - online
+
 - name: create ai config directories
   file:
     path: '{{ item }}'
@@ -77,6 +92,7 @@
     - ~/.pi/agent
     - ~/.pi/agent/prompts
     - ~/.pi/agent/extensions
+    - ~/.codex
 
 - name: copy config files
   copy:
@@ -111,6 +127,10 @@
       dest: ~/.config/opencode/themes/tomorrow.json
     - src: tui.json
       dest: ~/.config/opencode/tui.json
+    - src: zai-models.json
+      dest: ~/.codex/zai-models.json
+    - src: ds-models.json
+      dest: ~/.codex/ds-models.json
 
 - name: template config files
   template:
@@ -131,6 +151,14 @@
       dest: ~/.pi/agent/settings.json
     - src: pi-mcp.json.j2
       dest: ~/.pi/agent/mcp.json
+    - src: codex-config.toml.j2
+      dest: ~/.codex/config.toml
+    - src: codex-ds.config.toml.j2
+      dest: ~/.codex/ds.config.toml
+    - src: codex-zai.config.toml.j2
+      dest: ~/.codex/zai.config.toml
+    - src: codex-AGENTS.md
+      dest: ~/.codex/AGENTS.md
 
 - name: add llm provider functions to shell rc
   blockinfile:
