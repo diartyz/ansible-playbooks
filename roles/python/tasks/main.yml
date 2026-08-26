@@ -13,9 +13,12 @@
       - python3-pip
       - python-is-python3
     binaries:
-      - url: https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz
-        check: uv
-        install: tar -xzf ~/.cache/ansible/uv-x86_64-unknown-linux-gnu.tar.gz -C ~/.local/bin --strip-components=1
+      - check: uv
+        urls:
+          linux-x64: https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz
+          macos-x64: https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-apple-darwin.tar.gz
+          macos-arm64: https://github.com/astral-sh/uv/releases/latest/download/uv-aarch64-apple-darwin.tar.gz
+        install: tar -xzf $CACHE_FILE -C ~/.local/bin --strip-components=1
 
 - name: add python env to shell rc
   lineinfile:

@@ -46,10 +46,10 @@
     },
     "gitcode": {
       "enabled": false,
-      "type": "local",
-      "command": ["gitcode-mcp"],
-      "environment": {
-        "GITCODE_TOKEN": "{{ gitcode_token }}"
+      "type": "remote",
+      "url": "https://api.gitcode.com/mcp-server/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ gitcode_token }}"
       }
     },
     "minimax": {

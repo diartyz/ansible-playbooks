@@ -46,7 +46,7 @@ return {
         },
         find_files = {
           hidden = true,
-          search_dirs = vim.g.telescope_search_dirs,
+          search_dirs = vim.g.telescope_dirs,
         },
       },
     }

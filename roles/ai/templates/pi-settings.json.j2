@@ -7,9 +7,7 @@
   "defaultThinkingLevel": "max",
   "followUpMode": "all",
   "lastChangelogVersion": "{{ (lookup('file', lookup('env', 'HOME') ~ '/.pi/agent/settings.json', errors='ignore') | default('{}', true) | from_json).lastChangelogVersion | default('0.0.0') }}",
-  "packages": [
-    "npm:pi-mcp-extension"
-  ],
+  "packages": [],
   "retry": {
     "enabled": true,
     "maxRetries": 9

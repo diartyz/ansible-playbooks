@@ -26,7 +26,7 @@ return {
       folding = { enabled = false },
       instanceName = 'far',
       openTargetWindow = { preferredLocation = 'prev' },
-      prefills = vim.tbl_extend('force', { filesFilter = '!.git/', flags = '--hidden -i' }, vim.g.far_prefills or {}),
+      prefills = { filesFilter = '!.git/', flags = '--hidden -i', paths = vim.g.far_dirs },
       staticTitle = 'far',
       keymaps = {
         abort = false,
