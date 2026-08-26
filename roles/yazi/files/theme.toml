@@ -40,7 +40,7 @@ syntect_theme = ""
 # : Tabs {{{
 
 [tabs]
-active   = { bg = "#35a77c", bold = true }
+active   = { fg = "#fdf6e3", bg = "#35a77c", bold = true }
 inactive = { fg = "#35a77c", bg = "#efebd4" }
 
 # Separator

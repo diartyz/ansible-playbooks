@@ -87,34 +87,30 @@ return {
 
     -- mapping
     vim.keymap.set('n', '<f2>', vim.lsp.buf.rename, { desc = 'lsp rename' })
-    vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, { desc = 'lsp code action' })
     vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'lsp rename' })
+    vim.keymap.set('n', 'g.', vim.lsp.buf.code_action, { desc = 'lsp code action' })
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, { desc = 'lsp hover' })
     local pos_equal = function(p1, p2)
       local r1, c1 = (table.unpack or unpack)(p1)
       local r2, c2 = (table.unpack or unpack)(p2)
       return r1 == r2 and c1 == c2
     end
-    vim.keymap.set('n', '<c-j>', function()
+    vim.keymap.set('n', 'g]', function()
       local pos = vim.api.nvim_win_get_cursor(0)
       vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
       if pos_equal(pos, pos2) then vim.diagnostic.jump { count = 1, float = true } end
     end, { desc = 'next diagnostic' })
-    vim.keymap.set('n', '<c-k>', function()
+    vim.keymap.set('n', 'g[', function()
       local pos = vim.api.nvim_win_get_cursor(0)
       vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
       if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1, float = true } end
     end, { desc = 'prev diagnostic' })
     local is_module_available = require('core.utils').is_module_available
-    vim.keymap.set('n', '<c-t>', function()
-      if is_module_available 'fzf-lua' then
-        require('fzf-lua').lsp_document_symbols()
-      else
-        vim.lsp.buf.document_symbol()
-      end
-    end, { desc = 'lsp document symbols' })
+    vim.keymap.set('n', 'gA', function()
+      if is_module_available 'fzf-lua' then require('fzf-lua').lsp_finder() end
+    end, { desc = 'lsp locations' })
     vim.keymap.set('n', 'gD', function()
       if is_module_available 'fzf-lua' then
         require('fzf-lua').lsp_declarations()
@@ -122,13 +118,6 @@ return {
         vim.lsp.buf.declaration()
       end
     end, { desc = 'lsp declaration' })
-    vim.keymap.set('n', 'gI', function()
-      if is_module_available 'fzf-lua' then
-        require('fzf-lua').lsp_implementations()
-      else
-        vim.lsp.buf.implementation()
-      end
-    end, { desc = 'lsp implementation' })
     vim.keymap.set('n', 'gd', function()
       if is_module_available 'fzf-lua' then
         require('fzf-lua').lsp_definitions()
@@ -136,6 +125,13 @@ return {
         vim.lsp.buf.definition()
       end
     end, { desc = 'lsp definition' })
+    vim.keymap.set('n', 'gI', function()
+      if is_module_available 'fzf-lua' then
+        require('fzf-lua').lsp_implementations()
+      else
+        vim.lsp.buf.implementation()
+      end
+    end, { desc = 'lsp implementation' })
     vim.keymap.set('n', 'gi', function()
       if is_module_available 'fzf-lua' then
         require('fzf-lua').lsp_incoming_calls()
@@ -143,9 +139,23 @@ return {
         vim.lsp.buf.incoming_calls()
       end
     end, { desc = 'lsp incoming calls' })
+    vim.keymap.set('n', 'gS', function()
+      if is_module_available 'fzf-lua' then
+        require('fzf-lua').lsp_live_workspace_symbols()
+      else
+        vim.lsp.buf.workspace_symbol()
+      end
+    end, { desc = 'lsp workspace symbols' })
+    vim.keymap.set('n', 'gs', function()
+      if is_module_available 'fzf-lua' then
+        require('fzf-lua').lsp_document_symbols()
+      else
+        vim.lsp.buf.document_symbol()
+      end
+    end, { desc = 'lsp document symbols' })
     vim.keymap.set('n', 'gy', function()
       if is_module_available 'fzf-lua' then
-        require('fzf-lua').lsp_type_definitions()
+        require('fzf-lua').lsp_typedefs()
       else
         vim.lsp.buf.type_definition()
       end

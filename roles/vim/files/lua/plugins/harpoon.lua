@@ -12,7 +12,7 @@ return {
     { "'7", function() require('harpoon'):list():select(7) end, desc = 'harpoon' },
     { "'8", function() require('harpoon'):list():select(8) end, desc = 'harpoon' },
     { "'9", function() require('harpoon'):list():select(9) end, desc = 'harpoon' },
-    { 'mo', function() require('harpoon'):list():add() end, desc = 'harpoon add' },
+    { '<leader>i', function() require('harpoon'):list():add() end, desc = 'harpoon add' },
     {
       '<leader>o',
       function() require('harpoon').ui:toggle_quick_menu(require('harpoon'):list()) end,

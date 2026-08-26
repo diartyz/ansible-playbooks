@@ -73,8 +73,8 @@ return {
       vim.keymap.set('n', '<cr>', api.node.open.edit, opts 'Open')
       vim.keymap.set('n', '[c', api.node.navigate.git.prev, opts 'Prev Git')
       vim.keymap.set('n', ']c', api.node.navigate.git.next, opts 'Next Git')
-      vim.keymap.set('n', '<c-j>', api.node.navigate.diagnostics.next, opts 'Next Diagnostic')
-      vim.keymap.set('n', '<c-k>', api.node.navigate.diagnostics.prev, opts 'Prev Diagnostic')
+      vim.keymap.set('n', 'g]', api.node.navigate.diagnostics.next, opts 'Next Diagnostic')
+      vim.keymap.set('n', 'g[', api.node.navigate.diagnostics.prev, opts 'Prev Diagnostic')
 
       vim.keymap.set('n', 'a', api.fs.create, opts 'Create')
       vim.keymap.set('n', 'r', api.fs.rename_basename, opts 'Rename: Basename')

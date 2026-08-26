@@ -8,11 +8,14 @@
     packages_macos:
       - go
     binaries:
-      - url: https://go.dev/dl/go1.27.0.linux-amd64.tar.gz
-        check: go
+      - check: go
+        urls:
+          linux-x64: https://go.dev/dl/go1.27.0.linux-amd64.tar.gz
+          macos-x64: https://go.dev/dl/go1.27.0.darwin-amd64.tar.gz
+          macos-arm64: https://go.dev/dl/go1.27.0.darwin-arm64.tar.gz
         install: >-
           rm -rf ~/.local/go
-          && tar -C ~/.local -xzf ~/.cache/ansible/go1.27.0.linux-amd64.tar.gz
+          && tar -C ~/.local -xzf $CACHE_FILE
 
 - name: configure go environment
   lineinfile:
