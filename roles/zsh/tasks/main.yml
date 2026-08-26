@@ -50,7 +50,6 @@
   loop:
     - colored-man-pages
     - history-substring-search
-    - vi-mode
     - zsh-autosuggestions
     - zsh-syntax-highlighting
 

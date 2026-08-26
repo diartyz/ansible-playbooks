@@ -22,20 +22,29 @@
     packages_macos:
       - mas
     binaries:
-      - url: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
-        check: jq
+      - check: jq
+        urls:
+          linux-x64: https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+          macos-x64: https://github.com/jqlang/jq/releases/latest/download/jq-macos-amd64
+          macos-arm64: https://github.com/jqlang/jq/releases/latest/download/jq-macos-arm64
         install: >-
-          chmod +x ~/.cache/ansible/jq-linux-amd64
-          && install ~/.cache/ansible/jq-linux-amd64 ~/.local/bin/jq
-      - url: https://github.com/tickstep/aliyunpan/releases/download/v0.4.0/aliyunpan-v0.4.0-linux-amd64.zip
-        check: aliyunpan
+          chmod +x $CACHE_FILE
+          && install $CACHE_FILE ~/.local/bin/jq
+      - check: aliyunpan
+        urls:
+          linux-x64: https://github.com/tickstep/aliyunpan/releases/download/v0.4.0/aliyunpan-v0.4.0-linux-amd64.zip
+          macos-x64: https://github.com/tickstep/aliyunpan/releases/download/v0.4.0/aliyunpan-v0.4.0-darwin-macos-amd64.zip
+          macos-arm64: https://github.com/tickstep/aliyunpan/releases/download/v0.4.0/aliyunpan-v0.4.0-darwin-macos-arm64.zip
         install: >-
-          unzip -o ~/.cache/ansible/aliyunpan-v0.4.0-linux-amd64.zip -d /tmp/aliyunpan
-          && install /tmp/aliyunpan/aliyunpan-v0.4.0-linux-amd64/aliyunpan ~/.local/bin/aliyunpan
-      - url: https://github.com/benbjohnson/litestream/releases/download/v0.5.16/litestream-0.5.16-linux-x86_64.tar.gz
-        check: litestream
+          unzip -o $CACHE_FILE -d /tmp/aliyunpan
+          && install /tmp/aliyunpan/$CACHE_STEM/aliyunpan ~/.local/bin/aliyunpan
+      - check: litestream
+        urls:
+          linux-x64: https://github.com/benbjohnson/litestream/releases/download/v0.5.16/litestream-0.5.16-linux-x86_64.tar.gz
+          macos-x64: https://github.com/benbjohnson/litestream/releases/download/v0.5.16/litestream-0.5.16-darwin-x86_64.tar.gz
+          macos-arm64: https://github.com/benbjohnson/litestream/releases/download/v0.5.16/litestream-0.5.16-darwin-arm64.tar.gz
         install: >-
-          tar -xzf ~/.cache/ansible/litestream-0.5.16-linux-x86_64.tar.gz -C /tmp
+          tar -xzf $CACHE_FILE -C /tmp
           && install /tmp/litestream ~/.local/bin/litestream
 
 - name: install Apps from Mac App Store

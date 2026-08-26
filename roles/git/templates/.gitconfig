@@ -1,6 +1,3 @@
-[user]
-	email = diartyz@gmail.com
-	name = diartyz
 [alias]
 	cm = commit -s
 [color]
@@ -45,6 +42,8 @@
 	smudge = git-lfs smudge -- %f
 [include]
 	path = .gitconfig.local
+[includeIf "gitdir:/srv/workspace/"]
+	path = .gitconfig-work
 [includeIf "gitdir:~/Coding/"]
 	path = .gitconfig-me
 [includeIf "gitdir:~/Work/"]
@@ -66,5 +65,10 @@
 	ff = only
 [push]
 	recurseSubmodules = on-demand
+# [safe]
+# 	directory = *
 [submodule]
 	recurse = true
+[user]
+	email = diartyz@gmail.com
+	name = diartyz

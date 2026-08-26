@@ -73,16 +73,18 @@ out=""
 for p in "${parts[@]}"; do out="${out:+$out | }$p"; done
 
 # Pin version to the right edge of the status line's content area. Claude
-# Code exports COLUMNS (v2.1.153+). The -3 absorbs the UI's built-in left
-# indent plus glyph-width slack (¥ etc. render wider than ${#out}'s char
-# count); the UI also reserves 1 col on the right that the script can't
-# occupy, so 3 is the flush floor — lowering it truncates the version.
+# Code exports COLUMNS but renders the statusline in a content area 4 cells
+# narrower than COLUMNS (measured: a COLUMNS-wide ruler is clipped to
+# COLUMNS-4 cells and '…' is appended on overflow), so target COLUMNS-4 with
+# a cell-based gap. Sizing by byte width (wc -c) over-corrects here —
+# multibyte glyphs (↓ ↑ ✓ ¥) cost bytes but one cell each, leaving the
+# version ~7 cells left of the edge. -4 is the flush floor; lower chops it.
 # Fall back to a plain segment on narrow/unknown widths.
 if [ -n "$version" ]; then
   ver="v$version"
   if [ -n "${COLUMNS:-}" ] && [ "$COLUMNS" -gt 0 ] 2>/dev/null; then
     out_vis=$(printf '%s' "$out" | sed "s/$esc\[[0-9;]*m//g")
-    gap=$(( COLUMNS - ${#out_vis} - ${#ver} - 3 ))
+    gap=$(( COLUMNS - ${#out_vis} - ${#ver} - 4 ))
     if [ "$gap" -ge 1 ]; then
       printf '%s%*s%s\n' "$out" "$gap" "" "$ver"
     else

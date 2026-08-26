@@ -10,16 +10,22 @@
       - fnm
       - oven-sh/bun/bun
     binaries:
-      - url: https://github.com/Schniz/fnm/releases/latest/download/fnm-linux.zip
-        check: fnm
+      - check: fnm
+        urls:
+          linux-x64: https://github.com/Schniz/fnm/releases/latest/download/fnm-linux.zip
+          macos-x64: https://github.com/Schniz/fnm/releases/latest/download/fnm-macos.zip
+          macos-arm64: https://github.com/Schniz/fnm/releases/latest/download/fnm-macos.zip
         install: >-
-          unzip -o ~/.cache/ansible/fnm-linux.zip -d /tmp
+          unzip -o $CACHE_FILE -d /tmp
           && install /tmp/fnm ~/.local/bin/fnm
-      - url: https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64.zip
-        check: bun
+      - check: bun
+        urls:
+          linux-x64: https://github.com/oven-sh/bun/releases/latest/download/bun-linux-x64.zip
+          macos-x64: https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-x64.zip
+          macos-arm64: https://github.com/oven-sh/bun/releases/latest/download/bun-darwin-aarch64.zip
         install: >-
-          unzip -o ~/.cache/ansible/bun-linux-x64.zip -d /tmp
-          && install /tmp/bun-linux-x64/bun ~/.local/bin/bun
+          unzip -o $CACHE_FILE -d /tmp
+          && install /tmp/$CACHE_STEM/bun ~/.local/bin/bun
 
 - name: check if fnm is installed
   command: which fnm

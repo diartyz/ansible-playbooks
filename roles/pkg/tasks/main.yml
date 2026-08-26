@@ -1,4 +1,33 @@
 ---
+- name: normalize platform facts
+  set_fact:
+    bin_os: >-
+      {{ 'macos' if ansible_system == 'Darwin'
+          else 'windows' if (ansible_system | lower) is search('win')
+          else 'linux' }}
+    bin_arch: >-
+      {{ 'arm64' if ansible_architecture in ['aarch64', 'arm64']
+          else 'arm' if ansible_architecture in ['armv7l', 'armhf']
+          else 'x86' if ansible_architecture in ['i386', 'i686']
+          else 'x64' }}
+
+- name: set binary platform key
+  set_fact:
+    bin_platform: '{{ bin_os }}-{{ bin_arch }}'
+
+- name: resolve binary entries
+  set_fact:
+    binary_entries: >-
+      {%- set ns = namespace(out=[]) -%}
+      {%- for b in (binaries | default([])) -%}
+      {%- set u = (b.urls[bin_platform] if (b.urls is defined and bin_platform in b.urls) else b.url) | default('') -%}
+      {%- if u -%}
+      {%- set _ = ns.out.append(b | combine({'_url': u, '_cache_file': u | basename})) -%}
+      {%- endif -%}
+      {%- endfor -%}
+      {{ ns.out }}
+  when: binaries is defined
+
 - name: install packages (Archlinux)
   become: true
   pacman:
@@ -40,16 +69,16 @@
   register: binary_check
   failed_when: false
   changed_when: false
-  loop: '{{ binaries | default([]) }}'
+  loop: '{{ binary_entries }}'
   loop_control:
     extended: true
   when: binaries is defined
 
 - name: check cache files
   stat:
-    path: '~/.cache/ansible/{{ item.url | basename }}'
+    path: '~/.cache/ansible/{{ item._cache_file }}'
   register: binary_cache
-  loop: '{{ binaries | default([]) }}'
+  loop: '{{ binary_entries }}'
   loop_control:
     extended: true
   when:
@@ -59,25 +88,30 @@
 
 - name: download binaries to cache
   get_url:
-    url: '{{ item.0.url }}'
+    url: '{{ item.0._url }}'
     dest: ~/.cache/ansible/
   register: binary_download
-  loop: '{{ binaries | zip(binary_cache.results) | list }}'
+  loop: '{{ binary_entries | zip(binary_cache.results) | list }}'
   loop_control:
     extended: true
   when:
     - binaries is defined
     - "'prepare' in ansible_run_tags"
+    - item.0._url
     - not item.1.stat.exists | default(false)
   tags:
     - prepare
 
 - name: install binary from cache
   shell: '{{ item.0.install }}'
-  loop: '{{ binaries | zip(binary_check.results, binary_cache.results, binary_download.results) | list }}'
+  environment:
+    CACHE_FILE: '{{ lookup("env", "HOME") }}/.cache/ansible/{{ item.0._cache_file }}'
+    CACHE_STEM: '{{ item.0._cache_file | regex_replace("([.]zip|[.]tar[.]gz|[.]gz)$", "") }}'
+  loop: '{{ binary_entries | zip(binary_check.results, binary_cache.results, binary_download.results) | list }}'
   loop_control:
     extended: true
   when:
     - binaries is defined
+    - item.0._url
     - item.1.rc != 0
     - item.2.stat.exists or item.3.changed | default(false)

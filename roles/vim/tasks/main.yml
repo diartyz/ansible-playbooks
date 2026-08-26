@@ -15,14 +15,28 @@
       - vim-gtk3
       - python3-pynvim
     binaries:
-      - url: https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl.tar.gz
-        check: rg
+      - check: rg
+        urls:
+          linux-x64: https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-x86_64-unknown-linux-musl.tar.gz
+          macos-x64: https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-x86_64-apple-darwin.tar.gz
+          macos-arm64: https://github.com/BurntSushi/ripgrep/releases/download/15.2.0/ripgrep-15.2.0-aarch64-apple-darwin.tar.gz
         install: >-
-          tar -xzf ~/.cache/ansible/ripgrep-15.2.0-x86_64-unknown-linux-musl.tar.gz -C /tmp
-          && install /tmp/ripgrep-15.2.0-x86_64-unknown-linux-musl/rg ~/.local/bin/rg
-      - url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-        check: nvim
-        install: tar -xzf ~/.cache/ansible/nvim-linux-x86_64.tar.gz -C ~/.local --strip-components=1
+          tar -xzf $CACHE_FILE -C /tmp
+          && install /tmp/$CACHE_STEM/rg ~/.local/bin/rg
+      - check: nvim
+        urls:
+          linux-x64: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+          macos-x64: https://github.com/neovim/neovim/releases/latest/download/nvim-macos-x86_64.tar.gz
+          macos-arm64: https://github.com/neovim/neovim/releases/latest/download/nvim-macos-arm64.tar.gz
+        install: tar -xzf $CACHE_FILE -C ~/.local --strip-components=1
+      - check: tree-sitter
+        urls:
+          linux-x64: https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.0/tree-sitter-linux-x64.gz
+          macos-x64: https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.0/tree-sitter-macos-x64.gz
+          macos-arm64: https://github.com/tree-sitter/tree-sitter/releases/download/v0.27.0/tree-sitter-macos-arm64.gz
+        install: >-
+          gunzip -c $CACHE_FILE > ~/.local/bin/tree-sitter
+          && chmod +x ~/.local/bin/tree-sitter
 
 - name: install pynvim
   pip:
