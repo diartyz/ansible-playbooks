@@ -59,6 +59,24 @@
   tags:
     - online
 
+- name: check if dsh-tui is installed
+  command: which dsh-tui
+  register: dsh_tui_check
+  failed_when: false
+  changed_when: false
+
+- name: install dsh host and tui via npm
+  npm:
+    name: '{{ item }}'
+    global: true
+  loop:
+    - '@deepseek-ai/dsh'
+    - '@deepseek-harness-tui/dsh-tui'
+  when:
+    - dsh_tui_check.rc != 0
+  tags:
+    - online
+
 - name: create ai config directories
   file:
     path: '{{ item }}'
@@ -76,6 +94,8 @@
     - ~/.pi/agent/prompts
     - ~/.pi/agent/extensions
     - ~/.codex
+    - ~/.dsh-tui
+    - ~/.dsh/profiles/dsh-tui
 
 - name: copy config files
   copy:
@@ -94,6 +114,8 @@
       dest: ~/.pi/agent/extensions/claude-footer.ts
     - src: extensions/rewind.ts
       dest: ~/.pi/agent/extensions/rewind.ts
+    - src: extensions/history-search.ts
+      dest: ~/.pi/agent/extensions/history-search.ts
     - src: keybindings.json
       dest: ~/.pi/agent/keybindings.json
     - src: commands/t.md
@@ -102,6 +124,8 @@
       dest: ~/.config/opencode/commands/t.md
     - src: statusline-command.sh
       dest: ~/.claude/statusline-command.sh
+    - src: claude-settings.json
+      dest: ~/.claude/settings.json
     - src: themes/everforest-hard.json
       dest: ~/.config/opencode/themes/everforest-hard.json
     - src: themes/solarized-light.json
@@ -116,6 +140,22 @@
       dest: ~/.codex/ds-models.json
     - src: codex-AGENTS.md
       dest: ~/.codex/AGENTS.md
+    - src: codex-ds.config.toml
+      dest: ~/.codex/ds.config.toml
+    - src: codex-zai.config.toml
+      dest: ~/.codex/zai.config.toml
+    - src: dsh-tui-model.json
+      dest: ~/.dsh-tui/model.json
+    - src: dsh-tui-effort.json
+      dest: ~/.dsh-tui/effort.json
+    - src: dsh-tui-theme.json
+      dest: ~/.dsh-tui/theme.json
+    - src: dsh-tui-settings.json
+      dest: ~/.dsh-tui/settings.json
+    - src: dsh-tui-permission.json
+      dest: ~/.dsh-tui/permission.json
+    - src: dsh-tui-cordis.patch.yml
+      dest: ~/.dsh/profiles/dsh-tui/cordis.patch.yml
 
 - name: template config files
   template:
@@ -126,8 +166,6 @@
       dest: ~/.mcp.json
     - src: auth.json.j2
       dest: ~/.local/share/opencode/auth.json
-    - src: claude-settings.json
-      dest: ~/.claude/settings.json
     - src: opencode.json.j2
       dest: ~/.config/opencode/opencode.json
     - src: pi-auth.json.j2
@@ -138,10 +176,8 @@
       dest: ~/.pi/agent/mcp.json
     - src: codex-config.toml.j2
       dest: ~/.codex/config.toml
-    - src: codex-ds.config.toml.j2
-      dest: ~/.codex/ds.config.toml
-    - src: codex-zai.config.toml.j2
-      dest: ~/.codex/zai.config.toml
+    - src: dsh-credentials.yaml.j2
+      dest: ~/.dsh/.credentials.yaml
 
 - name: add llm provider functions to shell rc
   blockinfile:
