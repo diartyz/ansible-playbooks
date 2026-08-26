@@ -77,17 +77,22 @@ nnoremap <bs> :nohlsearch<cr>:match none<cr>
 nnoremap <c-h> :nohlsearch<cr>:match none<cr>
 nnoremap <leader><leader>q :q!<cr>
 nnoremap <leader><leader>s :noautocmd update<cr>
-nnoremap <leader>d :BufOnly<cr>
+nnoremap <leader><leader>d :bd!<cr>
+nnoremap <leader>d :bd<cr>
 nnoremap <leader>m :match IncSearch /\<<c-r><c-w>\>/<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>s :update<cr>
-nnoremap <leader>x :bd<cr>
+nnoremap <leader>x :BufOnly<cr>
 nnoremap cp :let @+=expand("%:p")<cr>:OSCYankRegister +<cr>
 nnoremap cy :let @+=expand("%").":".line(".")<cr>:OSCYankRegister +<cr>
-noremap $ g_
-noremap g_ $
-noremap 0 ^
-noremap ^ 0
+nnoremap $ g_
+nnoremap g_ $
+nnoremap 0 ^
+nnoremap ^ 0
+xnoremap $ g_
+xnoremap g_ $
+xnoremap 0 ^
+xnoremap ^ 0
 if has("gui_running")
   cnoremap <a-v> <c-r>+
   inoremap <a-v> <c-r>+

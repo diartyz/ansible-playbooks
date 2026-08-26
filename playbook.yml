@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   environment:
-    PATH: "{{ lookup('env', 'HOME') }}/.local/bin:{{ lookup('env', 'HOME') }}/.local/share/fnm/aliases/lts-latest/bin:{{ lookup('env', 'PATH') }}"
+    PATH: "{{ lookup('env', 'HOME') }}/.local/bin:{{ lookup('env', 'HOME') }}/.npm-global/bin:{{ lookup('env', 'HOME') }}/.local/share/fnm/aliases/lts-latest/bin:{{ lookup('env', 'PATH') }}"
   roles:
     - role: user
       tags: ['user']

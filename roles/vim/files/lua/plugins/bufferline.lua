@@ -35,9 +35,9 @@ return {
     vim.keymap.set('n', '<leader>8', function() require('bufferline').go_to(8, true) end, { desc = 'go to buffer 8' })
     vim.keymap.set('n', '<leader>9', function() require('bufferline').go_to(9, true) end, { desc = 'go to buffer 9' })
     vim.keymap.set('n', '<leader>0', function() require('bufferline').go_to(10, true) end, { desc = 'go to buffer 10' })
-    vim.keymap.set({ 'n', 'x' }, '<leader>X', '<cmd>BufferLinePickClose<cr>', { desc = 'pick and close buffer' })
-    vim.keymap.set({ 'n', 'x' }, '<leader>d', '<cmd>BufferLineCloseOthers<cr>', { desc = 'close other buffers' })
+    vim.keymap.set({ 'n', 'x' }, '<leader>D', '<cmd>BufferLinePickClose<cr>', { desc = 'pick and close buffer' })
     vim.keymap.set({ 'n', 'x' }, '<leader>t', '<cmd>BufferLinePick<cr>', { desc = 'pick buffer' })
+    vim.keymap.set({ 'n', 'x' }, '<leader>x', '<cmd>BufferLineCloseOthers<cr>', { desc = 'close other buffers' })
     vim.keymap.set(
       { 'n', 'x' },
       '[B',

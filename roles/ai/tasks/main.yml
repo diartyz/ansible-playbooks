@@ -51,16 +51,6 @@
   tags:
     - online
 
-- name: install herdr from github releases
-  shell: >
-    curl -fsSL -o ~/.local/bin/herdr
-    https://github.com/ogulcancelik/herdr/releases/latest/download/herdr-{{ 'macos' if ansible_facts.system == 'Darwin' else 'linux' }}-{{ 'aarch64' if ansible_facts.architecture in ['aarch64', 'arm64'] else 'x86_64' }}
-    && chmod +x ~/.local/bin/herdr
-  args:
-    creates: ~/.local/bin/herdr
-  tags:
-    - online
-
 - name: check if codex is installed
   command: which codex
   register: codex_check

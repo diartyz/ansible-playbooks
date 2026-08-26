@@ -15,9 +15,10 @@
       }
     },
     "gitcode": {
-      "command": "gitcode-mcp",
-      "env": {
-        "GITCODE_TOKEN": "{{ gitcode_token }}"
+      "type": "http",
+      "url": "https://api.gitcode.com/mcp-server/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer {{ gitcode_token }}"
       }
     },
     "minimax": {

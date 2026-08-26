@@ -10,9 +10,7 @@ return {
     vim.api.nvim_command 'colorscheme everforest'
     vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
     vim.api.nvim_set_hl(0, 'MatchupVirtualText', { link = 'Comment' })
-    vim.api.nvim_set_hl(0, 'TabLineFill', { link = 'Normal' })
     vim.api.nvim_set_hl(0, 'VM_Mono', { link = 'DiffAdd' })
-    -- vim.api.nvim_set_hl(0, 'Visual', { cterm = nil, ctermbg = 241, fg = nil, bg = '#665c54' })
     vim.fn.sign_define {
       {
         name = 'DiagnosticSignError',

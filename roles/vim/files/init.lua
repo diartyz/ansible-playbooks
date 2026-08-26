@@ -7,9 +7,7 @@ vim.opt.undodir = '/tmp/nvim'
 vim.opt.undofile = true
 -- vim.opt.updatetime = 300
 -- vim.opt.wildignore = { '*/.cache/*', '*/dist/*', '*/node_modules/*' }
-if vim.fn.has('wsl') == 1 then
-  vim.g.clipboard = 'win32yank'
-end
+if vim.fn.has 'wsl' == 1 then vim.g.clipboard = 'win32yank' end
 -- if vim.fn.executable 'clip.exe' then
 --   vim.g.clipboard = {
 --     name = 'WslClipboard',
@@ -46,11 +44,11 @@ vim.keymap.set('n', '<bs>', '<cmd>nohlsearch|match none<cr>')
 vim.keymap.set('n', '<c-h>', '<cmd>nohlsearch|match none<cr>')
 vim.keymap.set('n', '<leader><leader>q', '<cmd>q!<cr>')
 vim.keymap.set('n', '<leader><leader>s', '<cmd>noautocmd update<cr>')
-vim.keymap.set('n', '<leader><leader>x', '<cmd>bdelete!<cr>')
+vim.keymap.set('n', '<leader><leader>d', '<cmd>bdelete!<cr>')
 vim.keymap.set('n', '<leader>m', ':match IncSearch /\\<<c-r><c-w>\\>/<cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>q<cr>')
 vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')
-vim.keymap.set('n', '<leader>x', '<cmd>bdelete<cr>')
+vim.keymap.set('n', '<leader>d', '<cmd>bdelete<cr>')
 vim.keymap.set('n', 'cp', [[<cmd>let @+=expand('%:p')<cr>]])
 vim.keymap.set('n', 'cy', [[<cmd>let @+=expand('%').':'.line('.')<cr>]])
 vim.keymap.set({ 'n', 'x' }, '$', 'g_')
@@ -134,7 +132,7 @@ load_plugins {
   require 'plugins/visual-multi',
   require 'plugins/wordmotion',
   -- { 'diartyz/vim-utils', event = 'InsertEnter' },
-  -- { 'gcmt/wildfire.vim', keys = '<enter>' },
+  { 'gcmt/wildfire.vim', keys = '<enter>' },
   { 'inkarkat/vim-AdvancedSorters', dependencies = 'inkarkat/vim-ingo-library', cmd = 'SortRangesByHeader' },
   { 'inkarkat/vim-visualrepeat', keys = { { '.', mode = 'x' } } },
   { 'junegunn/vim-easy-align', keys = { { 'ga', '<plug>(EasyAlign)', mode = { 'n', 'x' }, desc = 'easyalign' } } },
@@ -170,17 +168,18 @@ load_plugins {
   require 'plugins/indent-blankline',
   require 'plugins/lualine',
   require 'plugins/noice',
+  require 'plugins/syntax',
   require 'plugins/tree',
   require 'plugins/ufo',
   { 'kevinhwang91/nvim-bqf', ft = 'qf' },
   { 'ntpeters/vim-better-whitespace', event = 'VeryLazy' },
-  -- { 'sheerun/vim-polyglot', event = 'VeryLazy', config = function() vim.g.vim_markdown_no_default_key_mappings = 1 end },
+  -- { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
 
   -- util
   require 'plugins/close-buffers',
   require 'plugins/fugitive',
   require 'plugins/markdown-preview',
-  -- require 'plugins/neoscroll',
+  require 'plugins/neoscroll',
   -- require 'plugins/osc52',
   -- require 'plugins/profile',
   require 'plugins/sniprun',

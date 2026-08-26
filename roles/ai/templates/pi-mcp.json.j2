@@ -17,12 +17,12 @@
       "transport": "stdio"
     },
     "gitcode": {
-      "command": "gitcode-mcp",
-      "env": {
-        "GITCODE_TOKEN": "{{ gitcode_token }}"
+      "headers": {
+        "Authorization": "Bearer {{ gitcode_token }}"
       },
       "lifecycle": "lazy",
-      "transport": "stdio"
+      "transport": "streamable-http",
+      "url": "https://api.gitcode.com/mcp-server/v1/mcp"
     },
     "minimax": {
       "args": ["minimax-coding-plan-mcp", "-y"],

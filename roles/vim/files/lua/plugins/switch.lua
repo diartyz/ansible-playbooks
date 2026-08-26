@@ -1,8 +1,8 @@
 return {
   'AndrewRadev/switch.vim',
-  keys = '<leader>i',
+  keys = '<c-t>',
   init = function()
-    vim.g.switch_mapping = '<leader>i'
+    vim.g.switch_mapping = '<c-t>'
     vim.api.nvim_create_autocmd('FileType', {
       pattern = { 'javascriptreact', 'typescriptreact' },
       callback = function()
