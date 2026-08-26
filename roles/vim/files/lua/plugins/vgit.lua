@@ -9,13 +9,13 @@ return {
 
     vgit.setup {
       keymaps = {
-        ['n ]c'] = next_hunk_repeat,
-        ['n [c'] = prev_hunk_repeat,
         ['n <leader>gb'] = 'buffer_blame_preview',
         ['n <leader>gh'] = 'buffer_history_preview',
+        ['n [c'] = prev_hunk_repeat,
+        ['n ]c'] = next_hunk_repeat,
         ['n ga'] = 'buffer_conflict_accept_both',
-        ['n gb'] = 'buffer_conflict_accept_incoming',
-        ['n gc'] = 'buffer_conflict_accept_current',
+        ['n gi'] = 'buffer_conflict_accept_incoming',
+        ['n go'] = 'buffer_conflict_accept_current',
       },
       settings = {
         live_blame = {

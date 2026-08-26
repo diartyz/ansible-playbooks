@@ -9,11 +9,6 @@ return {
     },
   },
   cmd = 'Telescope',
-  keys = {
-    { '<c-p>', function() require('telescope.builtin').find_files() end, desc = 'search files' },
-    { '<leader>:', function() require('telescope.builtin').command_history() end, desc = 'search command history' },
-    { '<leader>a', function() require('telescope.builtin').buffers() end, desc = 'search buffers' },
-  },
   config = function()
     require('telescope').setup {
       defaults = require('telescope.themes').get_dropdown {

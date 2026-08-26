@@ -1,12 +1,12 @@
-local function get_tsserver()
-  for _, client in pairs(vim.lsp.get_active_clients()) do
-    if client.name == 'tsserver' then return client end
+local function get_ts_ls()
+  for _, client in pairs(vim.lsp.get_clients()) do
+    if client.name == 'ts_ls' then return client end
   end
 end
 
 local function make_source_actions(source_action)
   return function(options)
-    local client = get_tsserver()
+    local client = get_ts_ls()
 
     if not client then return end
 

@@ -43,7 +43,7 @@ return {
       settings = {
         Lua = {
           diagnostics = {
-            globals = { 'vim' },
+            globals = { 'Snacks', 'vim' },
           },
         },
       },
@@ -95,18 +95,18 @@ return {
       local r2, c2 = (table.unpack or unpack)(p2)
       return r1 == r2 and c1 == c2
     end
-    vim.keymap.set('n', 'g]', function()
+    local jump_diagnostic = function(count)
       local pos = vim.api.nvim_win_get_cursor(0)
-      vim.diagnostic.jump { count = 1, float = true, severity = vim.diagnostic.severity.ERROR }
+      vim.diagnostic.jump { count = count, float = true, severity = vim.diagnostic.severity.ERROR }
       local pos2 = vim.api.nvim_win_get_cursor(0)
-      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = 1, float = true } end
-    end, { desc = 'next diagnostic' })
-    vim.keymap.set('n', 'g[', function()
-      local pos = vim.api.nvim_win_get_cursor(0)
-      vim.diagnostic.jump { count = -1, float = true, severity = vim.diagnostic.severity.ERROR }
-      local pos2 = vim.api.nvim_win_get_cursor(0)
-      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = -1, float = true } end
-    end, { desc = 'prev diagnostic' })
+      if pos_equal(pos, pos2) then vim.diagnostic.jump { count = count, float = true } end
+    end
+    local next_diagnostic, prev_diagnostic = require('core.utils').make_repeatable_pair(
+      function() jump_diagnostic(1) end,
+      function() jump_diagnostic(-1) end
+    )
+    vim.keymap.set('n', ']g', next_diagnostic, { desc = 'next diagnostic' })
+    vim.keymap.set('n', '[g', prev_diagnostic, { desc = 'prev diagnostic' })
     local is_module_available = require('core.utils').is_module_available
     vim.keymap.set('n', 'gA', function()
       if is_module_available 'fzf-lua' then require('fzf-lua').lsp_finder() end

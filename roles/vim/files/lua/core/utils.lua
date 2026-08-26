@@ -33,8 +33,8 @@ local function is_module_available(name)
 end
 
 local function load_local_config(file)
-  local localConfig = vim.fn.findfile(file, '.;')
-  if vim.fn.filereadable(localConfig) == 1 then vim.cmd('source ' .. localConfig) end
+  local path = vim.fn.findfile(file, '.;')
+  if vim.fn.filereadable(path) == 1 then dofile(path) end
 end
 
 local last_move = nil

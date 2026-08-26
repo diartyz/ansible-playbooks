@@ -1,8 +1,8 @@
 {
     "models": [
         {
-            "slug": "glm-5.3",
-            "display_name": "glm-5.3",
+            "slug": "glm-5.4",
+            "display_name": "glm-5.4",
             "description": "flagship",
             "default_reasoning_level": "max",
             "supported_reasoning_levels": [

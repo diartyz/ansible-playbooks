@@ -77,7 +77,7 @@ return {
           if hunk ~= nil and hunk.type ~= 'delete' then
             local start = hunk.added.start
             local last = start + hunk.added.count
-            local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
+            local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1] or ''
             conform.format {
               bufnr = args.buf,
               range = {

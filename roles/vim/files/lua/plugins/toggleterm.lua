@@ -5,8 +5,8 @@ return {
     [[<c-\>]],
     {
       '+',
-      function() require('toggleterm.terminal').Terminal:new({ cmd = 'yazi', count = 8 }):toggle() end,
-      desc = 'yazi',
+      function() require('toggleterm.terminal').Terminal:new({ cmd = 'pi', count = 8, newline_chr = '' }):toggle() end,
+      desc = 'pi',
     },
     {
       '-',

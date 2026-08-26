@@ -28,12 +28,12 @@ vim.opt.tabstop = 2
 
 -- mappings
 vim.api.nvim_create_user_command('E', 'edit $MYVIMRC', { nargs = 0, desc = 'open config' })
-vim.api.nvim_create_user_command('R', 'update|source $MYVIMRC', { nargs = 0, desc = 'source config' })
+vim.api.nvim_create_user_command('R', 'update|restart', { nargs = 0, desc = 'restart nvim' })
 vim.api.nvim_create_user_command('Q', 'qa!', { nargs = 0, desc = 'quit all' })
 vim.api.nvim_create_user_command('W', 'noautocmd wall', { nargs = 0, desc = 'save all' })
 vim.api.nvim_create_user_command(
   'Code',
-  [[exe "silent !code '" . getcwd() . "' --goto '" . expand('%') . ":" . line('.') . ":" . col('.') . "'"]],
+  [[exe "silent !code '" . getcwd() . "' --goto '" . expand('%') . ":" . line('.') . ":" . col('.') . "'" | redraw!]],
   { nargs = 0, desc = 'open vs code' }
 )
 vim.g.mapleader = ' '
@@ -50,7 +50,7 @@ vim.keymap.set('n', '<leader>q', '<cmd>q<cr>')
 vim.keymap.set('n', '<leader>s', '<cmd>update<cr>')
 vim.keymap.set('n', '<leader>d', '<cmd>bdelete<cr>')
 vim.keymap.set('n', 'cp', [[<cmd>let @+=expand('%:p')<cr>]])
-vim.keymap.set('n', 'cy', [[<cmd>let @+=expand('%').':'.line('.')<cr>]])
+vim.keymap.set('n', 'cy', [[<cmd>let @+=expand('%')<cr>]])
 vim.keymap.set({ 'n', 'x' }, '$', 'g_')
 vim.keymap.set({ 'n', 'x' }, 'g_', '$')
 vim.keymap.set({ 'n', 'x' }, '0', '^')
@@ -60,12 +60,19 @@ vim.keymap.set({ 'n', 'x' }, '<leader>y', function()
   if vim.fn.mode() == 'n' then
     text = vim.fn.expand '%' .. ':' .. vim.fn.line '.'
   else
-    vim.cmd 'normal! y'
-    text = vim.fn.getreg '+'
+    local l1 = math.min(vim.fn.line 'v', vim.fn.line '.')
+    local l2 = math.max(vim.fn.line 'v', vim.fn.line '.')
+    text = vim.fn.expand '%' .. ':' .. l1 .. '-' .. l2
+  end
+  local terminal = package.loaded['toggleterm.terminal']
+  local pi_term = terminal and terminal.get(8, true)
+  if pi_term and pi_term.job_id and pcall(pi_term.send, pi_term, text) then
+    if not pi_term:is_open() then pi_term:open() end
+    return
   end
   vim.fn.system { 'tmux', 'send-keys', '-t', '{last}', '-l', text }
   vim.fn.system { 'tmux', 'select-pane', '-t', '{last}' }
-end, { desc = 'send to tmux' })
+end, { desc = 'send to pi' })
 if vim.fn.has 'nvim-0.11.3' == 1 then
   for _, m in ipairs {
     { 'i', '<c-s>' },
@@ -100,13 +107,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
   callback = function() vim.highlight.on_yank { higroup = 'Visual', timeout = 300 } end,
 })
-vim.api.nvim_create_autocmd('WinEnter', {
-  group = vim.api.nvim_create_augroup('set_cursorline', { clear = true }),
-  callback = function() vim.opt.cursorline = true end,
-})
-vim.api.nvim_create_autocmd('WinLeave', {
-  group = vim.api.nvim_create_augroup('set_no_cursorline', { clear = true }),
-  callback = function() vim.opt.cursorline = false end,
+vim.api.nvim_create_autocmd({ 'WinEnter', 'WinLeave' }, {
+  group = vim.api.nvim_create_augroup('cursorline', { clear = true }),
+  callback = function(ev) vim.opt.cursorline = ev.event == 'WinEnter' end,
 })
 
 local load_local_config = require('core.utils').load_local_config
@@ -151,7 +154,7 @@ load_plugins {
 
   -- intelligence
   require 'plugins/cmp',
-  require 'plugins/codecompanion',
+  -- require 'plugins/codecompanion',
   require 'plugins/conform',
   require 'plugins/copilot',
   require 'plugins/lexima',
@@ -168,6 +171,7 @@ load_plugins {
   require 'plugins/indent-blankline',
   require 'plugins/lualine',
   require 'plugins/noice',
+  require 'plugins/snacks',
   -- require 'plugins/syntax',
   require 'plugins/tree',
   require 'plugins/ufo',

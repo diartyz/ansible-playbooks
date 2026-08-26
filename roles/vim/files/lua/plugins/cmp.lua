@@ -24,11 +24,6 @@ return {
       ft = 'lua',
       opts = { library = { { path = '${3rd}/luv/library', words = { 'vim%.uv' } } } },
     },
-    {
-      'tzachar/cmp-tabnine',
-      build = './install.sh',
-      enabled = not vim.g.disable_ai,
-    },
   },
   event = { 'CmdlineEnter', 'InsertEnter' },
   config = function()
@@ -69,19 +64,7 @@ return {
     cmp.setup {
       completion = { completeopt = 'menu,menuone,noinsert' },
       formatting = {
-        format = function(entry, vim_item)
-          if entry.source.name == 'cmp_tabnine' then
-            vim_item.kind = ' Tabnine'
-            vim_item.menu = ''
-            if (entry.completion_item.data or {}).multiline then vim_item.kind = vim_item.kind .. '*' end
-            local detail = (entry.completion_item.labelDetails or {}).detail
-            if detail and detail:find '.*%%.*' then
-              vim_item.kind = string.format('%s%s %s', vim_item.kind, ':', detail)
-            end
-            return vim_item
-          end
-          return require('lspkind').cmp_format { mode = 'symbol_text' }(entry, vim_item)
-        end,
+        format = require('lspkind').cmp_format { mode = 'symbol_text' },
       },
       mapping = {
         ['<c-]>'] = mapping_toggle,
@@ -110,15 +93,10 @@ return {
           { name = 'lazydev' },
           { name = 'nvim_lua' },
         },
-        vim.g.disable_ai and {
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-          }
-          or {
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-            { name = 'cmp_tabnine' },
-          },
+        {
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+        },
         {
           { name = 'buffer' },
         }

@@ -11,30 +11,20 @@ return {
     vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
     vim.api.nvim_set_hl(0, 'MatchupVirtualText', { link = 'Comment' })
     vim.api.nvim_set_hl(0, 'VM_Mono', { link = 'DiffAdd' })
-    vim.fn.sign_define {
-      {
-        name = 'DiagnosticSignError',
-        text = 'E',
-        texthl = 'DiagnosticSignError',
-        linehl = 'ErrorLine',
-      },
-      {
-        name = 'DiagnosticSignWarn',
-        text = 'W',
-        texthl = 'DiagnosticSignWarn',
-        linehl = 'WarningLine',
-      },
-      {
-        name = 'DiagnosticSignInfo',
-        text = 'I',
-        texthl = 'DiagnosticSignInfo',
-        linehl = 'InfoLine',
-      },
-      {
-        name = 'DiagnosticSignHint',
-        text = 'H',
-        texthl = 'DiagnosticSignHint',
-        linehl = 'HintLine',
+    vim.diagnostic.config {
+      signs = {
+        linehl = {
+          [vim.diagnostic.severity.ERROR] = 'ErrorLine',
+          [vim.diagnostic.severity.HINT] = 'HintLine',
+          [vim.diagnostic.severity.INFO] = 'InfoLine',
+          [vim.diagnostic.severity.WARN] = 'WarningLine',
+        },
+        text = {
+          [vim.diagnostic.severity.ERROR] = 'E',
+          [vim.diagnostic.severity.HINT] = 'H',
+          [vim.diagnostic.severity.INFO] = 'I',
+          [vim.diagnostic.severity.WARN] = 'W',
+        },
       },
     }
   end,
