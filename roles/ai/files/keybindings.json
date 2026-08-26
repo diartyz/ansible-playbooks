@@ -1,5 +1,6 @@
 {
   "app.message.dequeue": ["alt+up", "shift+up"],
   "app.message.followUp": ["shift+down", "shift+enter"],
-  "tui.input.newLine": ["ctrl+j"]
+  "tui.input.newLine": ["ctrl+j"],
+  "app.session.rename": "f2"
 }

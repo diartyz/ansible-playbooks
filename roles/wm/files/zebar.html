@@ -26,6 +26,20 @@
           JetBrainsMono Nerd Font Mono, Menlo, Monaco, Courier New, monospace;
         padding: 4px;
       }
+
+      .media-text {
+        padding: 0 4px;
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: inherit;
+        font: inherit;
+      }
+
+      .media-text:hover {
+        opacity: 0.7;
+      }
     </style>
   </head>
   <body>
@@ -181,11 +195,16 @@
             </div>
 
             <div className="center">
-              {output.media && (
-                <div className="media">
-                  {output.media.currentSession &&
-                    `${output.media.currentSession.title} - ${output.media.currentSession.artist}`}
-                </div>
+              {output.media?.currentSession && (
+                <button
+                  className="media-text"
+                  onClick={() => output.media.next()}
+                >
+                  {output.media.currentSession.title}
+                  {output.media.currentSession.artist
+                    ? ` - ${output.media.currentSession.artist}`
+                    : ""}
+                </button>
               )}
             </div>
 

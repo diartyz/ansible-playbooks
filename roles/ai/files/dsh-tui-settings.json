@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "values": {
+    "pageMargin": "none",
+    "statusBar": {
+      "cache": false,
+      "contextBar": false,
+      "cwd": false
+    },
+    "thinkingFold": "full"
+  }
+}
