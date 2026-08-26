@@ -16,3 +16,7 @@ Use code fences for code/commands. Be concise.
 Do **not** run `git commit`, `git push` (including `git push -f` / force-push), or `git reset --hard` automatically. Only make local working-tree edits (edit files, build to verify) and stage nothing unless the user explicitly asks for a commit/push/reset.
 
 When the user asks to commit or push, do exactly that one action and stop — do not chain additional commits/pushes on your own. Wait for the next explicit instruction.
+
+# Code style
+
+Do not add unnecessary comments. Keep only comments that document non-obvious invariants or rationale whose removal would risk reintroducing a bug; never write comments that restate what the code already says.
